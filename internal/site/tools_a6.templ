@@ -1,0 +1,119 @@
+package site
+
+templ toolsStylesheetHead() {
+	<link rel="stylesheet" href="/tools_a6.css"/>
+}
+
+templ toolsIndexPage(tools []Tool, postsByTool map[string][]Post, data PageData, status string, language string, head []templ.Component) {
+	@Document("Tools — Siduri", data.Preview, head, toolsIndexContent(tools, postsByTool, status, language))
+}
+
+templ toolsIndexContent(tools []Tool, postsByTool map[string][]Post, status string, language string) {
+	<main class="tools-page">
+		<h1>Tools</h1>
+		<p class="lede">Small software systems, with their current status and the work behind them.</p>
+		@toolFilters(tools, status, language)
+		@toolGrid(filteredTools(tools, status, language), postsByTool)
+	</main>
+}
+
+templ toolFilterFragment(tools []Tool, postsByTool map[string][]Post, data PageData, status string, language string) {
+	@toolGrid(filteredTools(tools, status, language), postsByTool)
+}
+
+templ toolFilters(tools []Tool, status string, language string) {
+	<nav class="tool-filters" aria-label="Filter tools">
+		<strong>Filter:</strong>
+		<span>Status</span>
+		@toolFilterLink("All", "", language, status == "" && language == "")
+		for _, option := range toolStatuses {
+			@toolFilterLink(toolStatusLabel(option), option, language, status == option)
+		}
+		<span>Language</span>
+		for _, option := range toolLanguages(tools) {
+			@toolFilterLink(option, status, option, language == option)
+		}
+	</nav>
+}
+
+templ toolFilterLink(label string, status string, language string, selected bool) {
+	<a
+		if selected {
+			class="selected"
+			aria-current="page"
+		}
+		href={ toolFilterHref(status, language) }
+		hx-get={ toolFilterEndpoint(status, language) }
+		hx-target="#tool-grid"
+		hx-swap="outerHTML"
+		hx-select="#tool-grid"
+		>{ label }</a>
+}
+
+templ toolGrid(tools []Tool, postsByTool map[string][]Post) {
+	<section id="tool-grid" class="tool-grid" data-tool-count={ toolCountString(len(tools)) } aria-live="polite">
+		if len(tools) == 0 {
+			<p class="tool-empty">No tools match this filter.</p>
+		}
+		for _, tool := range tools {
+			@toolCard(tool, len(postsByTool[tool.Slug]))
+		}
+	</section>
+}
+
+templ toolCard(tool Tool, postCount int) {
+	<article class="tool-card" data-status={ tool.Status } data-language={ tool.Language }>
+		<p class="tool-meta"><time datetime={ tool.Date }>{ tool.Date }</time> · { tool.Language }</p>
+		<h2><a href={ "/tools/" + tool.Slug + "/" }>{ tool.Title }</a></h2>
+		<p>{ tool.Summary }</p>
+		<p class="tool-card-footer">
+			<span class="tool-status" data-status={ tool.Status }>Status: { tool.Status }</span>
+			<span>{ postCount } journal posts</span>
+		</p>
+	</article>
+}
+
+templ toolPage(tool Tool, mentioned []Post, data PageData, head []templ.Component) {
+	@Document(tool.Title+" — Tools — Siduri", data.Preview, head, toolContent(tool, mentioned))
+}
+
+templ toolContent(tool Tool, mentioned []Post) {
+	<main class="tools-page">
+		<article class="tool-detail">
+			<header class="tool-header">
+				<p class="tool-meta"><time datetime={ tool.Date }>{ tool.Date }</time> · { tool.Language }</p>
+				<h1>{ tool.Title }</h1>
+				<p class="lede">{ tool.Summary }</p>
+				<p class="tool-status" data-status={ tool.Status }>Status: { tool.Status }</p>
+			</header>
+			<section>
+				<h2>Why it exists</h2>
+				<div class="prose">
+					@templ.Raw(renderMarkdown(tool.Why))
+				</div>
+			</section>
+			<section>
+				<h2>Example</h2>
+				if tool.Example != "" {
+					<pre class="tool-example"><code>{ tool.Example }</code></pre>
+				} else {
+					<img src={ tool.Screenshot } alt={ "Screenshot of " + tool.Title }/>
+				}
+			</section>
+			<section>
+				<h2>Install</h2>
+				<p><code>{ tool.Install }</code></p>
+				<p><a href={ tool.Repository } rel="noopener">Repository</a></p>
+			</section>
+			<section class="tool-posts">
+				<h2>Journal posts mentioning { tool.Title }</h2>
+				if len(mentioned) == 0 {
+					<p>No journal posts mention this tool yet.</p>
+				}
+				for _, post := range mentioned {
+					<p><a href={ "/journal/" + post.Slug + "/" }>{ post.Title }</a></p>
+				}
+			</section>
+		</article>
+	</main>
+}

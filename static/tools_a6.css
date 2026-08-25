@@ -1,0 +1,104 @@
+.tools-page {
+	max-width: 56rem;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+}
+
+.tool-filters {
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem 1rem;
+	align-items: baseline;
+	margin: 2rem 0;
+	padding: 1rem;
+	border: 1px solid #d8d8d8;
+}
+
+.tool-filters span {
+	font-size: .85rem;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.tool-filters a.selected {
+	font-weight: 700;
+	text-decoration-thickness: .15em;
+}
+
+.tool-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+	gap: 1rem;
+}
+
+.tool-card {
+	display: flex;
+	flex-direction: column;
+	min-height: 12rem;
+	padding: 1.25rem;
+	border: 1px solid #d8d8d8;
+	background: #fff;
+}
+
+.tool-card h2 {
+	margin: .35rem 0 .75rem;
+}
+
+.tool-meta,
+.tool-card-footer {
+	font-size: .85rem;
+}
+
+.tool-card-footer {
+	display: flex;
+	justify-content: space-between;
+	gap: .75rem;
+	margin-top: auto;
+}
+
+.tool-status {
+	display: inline-block;
+	font-weight: 700;
+}
+
+.tool-status[data-status="abandoned"] {
+	color: #7a2e2e;
+}
+
+.tool-status[data-status="maintained"] {
+	color: #5b4b16;
+}
+
+.tool-status[data-status="active"] {
+	color: #1e5b36;
+}
+
+.tool-detail > section {
+	margin-top: 2.5rem;
+}
+
+.tool-example {
+	overflow-x: auto;
+	padding: 1rem;
+	background: #f4f4f4;
+}
+
+.tool-posts p {
+	margin: .5rem 0;
+}
+
+.tool-empty {
+	grid-column: 1 / -1;
+}
+
+/* A post's ordinary Markdown link to /tools/<slug>/ is the stable reference
+   syntax. This gives that link the same card treatment without changing the
+   shared article renderer. */
+.prose a[href^="/tools/"] {
+	display: block;
+	margin: 1.25rem 0;
+	padding: 1rem 1.25rem;
+	border: 1px solid #d8d8d8;
+	background: #fff;
+	font-weight: 700;
+}
