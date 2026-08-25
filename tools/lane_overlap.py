@@ -23,6 +23,7 @@ Stdlib only. Exit 1 on any collision, so it can sit in a gate.
 """
 from __future__ import annotations
 
+import pathlib
 import posixpath
 import re
 import subprocess
@@ -52,8 +53,12 @@ INTEGRATOR_OWNED = {
     "internal/site/markdown.go",
 }
 
-#: Root files with no directory part and no extension that a lane really can own.
-KNOWN_ROOT_FILES = {"_headers", "_redirects", "Dockerfile"}
+#: Root files a lane can own whose names the rules below would otherwise reject.
+#: The four Cloudflare ones all begin with an underscore, which is the test that
+#: rejects `_templ.go`. `_worker.js` is the Pages advanced-mode entry point and
+#: `_routes.json` decides which paths invoke the Worker; both are plausible for
+#: the deploy lane and both were invisible.
+KNOWN_ROOT_FILES = {"_headers", "_redirects", "_worker.js", "_routes.json", "Dockerfile"}
 
 #: Backticked or bare, since a task can name a path either way.
 TOKEN = re.compile(r"`([^`\s]+)`|(?<![\w/`])((?:\.{0,2}/)?[\w.-]+(?:/[\w.-]+)+)(?![\w`])")
@@ -68,11 +73,11 @@ def is_path(token: str) -> bool:
     """
     if "/" in token:
         return True
-    if token in KNOWN_ROOT_FILES:
+    if token in KNOWN_ROOT_FILES or token in INTEGRATOR_OWNED:
         return True
     if token.startswith("_"):
         return False
-    return "." in token.strip(".") or token in KNOWN_ROOT_FILES
+    return "." in token.strip(".")
 
 
 def normalise(token: str) -> str:
@@ -113,7 +118,12 @@ def branch_writes(base: str, branches: list[str]) -> dict[str, list[str]]:
     written: dict[str, list[str]] = {}
     for branch in branches:
         out = subprocess.run(
-            ["git", "diff", "--name-only", f"{base}..{branch}"],
+            # Three dots, not two. `a..b` compares two endpoints, so once one
+            # lane merges into `base` every later branch appears to have written
+            # the merged lane's files -- a wall of false collisions arriving
+            # exactly during integration, the only time this runs. `a...b` is
+            # changes on `b` since the merge base, which is the question asked.
+            ["git", "diff", "--name-only", f"{base}...{branch}"],
             capture_output=True, text=True, check=True,
         ).stdout.split()
         for path in out:
@@ -173,8 +183,72 @@ def selftest() -> int:
     check({"A8": "own `_headers`", "A7": "also `_headers`"},
           {"_headers": ["A7", "A8"]}, {}, "underscore root file")
 
-    print("lane_overlap selftest: 10 cases pass")
+    # Every integrator-owned file must be recognised as a path, or its
+    # threshold-one branch can never fire. `Makefile` failed this: no dot, no
+    # slash, not underscore-prefixed, so `is_path` returned False and two tasks
+    # claiming it reported cuttable. Asserting the invariant makes the omission
+    # impossible rather than caught.
+    unreachable = [p for p in sorted(INTEGRATOR_OWNED) if not is_path(p)]
+    assert not unreachable, f"integrator-owned but unreachable by is_path: {unreachable}"
+
+    branch_cases = _selftest_branches()
+    print(f"lane_overlap selftest: 10 intent cases, 1 invariant, {branch_cases} branch cases pass")
     return 0
+
+
+def _selftest_branches() -> int:
+    """A base that has moved is the case that will actually occur."""
+    import shutil, subprocess as sp, tempfile
+
+    if not shutil.which("git"):
+        return 0
+    root = tempfile.mkdtemp(prefix="lane_overlap_selftest_")
+    try:
+        def git(*args):
+            sp.run(["git", "-C", root, *args], check=True, capture_output=True, text=True)
+
+        sp.run(["git", "init", "-q", "-b", "main", root], check=True)
+        git("config", "user.name", "selftest")
+        git("config", "user.email", "selftest@localhost")
+        (pathlib.Path(root) / "base.txt").write_text("x\n")
+        git("add", "-A"); git("commit", "-q", "-m", "base")
+        base = sp.run(["git", "-C", root, "rev-parse", "HEAD"],
+                      check=True, capture_output=True, text=True).stdout.strip()
+
+        git("checkout", "-q", "-b", "lane/a")
+        (pathlib.Path(root) / "a_only.go").write_text("a\n")
+        git("add", "-A"); git("commit", "-q", "-m", "a")
+
+        git("checkout", "-q", "-b", "lane/b", base)
+        (pathlib.Path(root) / "b_only.go").write_text("b\n")
+        git("add", "-A"); git("commit", "-q", "-m", "b")
+
+        cwd = pathlib.Path.cwd()
+        import os
+        os.chdir(root)
+        try:
+            before = branch_writes(base, ["lane/a", "lane/b"])
+            assert before == {}, f"disjoint branches before merge: {before}"
+
+            # Move the base, which is what integration does.
+            git("checkout", "-q", "main"); git("merge", "-q", "--no-edit", "lane/a")
+            after = branch_writes("main", ["lane/b"])
+            assert after == {}, f"moved base attributed merged work to lane/b: {after}"
+
+            # And a genuine collision is still caught after the base moved.
+            git("checkout", "-q", "lane/b")
+            (pathlib.Path(root) / "a_only.go").write_text("b touched it\n")
+            git("add", "-A"); git("commit", "-q", "-m", "b touches a_only")
+            git("checkout", "-q", "-b", "lane/c", base)
+            (pathlib.Path(root) / "a_only.go").write_text("c too\n")
+            git("add", "-A"); git("commit", "-q", "-m", "c touches a_only")
+            real = branch_writes(base, ["lane/b", "lane/c"])
+            assert real == {"a_only.go": ["lane/b", "lane/c"]}, f"real collision missed: {real}"
+        finally:
+            os.chdir(cwd)
+        return 3
+    finally:
+        shutil.rmtree(root, ignore_errors=True)
 
 
 def main(argv: list[str]) -> int:
