@@ -103,7 +103,9 @@ templ toolContent(tool Tool, mentioned []Post) {
 			<section>
 				<h2>Install</h2>
 				<p><code>{ tool.Install }</code></p>
-				<p><a href={ tool.Repository } rel="noopener">Repository</a></p>
+				if tool.Repository != "" {
+					<p><a href={ tool.Repository } rel="noopener">Repository</a></p>
+				}
 			</section>
 			<section class="tool-posts">
 				<h2>Journal posts mentioning { tool.Title }</h2>
