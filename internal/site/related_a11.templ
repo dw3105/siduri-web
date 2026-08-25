@@ -1,0 +1,17 @@
+package site
+
+templ relatedPostsSection(posts []Post) {
+	if len(posts) > 0 {
+		<section class="related-posts" aria-labelledby="related-posts-heading">
+			<h2 id="related-posts-heading">Related posts</h2>
+			<ol class="related-post-list">
+				for _, post := range posts {
+					<li class="related-post">
+						<h3><a href={ a2PostURL(post.Slug) }>{ post.Title }</a></h3>
+						<p>{ post.PlainSummary }</p>
+					</li>
+				}
+			</ol>
+		</section>
+	}
+}
