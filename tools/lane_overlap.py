@@ -99,10 +99,24 @@ OWNS_HEADING = re.compile(r"^#+\s*Files you own\s*$", re.M)
 NEXT_HEADING = re.compile(r"^#+\s", re.M)
 
 
-def ownership_block(text: str) -> str:
-    """The `Files you own` section, or the whole text when there is no such section."""
+def ownership_block(text: str, label: str = "?", quiet: bool = False) -> str:
+    """The `Files you own` section, or the whole text when there is no such section.
+
+    Falling back to the whole text is a **different check**: every
+    must-not-touch line reads as a claim. It used to happen silently, which
+    turned a task written in another format into a wall of false collisions --
+    and a checker that quietly changes what it measures is the thing this file
+    exists to catch. It now says so on stderr.
+    """
     match = OWNS_HEADING.search(text)
     if not match:
+        if quiet:
+            return text
+        print(
+            f"lane_overlap: {label} has no '### Files you own' heading; "
+            "scanning whole text, so must-not-touch lines will read as claims",
+            file=sys.stderr,
+        )
         return text
     rest = text[match.end():]
     following = NEXT_HEADING.search(rest)
@@ -118,11 +132,11 @@ def paths_in(text: str) -> set[str]:
     return found
 
 
-def collisions(tasks: dict[str, str]) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
+def collisions(tasks: dict[str, str], quiet: bool = False) -> tuple[dict[str, list[str]], dict[str, list[str]]]:
     """Return (lane-owned named twice, integrator-owned named at all)."""
     owners: dict[str, list[str]] = {}
     for name, text in sorted(tasks.items()):
-        for path in paths_in(ownership_block(text)):
+        for path in paths_in(ownership_block(text, name, quiet)):
             if path in READ_ONLY_BY_GUARD:
                 continue
             owners.setdefault(path, []).append(name)
@@ -165,7 +179,7 @@ def report(shared, claimed) -> int:
 
 def selftest() -> int:
     def check(tasks, want_shared, want_claimed, label):
-        got = collisions(tasks)
+        got = collisions(tasks, quiet=True)
         assert got == (want_shared, want_claimed), f"{label}: {got}"
 
     check({"A1": "own `internal/site/a1.go`", "A2": "own `internal/site/a2.go`"}, {}, {}, "clean")
