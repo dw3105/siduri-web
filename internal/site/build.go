@@ -39,6 +39,9 @@ func Build(root, output string, includeDrafts bool) error {
 		}
 		return posts[i].Slug < posts[j].Slug
 	})
+	data := PageData{Posts: posts, Tags: append([]string(nil), content.Tags...), Preview: includeDrafts}
+	routeOutputs := outputsForBuild(routesForBuild(data), data)
+
 	if err := os.RemoveAll(outputAbs); err != nil {
 		return fmt.Errorf("clear build output: %w", err)
 	}
@@ -52,23 +55,20 @@ func Build(root, output string, includeDrafts bool) error {
 	if err := writeOutput(outputAbs, "site.css", css); err != nil {
 		return err
 	}
-	data := PageData{Posts: posts, Preview: includeDrafts}
-	for _, route := range registeredRoutes() {
-		if err := writeComponent(outputAbs, route.Output, route.Render(data)); err != nil {
-			return fmt.Errorf("render %s: %w", route.Name, err)
-		}
-	}
-	for _, post := range posts {
-		body := renderMarkdown(post.Body)
-		path := filepath.Join("journal", post.Slug, "index.html")
-		if err := writeComponent(outputAbs, path, ArticlePage(post, body, includeDrafts)); err != nil {
-			return fmt.Errorf("render post %s: %w", post.Slug, err)
+	for _, routeOutput := range routeOutputs {
+		if err := writeRouteOutput(outputAbs, routeOutput.Output); err != nil {
+			return fmt.Errorf("render %s: %w", routeOutput.Route, err)
 		}
 	}
 	return nil
 }
 
-type interfaceComponent = templ.Component
+func writeRouteOutput(root string, output Output) error {
+	if output.Render != nil {
+		return writeComponent(root, output.Path, output.Render())
+	}
+	return writeOutput(root, output.Path, output.Bytes)
+}
 
 func writeComponent(root, relative string, component templ.Component) error {
 	var rendered bytes.Buffer

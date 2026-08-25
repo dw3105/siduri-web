@@ -1,0 +1,12 @@
+package site
+
+templ contactPage(data PageData, head []templ.Component) {
+	@Document("Contact — Siduri", data.Preview, head, contactContent())
+}
+
+templ contactContent() {
+	<main>
+		<h1>Contact</h1>
+		<p>For now, the simplest route is <a href="mailto:hello@siduri.ai">hello@siduri.ai</a>.</p>
+	</main>
+}

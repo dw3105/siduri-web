@@ -1,0 +1,16 @@
+package site
+
+templ demoPage(entry demoEntry, head []templ.Component) {
+	@Document("Demo — Siduri", entry.Preview, head, demoContent(entry))
+}
+
+templ demoContent(entry demoEntry) {
+	<main>
+		<h1>{ entry.Title }</h1>
+		<p class="lede">This page is emitted by the demo lane.</p>
+	</main>
+}
+
+templ demoHead() {
+	<meta name="demo-head" content="registered"/>
+}

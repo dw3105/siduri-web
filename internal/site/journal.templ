@@ -1,0 +1,28 @@
+package site
+
+import "strings"
+
+templ journalPage(data PageData, head []templ.Component) {
+	@Document("Journal — Siduri", data.Preview, head, journalContent(data.Posts))
+}
+
+templ journalContent(posts []Post) {
+	<main>
+		<h1>Journal</h1>
+		<p class="lede">The work, including the parts that did not work.</p>
+		if len(posts) == 0 {
+			<p>No published posts yet.</p>
+		}
+		for _, post := range posts {
+			@postCard(post)
+		}
+	</main>
+}
+
+templ postCard(post Post) {
+	<article class="post-card">
+		<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+		<h2><a href={ "/journal/" + post.Slug + "/" }>{ post.Title }</a></h2>
+		<p>{ post.PlainSummary }</p>
+	</article>
+}

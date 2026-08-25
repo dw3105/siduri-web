@@ -1,0 +1,12 @@
+package site
+
+templ emptyTagPage(tag string, data PageData, head []templ.Component) {
+	@Document("Tag: "+tag+" — Siduri", data.Preview, head, emptyTagContent(tag))
+}
+
+templ emptyTagContent(tag string) {
+	<main>
+		<h1>Tag: { tag }</h1>
+		<p>No posts carry this tag yet.</p>
+	</main>
+}
