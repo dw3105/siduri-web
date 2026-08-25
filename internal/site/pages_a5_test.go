@@ -78,8 +78,18 @@ func TestA5NonPostContentStaysOutOfJournal(t *testing.T) {
 			t.Errorf("content/%s.md leaked into the journal", name)
 		}
 	}
-	if _, err := os.Stat(filepath.Join(output, "feed.xml")); !os.IsNotExist(err) {
-		t.Errorf("unexpected feed output: %v", err)
+	// The feed is A3's and must exist. Asserting its absence was green only
+	// while A3 was unmerged -- a lane cannot assert the absence of another
+	// lane's deliverable. What this test is named for is that non-post content
+	// stays out of the surfaces posts appear on, so check that instead.
+	feed, err := os.ReadFile(filepath.Join(output, "feed.xml"))
+	if err != nil {
+		t.Fatalf("feed.xml missing: %v", err)
+	}
+	for _, name := range []string{"home", "about", "stack"} {
+		if bytes.Contains(bytes.ToLower(feed), []byte(name+".md")) {
+			t.Errorf("content/%s.md leaked into the feed", name)
+		}
 	}
 }
 
