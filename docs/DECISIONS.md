@@ -16,6 +16,7 @@ they did not.
 | 4 | 2026-08-25 | Build order across P0/P1/P2 vs the §12 gates | proposed a `dist/` phase gate | **refuted it** — phase gate guards `dist/`, gate 490 guards the tree | **struck 490.** One programme, P0+P1+P2. ADR 0003 |
 | 5 | 2026-08-25 | Spec filenames | renamed to `REQUIREMENTS-*.md` | **refuted it** — four in-document refs dangled, incl. front matter and the D-5 consequence | renamed back; zero contract bytes changed, no amendment needed |
 | 6 | 2026-08-25 | Insert lane W1 — widen the seam — before wave A | proposed: eight lanes cannot run against finding 0006 | pending | pending |
+| 7 | 2026-08-25 | `siduri-code` skill, canonical in `skills/`, deployed to `~/.claude/skills/` | written, v1.0, 66 clauses, every one earned today | pending | pending |
 
 ## Open
 
