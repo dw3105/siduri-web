@@ -1,0 +1,12 @@
+name = "siduri-web"
+compatibility_date = "2026-08-25"
+workers_dev = true
+
+[assets]
+directory = "./dist"
+
+[env.preview]
+name = "siduri-web-preview"
+
+[env.preview.assets]
+directory = "./.preview-dist"
