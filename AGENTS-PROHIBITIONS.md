@@ -1,6 +1,6 @@
 # AGENTS.md — the agent contract for siduri-web
 
-Required by `docs/REQUIREMENTS-SITE.md:336` (AR-7). `CLAUDE.md` is a symlink to
+Required by `docs/site-requirements.md:336` (AR-7). `CLAUDE.md` is a symlink to
 this file.
 
 **Prohibitions are first on purpose.** `AR-7` lists them last. Codex assembles

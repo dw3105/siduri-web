@@ -1,6 +1,6 @@
 # AGENTS.md — the agent contract for siduri-web
 
-Required by `docs/REQUIREMENTS-SITE.md:336` (AR-7). `CLAUDE.md` is a symlink to
+Required by `docs/site-requirements.md:336` (AR-7). `CLAUDE.md` is a symlink to
 this file.
 
 **Prohibitions are first on purpose.** `AR-7` lists them last. Codex assembles
@@ -48,13 +48,16 @@ Routine operations are one command each:
 
 ## Where things are
 
-    docs/REQUIREMENTS-SITE.md       the contract — site
-    docs/REQUIREMENTS-COMMENTS.md   the contract — comments
-    docs/ARCHITECTURE.md            package boundaries
-    docs/IMPLEMENTATION-PLAN.md     lanes and their scope
+    docs/site-requirements.md       the contract — site
+    docs/comments-requirements.md   the contract — comments
     docs/DECISIONS.md               decision record
     docs/FINDINGS.md                out-of-scope findings
     docs/adr/                       one file per mechanism decision
+
+The seam a lane registers against lives in `internal/site/routes.go`:
+`Register` for a fixed page, `RegisterContent` for routes computed from loaded
+content, `RegisterHead` for a `<head>` fragment, and `PageOutput` / `ByteOutput`
+for what an expansion produces.
 
 ## Content conventions and voice
 
