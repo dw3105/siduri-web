@@ -2,6 +2,10 @@ name: CI
 
 on:
   pull_request:
+  # main is verified after every merge as well as before it. A status check that
+  # only ever runs on a pull request says nothing about the branch it protects.
+  push:
+    branches: [main]
 
 permissions:
   contents: read
