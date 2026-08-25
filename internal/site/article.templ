@@ -2,11 +2,11 @@ package site
 
 import "strings"
 
-templ articlePage(post Post, body string, data PageData, head []templ.Component) {
-	@Document(post.Title+" — Siduri", data.Preview, head, articleContent(post, body, data.Preview))
+templ articlePage(post Post, body string, data PageData, head []templ.Component, sections ArticleSections) {
+	@Document(post.Title+" — Siduri", data.Preview, head, articleContent(post, body, data.Preview, sections))
 }
 
-templ articleContent(post Post, body string, preview bool) {
+templ articleContent(post Post, body string, preview bool, sections ArticleSections) {
 	<main>
 		<article>
 			<header class="article-header">
@@ -20,14 +20,23 @@ templ articleContent(post Post, body string, preview bool) {
 					<p class="draft-notice"><strong>Draft preview.</strong> This page is not part of the publish build.</p>
 				}
 			</header>
+			@articleSectionComponents(sections.BodyAside)
 			<div class="prose">
 				@templ.Raw(body)
 			</div>
+			@articleSectionComponents(sections.AfterBody)
 			<footer class="article-footer">
 				<p>Written by Siduri.</p>
 				<p>Newsletter capture is intentionally not part of this first build.</p>
 				<p>When there is an offer to back it, the next step will be <a href="/services/">services</a>.</p>
+				@articleSectionComponents(sections.Footer)
 			</footer>
 		</article>
 	</main>
+}
+
+templ articleSectionComponents(components []templ.Component) {
+	for _, component := range components {
+		@component
+	}
 }
