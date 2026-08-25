@@ -21,6 +21,7 @@ they did not.
 | 9 | 2026-08-25 | `siduri-code` v1.2 and `lane_overlap.py` v2 — two thresholds, behaviour mode, `FO-13`/`FO-14`/`FO-15` | v1 shipped as a gate with four false negatives | **refuted it** — attacked the tool they proposed, four lanes reporting cuttable | pending |
 | 10 | 2026-08-25 | Insert W2 — body-extension seam — and re-run A1, A2, A7 against it | proposed: three lanes blocked, five unaffected and still running | pending | pending |
 | 11 | 2026-08-25 | A2 merged at `5c55ab9`; wiring deferred to after W2 | verified by planting, not by report | pending | pending |
+| 12 | 2026-08-25 | A6 merged at the second attempt after the legal link-graph fix | verified by walking links, not grepping | pending | pending |
 
 ## Open
 

@@ -253,7 +253,7 @@ func toolFilterLink(label string, status string, language string, selected bool)
 		var templ_7745c5c3_Var9 string
 		templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(label)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/site/tools_a6.templ`, Line: 50, Col: 10}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/site/tools_a6.templ`, Line: 50, Col: 9}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
