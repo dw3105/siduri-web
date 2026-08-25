@@ -30,6 +30,10 @@ Two more, specific to this repo:
 
 ## Commands — AR-1
 
+**None of these exist yet.** Wave 0 builds them. Until it lands, this section is
+what the repo is going to have, not what it has — do not run them and do not
+report them green.
+
     make dev · make build · make check · make publish · make comments · make deploy · make rollback
 
 ## Where things are
@@ -43,4 +47,12 @@ Two more, specific to this repo:
     docs/adr/                       one file per mechanism decision
 
 Content conventions, tag vocabulary and tone guide land with the wave that
-builds them, and stay above the byte cap guarded in `make check`.
+builds them.
+
+**Two things this file asserts that are unbuilt**, named here rather than left to
+read as fact. The `docs/` prohibition above is prose and nothing enforces it: the
+path check that binds it is wave 0's, and until it exists the rule holds only
+because a worker read it. Likewise the byte cap on this file — 32768, silent
+truncation, `docs/FINDINGS.md` row 0001 — is guarded by nothing until `make
+check` exists. A clause deposited with no guard behind it is a clause that reads
+enforced and is not.

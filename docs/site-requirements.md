@@ -487,7 +487,16 @@ Build pipeline, article rendering, `/`, `/journal/`, `/about/`, `/contact/` as `
 
 **Post 1 — introduction, vision, experience.** Who, why, what this is going to be, and what the operator has already done. The thesis post. Ships with the site; the site is not live without it.
 
-> **Gate: post 1 is published on a real domain before any P1 work begins.** This is the single most important line in the document. The characteristic death of this project is six weeks of beautiful scaffolding and zero published posts — and building it with agents makes scaffolding more seductive, not less.
+**[AMENDED 2026-08-25 — ADR 0003, operator's word given directly]**
+
+> ~~**Gate: post 1 is published on a real domain before any P1 work begins.** This is the single most important line in the document. The characteristic death of this project is six weeks of beautiful scaffolding and zero published posts — and building it with agents makes scaffolding more seductive, not less.~~
+>
+> **Gate struck.** P0, P1 and P2 are built in one programme rather than gated on
+> publication. The reasoning the struck text carries is not withdrawn and is not
+> restated as a rule: the risk it names — scaffolding instead of publishing, made
+> worse rather than better by building with agents — is now carried by the
+> end-to-end acceptance in ADR 0003 and by nothing else. Post 1 remains P0 scope
+> and the site is not live without it (§12, P0).
 
 ### P1 · Gateslot
 The first free tool: its own page under `/tools/`, a public repository, and **post 2** as the build log. This is the first real proof and the first thing a stranger can use without trusting anyone.
