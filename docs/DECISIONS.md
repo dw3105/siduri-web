@@ -23,6 +23,7 @@ they did not.
 | 11 | 2026-08-25 | A2 merged at `5c55ab9`; wiring deferred to after W2 | verified by planting, not by report | pending | pending |
 | 12 | 2026-08-25 | A6 merged at the second attempt after the legal link-graph fix | verified by walking links, not grepping | pending | pending |
 | 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
+| 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
 
 ## Open
 
