@@ -20,8 +20,12 @@ they did not.
 | 8 | 2026-08-25 | `siduri-code` v1.1 — add `## What this enforces`, `ST-13`, restore `ST-03`'s tell, convert `FO-12` to a script | v1.0 shipped 66 clauses with nothing distinguishing the guarded from the unguarded | **refuted v1.0's honesty** — named the 15 that go red nowhere, and refused `ST-13` alone as making the file less honest | pending |
 | 9 | 2026-08-25 | `siduri-code` v1.2 and `lane_overlap.py` v2 — two thresholds, behaviour mode, `FO-13`/`FO-14`/`FO-15` | v1 shipped as a gate with four false negatives | **refuted it** — attacked the tool they proposed, four lanes reporting cuttable | pending |
 | 10 | 2026-08-25 | Insert W2 — body-extension seam — and re-run A1, A2, A7 against it | proposed: three lanes blocked, five unaffected and still running | pending | pending |
+| 11 | 2026-08-25 | A2 merged at `5c55ab9`; wiring deferred to after W2 | verified by planting, not by report | pending | pending |
 
 ## Open
+
+- **Wire A2's related posts into the article page** once W2's section seam lands
+  (finding 0027). One registration in an A2-owned file; no rebuild.
 
 - **Dependencies before branches.** Every library the eight lanes need resolved
   into `go.mod` before any branch is cut; no lane runs `go get` (`FO-15`).
