@@ -78,6 +78,25 @@ func TestA4HeadHasAtMostTwoFontPreloads(t *testing.T) {
 	}
 }
 
+func TestA4FontPreloadsOnlyExistingFiles(t *testing.T) {
+	root := t.TempDir()
+	if preloads := a4FontPreloadsFromRoot(root); len(preloads) != 0 {
+		t.Fatalf("expected no font preloads without font files, got %v", preloads)
+	}
+
+	fontDirectory := filepath.Join(root, "static", "fonts")
+	if err := os.MkdirAll(fontDirectory, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	fontPath := filepath.Join(fontDirectory, "present.woff2")
+	if err := os.WriteFile(fontPath, []byte("font bytes"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if preloads := a4FontPreloadsFromRoot(root); len(preloads) != 1 || preloads[0] != "present.woff2" {
+		t.Fatalf("expected the present font preload, got %v", preloads)
+	}
+}
+
 func TestA4AssetRouteUsesByteOutputs(t *testing.T) {
 	set := newRouteSet()
 	registerA4Assets(PageData{}, set)

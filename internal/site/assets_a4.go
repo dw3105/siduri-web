@@ -12,11 +12,6 @@ import (
 	"github.com/dw3105/siduri-web/internal/assets"
 )
 
-// The font is deliberately named even while the binary is absent. A later
-// operator can place a real, subsetted WOFF2 at this path without changing
-// the document head or route code.
-const fallbackFont = "siduri-subset.woff2"
-
 //go:embed assets_a4.css
 var criticalCSS []byte
 
@@ -101,12 +96,13 @@ func a4FontFiles(root string) ([]a4FontFile, error) {
 }
 
 func a4FontPreloads() []string {
-	files, err := a4FontFiles(a4ProjectRoot())
+	return a4FontPreloadsFromRoot(a4ProjectRoot())
+}
+
+func a4FontPreloadsFromRoot(root string) []string {
+	files, err := a4FontFiles(root)
 	if err != nil {
 		panic(fmt.Errorf("a4 fonts: %w", err))
-	}
-	if len(files) == 0 {
-		return []string{fallbackFont}
 	}
 	preloads := make([]string, 0, len(files))
 	for _, file := range files {
