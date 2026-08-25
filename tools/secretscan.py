@@ -37,7 +37,16 @@ SECRET_PATTERNS = (
 IGNORED_DIRS = {".git", "dist", ".dev-dist", ".preview-dist", "node_modules", ".wrangler", "__pycache__"}
 LEGAL_EMAIL_FILES = {"content/legal/impressum.md", "content/legal/datenschutz.md"}
 ALLOWED_CONTACT = {"hello" + "@siduri.ai"}
-ALLOWED_CONTACT_FILES = {"internal/site/contact.templ", "internal/site/contact_templ.go"}
+#: A8 guessed these filenames before A5 existed and named two files no lane
+#: ever created; A5 put every page in one template. The allowlist stays
+#: file-scoped rather than pattern-scoped deliberately -- a pattern would
+#: permit the address anywhere it matched.
+ALLOWED_CONTACT_FILES = {
+    "internal/site/contact.templ",
+    "internal/site/contact_templ.go",
+    "internal/site/pages_a5.templ",
+    "internal/site/pages_a5_templ.go",
+}
 EMAIL_DOCUMENTATION_PREFIX = "docs/"
 
 

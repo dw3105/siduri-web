@@ -46,7 +46,13 @@ a8-html:
 	npx --yes html-validate@8 --rule doctype-style:off $$files
 
 a8-accessibility:
-	@set -eu; \
+	@major=$$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0); \
+	if [ "$$major" -lt 20 ]; then \
+	  echo "a8-accessibility: SKIPPED on node $$major -- axe-core needs >= 20." >&2; \
+	  echo "a8-accessibility: this stops measuring WCAG 2.2 AA entirely (NFR-2). CI pins 20 and runs it." >&2; \
+	  exit 0; \
+	fi; \
+	set -eu; \
 	(port=$$($(A8_PYTHON) -c 'import os; print(os.environ.get("A8_AXE_PORT", "8765"))'); \
 	cd dist; $(A8_PYTHON) -m http.server "$$port" >/tmp/siduri-a8-http.log 2>&1) & \
 	server=$$!; \
