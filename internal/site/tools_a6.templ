@@ -46,7 +46,8 @@ templ toolFilterLink(label string, status string, language string, selected bool
 		hx-get={ toolFilterEndpoint(status, language) }
 		hx-target="#tool-grid"
 		hx-swap="outerHTML"
-	>{ label }</a>
+		hx-select="#tool-grid"
+		>{ label }</a>
 }
 
 templ toolGrid(tools []Tool, postsByTool map[string][]Post) {

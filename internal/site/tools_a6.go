@@ -434,7 +434,7 @@ func toolFilterOutputs(tools []Tool, data PageData, postsByTool map[string][]Pos
 	languages := toolLanguages(tools)
 	outputs := []Output{
 		PageOutput("tools/filters/all/index.html", func() interfaceComponent {
-			return toolFilterFragment(tools, postsByTool, data, "", "")
+			return toolsIndexPage(tools, postsByTool, data, "", "", renderHeadFragments(data))
 		}),
 	}
 	for _, status := range statuses {
@@ -444,7 +444,7 @@ func toolFilterOutputs(tools []Tool, data PageData, postsByTool map[string][]Pos
 				return toolsIndexPage(tools, postsByTool, data, status, "", renderHeadFragments(data))
 			}),
 			PageOutput("tools/filters/status-"+status+"/index.html", func() interfaceComponent {
-				return toolFilterFragment(tools, postsByTool, data, status, "")
+				return toolsIndexPage(tools, postsByTool, data, status, "", renderHeadFragments(data))
 			}),
 		)
 	}
@@ -456,7 +456,7 @@ func toolFilterOutputs(tools []Tool, data PageData, postsByTool map[string][]Pos
 				return toolsIndexPage(tools, postsByTool, data, "", language, renderHeadFragments(data))
 			}),
 			PageOutput("tools/filters/language-"+slug+"/index.html", func() interfaceComponent {
-				return toolFilterFragment(tools, postsByTool, data, "", language)
+				return toolsIndexPage(tools, postsByTool, data, "", language, renderHeadFragments(data))
 			}),
 		)
 		for _, status := range statuses {
@@ -466,7 +466,7 @@ func toolFilterOutputs(tools []Tool, data PageData, postsByTool map[string][]Pos
 					return toolsIndexPage(tools, postsByTool, data, status, language, renderHeadFragments(data))
 				}),
 				PageOutput("tools/filters/status-"+status+"-language-"+slug+"/index.html", func() interfaceComponent {
-					return toolFilterFragment(tools, postsByTool, data, status, language)
+					return toolsIndexPage(tools, postsByTool, data, status, language, renderHeadFragments(data))
 				}),
 			)
 		}
@@ -519,7 +519,7 @@ func filteredTools(tools []Tool, status, language string) []Tool {
 }
 
 // toolFilterLinkPaths is kept in Go so the no-JavaScript href and the htmx
-// fragment endpoint cannot drift apart.
+// endpoint cannot drift apart.
 func toolFilterLinkPaths(status, language string) (string, string) {
 	if status == "" && language == "" {
 		return "/tools/", "/tools/filters/all/index.html"
