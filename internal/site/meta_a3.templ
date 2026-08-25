@@ -1,0 +1,14 @@
+package site
+
+templ a3Head(data PageData) {
+	<link rel="alternate" type="application/rss+xml" title="Siduri RSS" href={ siteURL("/feed.xml") }/>
+	<link rel="alternate" type="application/feed+json" title="Siduri JSON Feed" href={ siteURL("/feed.json") }/>
+	for _, post := range publishedPosts(data.Posts) {
+		<link rel="canonical" href={ canonicalURL(post) }/>
+	}
+	if len(publishedPosts(data.Posts)) == 0 {
+		<link rel="canonical" href={ siteURL("/") }/>
+	}
+	<meta name="description" content={ metaDescription(data.Posts) }/>
+	@templ.Raw("<script type=\"application/ld+json\">" + structuredData(data.Posts) + "</script>")
+}
