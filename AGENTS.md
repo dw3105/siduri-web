@@ -64,6 +64,17 @@ to replace Markdown-to-HTML rendering. `PageOutput` / `ByteOutput` are what an
 expansion produces. Article section render functions receive the post and
 build's `PageData`; section names are sorted within their slot.
 
+## How work reaches `main`
+
+`main` is protected with no bypass: deletion and force-push blocked, a pull
+request required, and CI's `check` job required to pass. `.github/ruleset-main.json`
+holds it; `docs/adr/0005` says why.
+
+So nothing merges locally. A lane commits on its own branch, the operator pushes
+the branch, CI runs, and the pull request merges when `check` is green. This
+machine fetches through a read-only deploy key and its push URL is `DISABLED`
+(`docs/adr/0004`).
+
 ## Content conventions and voice
 
 Posts use the required frontmatter fields `title`, `slug`, `date`, `summary`,

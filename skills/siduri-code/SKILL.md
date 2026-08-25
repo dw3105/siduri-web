@@ -129,6 +129,7 @@ Dev host commit. No remote, nothing pushed. Read `references/shipping.md` before
 cutting one.
 
 - **SH-01** **One lane, one commit.** Subject assigned by lead, used verbatim.
+- **SH-01a** **Nothing merge locally. `main` advance only through pull request, no bypass.** Lane commit on own branch, operator push branch, CI `check` gate merge. Lead's `main` track `origin/main` and stop being where merge happen.
 - **SH-02** **`make check` before every commit on `main`.**
 - **SH-03** **Worktree cut with absolute path.** Relative path resolve against `-C` and nest worktree inside repo, where every gate walk it.
 - **SH-04** **Identity set on parent before first worktree exist.** Worktree share parent `.git/config`. Unset mean every worker die at first commit after doing all work.
