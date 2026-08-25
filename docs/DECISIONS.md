@@ -25,6 +25,7 @@ they did not.
 | 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
 | 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
 | 15 | 2026-08-25 | Gateslot's repository link is dropped until the repo is public | offered three options with FR-13 and the P1 gate against each | not consulted | **decided**: drop the link until it is public |
+| 16 | 2026-08-25 | Session closed with the site unreviewed; design edits become the next wave | operator's call, after looking at the running site | not consulted | **decided**: *Site will require a lot of edits, but we are stopping here* |
 
 ## Open
 

@@ -3,7 +3,7 @@ name: siduri-code
 description: Working rule for the Siduri site build, repo siduri-web: two specs are the contract, eight Codex lanes run parallel and read no skill, the merged tree is the only verdict. Read before acting.
 ---
 
-**v1.2 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
+**v1.3 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
 content earned in one day: repo genesis, one spine lane, one seam lane, nine
 findings, four of them against this session's own claims. File caveman full.
 Output stay **lite**. Change log live in `ledger.md`, never here.
@@ -36,7 +36,7 @@ work move; `AGENTS.md` govern what worker may touch. Both read.
 `skill check` → this line, nothing else:
 
 ```
-siduri-code v1.2: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | fifteen clause here go red nowhere and forty-six are unaudited, and section naming them is only thing telling reader which is which
+siduri-code v1.3: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | gate running only in mode where it cannot fail is not gate | binding is not serving, check gate scan what it think it scan | under green-required gate, unit of work is whatever make gate green | wave not closeable until operator looked at artefact | fifteen clause here go red nowhere and rest unaudited, and section naming them is only thing telling reader which is which
 ```
 
 `skill check <ID>` → that rule line, verbatim. `skill check refs` → every filename
@@ -66,6 +66,8 @@ in reference table. Cannot recall → `skill check: FAILED, reattach skill`.
 - **RD-03** **Never restate machine fact or code fact from memory.** Three sibling repo carry three different git identity; one recalled cover all three is wrong twice.
 - **RD-04** **Claim that thing is built cite file and line, or say unprobed.** Grep hit is not substrate.
 - **RD-05** **Read requirement whole, by range.** grep locate; grep never read.
+- **RD-06** **Environment table is fact about machine, never advice.** Re-read at point of writing box that touch credential. `gh auth` was proposed for machine whose table list it under *Never holds*, by session that had read that table same morning.
+- **RD-07** **Before handing operator command, ask what it would take to run it here.** *Cannot verify here* is almost always *did not look*. Node 20 and Chrome installed in two command after operator insisted; three defect found in ten minute after, none diagnosable from CI failure text.
 
 ## Contract-first
 
@@ -96,11 +98,14 @@ Eight lane run parallel. Every rule here come from that and from nothing else.
 - **FO-08** **Branch green alone say nothing about branch merged.** Eight branch is 28 pair.
 - **FO-09** **Integration is named lane with own task, never residue.** Only clean fast-forward with green gate stay in lead's hand.
 - **FO-10** **Wave get one Done-when that is end-to-end and performed by person.** Read all lane Done-when and ask which name product. All naming file mean nobody test composition.
+- **FO-10a** **Wave not closeable until operator has looked at artefact.** Eleven lane merged, CI green, publish path designed and credential requested before anybody opened one page. Deliverable built here and never delivered is `OP-35` failing silently, and it cost a day of unreviewed design.
 - **FO-11** **Worker report is claim. Read tree.** Not summary, not test count, not *gate passed*.
 - **FO-12** **Filename named by two lane task is seam defect, and it is grep.** `tools/lane_overlap.py` over task set before any worktree cut. Non-empty output mean wave not ready. Fix seam, never route lane around it.
 - **FO-13** **Integrator-owned file get threshold of one, never two.** `go.mod`, `go.sum`, `Makefile`, `routes.go`, `build.go`, `content.go`, `markdown.go`. Task naming one already claim file lane do not own. Suppressing them read cuttable on wave that collide four way.
 - **FO-14** **Task text is declared intent. Branch is behaviour.** Lane writing file it never named is invisible to any regex. `lane_overlap.py --branches` before merge, pairwise over `git diff --name-only`. First prevent, second detect, neither substitute.
 - **FO-15** **Every dependency resolved into `go.mod` before any branch cut. No lane run `go get`.** Eight lane adding library is real conflict, never accidental, and `go.sum` land on integrator. Dependency claimed on unmerged branch is not claimed.
+- **FO-16** **Under gate requiring green, unit of work is whatever make gate green.** Splitting free only while every piece independently sufficient. Three lane each fixing part of one failure can none of them merge, and stacking not help because first in any order still red.
+- **FO-17** **Merged tree say nothing about either branch alone.** `CX-22` converse. Gating C1 and C3 together then predicting each PR gave two wrong prediction, opposite direction.
 
 ## Proving
 
@@ -113,6 +118,9 @@ Eight lane run parallel. Every rule here come from that and from nothing else.
 - **PR-07** **Determinism proved by recursive checksum over tree, never by eye.**
 - **PR-08** **Defect invisible to single run need test that run twice.** Package-global state survive build; one build see nothing.
 - **PR-09** **Silence mean broken until something prove otherwise.** Print value to compare, never `ok`.
+- **PR-10** **Gate running only in mode where it cannot fail is not gate.** External link check ran a day with `A8_EXTERNAL_LINKS=0`, green every time, 66 failure waiting. Ask which mode gate ran in, never whether it ran.
+- **PR-11** **Binding is not serving. Check gate scan what it think it scan.** Port 8765 held by unrelated service; `http.server` failed to bind, gate did not notice, axe scanned that application and reported 122 violation against markup this repo do not contain.
+- **PR-12** **Check on check need same standard as check.** Grep for `AKIA` where tool print `AWS access key` report working scan broken. Plant landing after frontmatter delimiter report working guard absent. Name input, read actual output, confirm plant landed where aimed.
 
 ## Reviewer
 
@@ -140,6 +148,7 @@ cutting one.
 - **SH-09** **Command shipped only after running here, or after reading its `--help` on this binary.**
 - **SH-10** **Watched command get no pipe, no redirect, no `tee`.**
 - **SH-11** **Pipeline exit status belong to last command.** Write to file, audit by outcome.
+- **SH-12** **Publish path is target with refusal, never block pasted into terminal.** Bootstrap have no target so one block unavoidable; every block after that is debt with shell prompt.
 
 ## Ask
 

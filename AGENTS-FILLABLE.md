@@ -22,7 +22,8 @@ Routine operations are one command each:
     docs/site-requirements.md       the contract — site
     docs/comments-requirements.md   the contract — comments
     docs/DECISIONS.md               decision record
-    docs/FINDINGS.md                out-of-scope findings
+    docs/FINDINGS.md                defects in the thing being built
+    docs/FRICTION.md                defects in how the work was done
     docs/adr/                       one file per mechanism decision
 
 The seam a lane registers against lives in `internal/site/routes.go` and
