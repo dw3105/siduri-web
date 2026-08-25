@@ -1,0 +1,36 @@
+package site
+
+import "fmt"
+
+templ a1TableOfContents(headings []a1Heading) {
+	if len(headings) > 0 {
+		<nav class="article-toc" aria-label="Table of contents">
+			<p class="article-toc-title">On this page</p>
+			<ol>
+				for _, heading := range headings {
+					<li class={ "toc-level-" + fmt.Sprint(heading.Level) }><a href={ "#" + heading.ID }>{ heading.Text }</a></li>
+				}
+			</ol>
+		</nav>
+	}
+}
+
+templ a1SeriesNavigation(navigation a1SeriesNav) {
+	if navigation.Series != "" {
+		<nav class="series-navigation" aria-label="Series navigation">
+			<p class="series-name">Series: { navigation.Series }</p>
+			<p class="series-position">{ navigation.Position }</p>
+			<div class="series-links">
+				if navigation.Previous != nil {
+					<a rel="prev" href={ "/journal/" + navigation.Previous.Slug + "/" }>Previous: { navigation.PreviousText }</a>
+				}
+				if navigation.Next != nil {
+					<a rel="next" href={ "/journal/" + navigation.Next.Slug + "/" }>Next: { navigation.NextText }</a>
+				}
+			</div>
+		</nav>
+	}
+}
+
+templ a1ContextualSlot() {
+}
