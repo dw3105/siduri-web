@@ -208,7 +208,7 @@ func articleContent(post Post, body string, preview bool, sections ArticleSectio
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<footer class=\"article-footer\"><p>Written by Siduri.</p><p>Newsletter capture is intentionally not part of this first build.</p><p>When there is an offer to back it, the next step will be <a href=\"/services/\">services</a>.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 16, "<footer class=\"article-footer\"><p>Written by Siduri.</p><p>Newsletter capture is intentionally not part of this first build.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

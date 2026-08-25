@@ -26,7 +26,7 @@ templ commentsSection(post Post, thread commentThread) {
 }
 
 templ commentCard(comment commentView) {
-	<article class="comment" id={ "comment-" + comment.ID } itemscope itemtype="https://schema.org/Comment">
+	<div class="comment" id={ "comment-" + comment.ID } data-comment-id={ comment.ID } itemscope itemtype="https://schema.org/Comment">
 		<header class="comment-header">
 			<p class="comment-meta">
 				if comment.AuthorWebsite != "" {
@@ -50,7 +50,7 @@ templ commentCard(comment commentView) {
 				}
 			</div>
 		}
-	</article>
+	</div>
 }
 
 func commentHeadingID(post Post) string {
