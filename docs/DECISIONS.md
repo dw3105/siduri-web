@@ -24,8 +24,14 @@ they did not.
 | 12 | 2026-08-25 | A6 merged at the second attempt after the legal link-graph fix | verified by walking links, not grepping | pending | pending |
 | 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
 | 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
+| 15 | 2026-08-25 | Gateslot's repository link is dropped until the repo is public | offered three options with FR-13 and the P1 gate against each | not consulted | **decided**: drop the link until it is public |
 
 ## Open
+
+- **`FR-13` is a deliberate partial** while Gateslot's repository stays private,
+  and `site-requirements.md:499` — *Gateslot is usable by someone who is not the
+  operator* — cannot be met until it is public. Recorded so a green tool page is
+  not read as a met requirement.
 
 - **Post 1 is a placeholder by the operator's own word** and is to be replaced
   with a real post. It is published, so replacing it is an edit to live content
