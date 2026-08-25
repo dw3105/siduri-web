@@ -3,7 +3,7 @@ name: siduri-code
 description: Working rule for the Siduri site build, repo siduri-web: two specs are the contract, eight Codex lanes run parallel and read no skill, the merged tree is the only verdict. Read before acting.
 ---
 
-**v1.1 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
+**v1.2 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
 content earned in one day: repo genesis, one spine lane, one seam lane, nine
 findings, four of them against this session's own claims. File caveman full.
 Output stay **lite**. Change log live in `ledger.md`, never here.
@@ -36,7 +36,7 @@ work move; `AGENTS.md` govern what worker may touch. Both read.
 `skill check` → this line, nothing else:
 
 ```
-siduri-code v1.1: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | fifteen clause here go red nowhere, and section naming them is the only thing telling reader which sixty-six are which
+siduri-code v1.2: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | fifteen clause here go red nowhere and forty-six are unaudited, and section naming them is only thing telling reader which is which
 ```
 
 `skill check <ID>` → that rule line, verbatim. `skill check refs` → every filename
@@ -97,7 +97,10 @@ Eight lane run parallel. Every rule here come from that and from nothing else.
 - **FO-09** **Integration is named lane with own task, never residue.** Only clean fast-forward with green gate stay in lead's hand.
 - **FO-10** **Wave get one Done-when that is end-to-end and performed by person.** Read all lane Done-when and ask which name product. All naming file mean nobody test composition.
 - **FO-11** **Worker report is claim. Read tree.** Not summary, not test count, not *gate passed*.
-- **FO-12** **Filename named by two lane task is seam defect, and it is grep.** `tools/lane_overlap.py` run over task set before any worktree cut; non-empty output mean wave not ready. Fix seam, never route lane around it.
+- **FO-12** **Filename named by two lane task is seam defect, and it is grep.** `tools/lane_overlap.py` over task set before any worktree cut. Non-empty output mean wave not ready. Fix seam, never route lane around it.
+- **FO-13** **Integrator-owned file get threshold of one, never two.** `go.mod`, `go.sum`, `Makefile`, `routes.go`, `build.go`, `content.go`, `markdown.go`. Task naming one already claim file lane do not own. Suppressing them read cuttable on wave that collide four way.
+- **FO-14** **Task text is declared intent. Branch is behaviour.** Lane writing file it never named is invisible to any regex. `lane_overlap.py --branches` before merge, pairwise over `git diff --name-only`. First prevent, second detect, neither substitute.
+- **FO-15** **Every dependency resolved into `go.mod` before any branch cut. No lane run `go get`.** Eight lane adding library is real conflict, never accidental, and `go.sum` land on integrator. Dependency claimed on unmerged branch is not claimed.
 
 ## Proving
 
@@ -207,17 +210,26 @@ close-out wave <N>
 
 ## What this enforces
 
-**Fifty-one of sixty-six clause bind an artefact. Fifteen bind nothing.** Nothing
-in the formatting tell them apart, and `skill check` reciting sixty-six read as
-coverage. This section exist so reader can tell which is which - and reader who
+**Seventy-two clause here, counted by `grep -oE '\*\*[A-Z]{2}-[0-9]+\*\*'
+SKILL.md | sort -u | wc -l`. Eleven bind named artefact. Fifteen bind nothing.
+Remaining forty-six are unaudited, and saying so is the point of this section.**
+
+Earlier version claimed *fifty-one of sixty-six bind an artefact*. Both number
+wrong: count came from grep matching only list-item form and missing `RD-01` and
+`CT-01`, which are written as bare lead-in exactly as parent skill write them,
+and the split was arithmetic rather than audit. `ST-05` say number carry command
+that produced it; that clause was broken by the section enforcing it.
+
+Nothing in formatting tell bound from unbound, and `skill check` reciting
+seventy-two read as coverage. This section exist so reader can tell which is which - and reader who
 most need it is this session, in three week, under load.
 
-**Bound, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
+**Eleven bound, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
 ranges* in pre-flight. `PR-01` by *baseline: every check proved red before counted
 green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
 row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
 lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
-`CT-04` by path check in `make check`. `FO-12` by `tools/lane_overlap.py`.
+`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py`, ten selftest case.
 
 **Unbound, named rather than left to look enforced:**
 
