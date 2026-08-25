@@ -20,10 +20,13 @@ func TestA6ToolLoaderAndPage(t *testing.T) {
 		t.Fatalf("unexpected seeded tool %#v", tools[0])
 	}
 	output := renderComponent(t, toolPage(tools[0], nil, PageData{}, nil))
-	for _, want := range []string{"Gateslot", "Status: active", "Why it exists", "gateslot check", "Repository"} {
+	for _, want := range []string{"Gateslot", "Status: active", "Why it exists", "gateslot check"} {
 		if !bytes.Contains(output, []byte(want)) {
 			t.Fatalf("tool page missing %q", want)
 		}
+	}
+	if bytes.Contains(output, []byte("Repository")) {
+		t.Fatal("tool without a repository renders a repository label")
 	}
 }
 
