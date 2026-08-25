@@ -35,9 +35,9 @@ templ commentCard(comment commentView) {
 					<span itemprop="author">{ comment.AuthorName }</span>
 				}
 				if comment.AuthorRole == "site" {
-					<span> · Siduri reply</span>
+					<span>· Siduri reply</span>
 				}
-				<span> · <time itemprop="datePublished" datetime={ comment.CreatedAt }>{ comment.CreatedAt }</time></span>
+				<span>· <time itemprop="datePublished" datetime={ comment.CreatedAt }>{ comment.CreatedAt }</time></span>
 			</p>
 		</header>
 		<div class="comment-body" itemprop="text">
