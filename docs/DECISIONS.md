@@ -22,8 +22,13 @@ they did not.
 | 10 | 2026-08-25 | Insert W2 — body-extension seam — and re-run A1, A2, A7 against it | proposed: three lanes blocked, five unaffected and still running | pending | pending |
 | 11 | 2026-08-25 | A2 merged at `5c55ab9`; wiring deferred to after W2 | verified by planting, not by report | pending | pending |
 | 12 | 2026-08-25 | A6 merged at the second attempt after the legal link-graph fix | verified by walking links, not grepping | pending | pending |
+| 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
 
 ## Open
+
+- **Post 1 is a placeholder by the operator's own word** and is to be replaced
+  with a real post. It is published, so replacing it is an edit to live content
+  rather than a draft change.
 
 - **Wire A2's related posts into the article page** once W2's section seam lands
   (finding 0027). One registration in an A2-owned file; no rebuild.

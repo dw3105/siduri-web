@@ -7,7 +7,7 @@ plain_summary: I am documenting what it takes to ship useful software with an ag
 tags:
   - method
   - build-log
-draft: true
+draft: false
 ---
 
 I am building Siduri to document the work behind agent-assisted software, not to pretend the agent is the work.
