@@ -5,8 +5,7 @@ date: 2026-08-25
 summary: A small approval gate for changes that become public.
 language: Go
 status: active
-repository: https://github.com/dw3105/gateslot
-install: git clone https://github.com/dw3105/gateslot && go install ./cmd/gateslot
+install: from a local checkout, run go install ./cmd/gateslot
 example: |
   gateslot check --path ./draft.md --require human-approval
 ---

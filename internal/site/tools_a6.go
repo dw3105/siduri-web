@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"net/url"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -338,7 +339,7 @@ func validateTool(tool Tool, path string) error {
 	}{
 		{"title", tool.Title}, {"slug", tool.Slug}, {"date", tool.Date},
 		{"summary", tool.Summary}, {"language", tool.Language}, {"status", tool.Status},
-		{"repository", tool.Repository}, {"install", tool.Install},
+		{"install", tool.Install},
 	} {
 		if strings.TrimSpace(field.value) == "" {
 			return fmt.Errorf("%s: missing required tool field %q", path, field.name)
@@ -362,6 +363,15 @@ func validateTool(tool Tool, path string) error {
 	}
 	if !validStatus {
 		return fmt.Errorf("%s: unknown tool status %q", path, tool.Status)
+	}
+	if repository := strings.TrimSpace(tool.Repository); repository != "" {
+		parsed, err := url.Parse(repository)
+		if err != nil || !parsed.IsAbs() || !strings.EqualFold(parsed.Scheme, "https") || parsed.Hostname() == "" {
+			return fmt.Errorf(
+				"%s: tool %q (title %q) repository %q must be an absolute https:// URL",
+				path, tool.Slug, tool.Title, tool.Repository,
+			)
+		}
 	}
 	return nil
 }
