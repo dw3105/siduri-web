@@ -1,0 +1,26 @@
+package site
+
+templ tagPage(tag string, posts []Post, data PageData, head []templ.Component) {
+	@Document("Tag: "+tag+" — Siduri", data.Preview, head, tagContent(tag, posts))
+}
+
+templ tagContent(tag string, posts []Post) {
+	<main>
+		<h1>Tag: { tag }</h1>
+		if len(posts) == 0 {
+			<p>No posts carry this tag yet.</p>
+		} else {
+			<ol class="post-list">
+				for _, post := range posts {
+					<li>
+						<article>
+							<h2><a href={ a2PostURL(post.Slug) }>{ post.Title }</a></h2>
+							<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time></p>
+							<p>{ post.PlainSummary }</p>
+						</article>
+					</li>
+				}
+			</ol>
+		}
+	</main>
+}
