@@ -23,6 +23,13 @@ jobs:
           node-version: '20'
       - name: Install templ
         run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
+      # axe drives a real browser. The runner ships Chrome but no matching
+      # chromedriver, and axe exits 2 rather than skipping when it cannot find
+      # one. This gate has never executed anywhere: it skips locally on Node 18
+      # by a named concession, and until the link fix landed CI failed before
+      # reaching it.
+      - name: Install a chromedriver matching the runner's Chrome
+        run: npx --yes browser-driver-manager install chrome
       - name: Run build, golden, vet, links, HTML, axe, budgets and secret gates
         env:
           A8_EXTERNAL_LINKS: '1'
