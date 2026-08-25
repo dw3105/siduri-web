@@ -49,22 +49,28 @@ a8-accessibility:
 	@major=$$(node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0); \
 	if [ "$$major" -lt 20 ]; then \
 	  echo "a8-accessibility: SKIPPED on node $$major -- axe-core needs >= 20." >&2; \
-	  echo "a8-accessibility: this stops measuring WCAG 2.2 AA entirely (NFR-2). CI pins 20 and runs it." >&2; \
+	  echo "a8-accessibility: this stops measuring WCAG 2.2 AA entirely (NFR-2)." >&2; \
 	  exit 0; \
 	fi; \
 	set -eu; \
-	(port=$$($(A8_PYTHON) -c 'import os; print(os.environ.get("A8_AXE_PORT", "8765"))'); \
-	cd dist; $(A8_PYTHON) -m http.server "$$port" >/tmp/siduri-a8-http.log 2>&1) & \
+	port=$$($(A8_PYTHON) tools/free_port.py); \
+	echo "a8-accessibility: serving dist/ on $$port"; \
+	( cd dist && $(A8_PYTHON) -m http.server "$$port" --bind 127.0.0.1 >/tmp/siduri-a8-http.log 2>&1 ) & \
 	server=$$!; \
 	trap 'kill "$$server" 2>/dev/null || true' EXIT HUP INT TERM; \
-	port="$(A8_AXE_PORT)"; \
-	for attempt in 1 2 3 4 5 6 7 8 9 10; do \
-		if curl -fsS "http://127.0.0.1:$$port/index.html" >/dev/null; then break; fi; \
-		sleep 1; \
-	done; \
-	curl -fsS "http://127.0.0.1:$$port/index.html" >/dev/null; \
-	urls="$$(find dist -type f -name '*.html' -print | sed 's#^dist#http://127.0.0.1:'"$$port"'#')"; \
-	npx --yes @axe-core/cli@4.10.2 --exit $$urls
+	$(A8_PYTHON) tools/wait_serving.py "$$port" || { \
+	  echo "a8-accessibility: dist/ is not being served on $$port -- refusing to scan" >&2; \
+	  cat /tmp/siduri-a8-http.log >&2; exit 1; }; \
+	pages=$$(cd dist && find . -name '*.html' | sed 's|^\.|http://127.0.0.1:'"$$port"'|'); \
+	drv=""; \
+	if [ -f "$$HOME/.browser-driver-manager/.env" ]; then \
+	  drv=$$(sed -n 's/^CHROMEDRIVER_TEST_PATH="\(.*\)"$$/\1/p' "$$HOME/.browser-driver-manager/.env"); \
+	fi; \
+	if [ -n "$$drv" ] && [ -x "$$drv" ]; then \
+	  npx --yes @axe-core/cli@4 --chromedriver-path "$$drv" --exit $$pages; \
+	else \
+	  npx --yes @axe-core/cli@4 --exit $$pages; \
+	fi
 
 a8-secrets:
 	@$(A8_PYTHON) tools/secretscan.py .
@@ -72,7 +78,7 @@ a8-secrets:
 # The transient Node YAML parser catches malformed workflow YAML in a fresh
 # checkout without adding a YAML package to this repository.
 a8-workflow:
-	@npx --yes -p yaml@2 node -e 'const fs=require("fs"), path=require("path"), yaml=require("yaml"); const files=fs.readdirSync(".github/workflows").filter(f => /\.ya?ml$$/.test(f)); if (!files.length) throw Error("no workflow files"); for (const file of files) yaml.parse(fs.readFileSync(path.join(".github/workflows", file), "utf8")); console.log("workflow YAML: valid")'
+	@$(A8_PYTHON) tools/workflow_check.py
 
 install-hooks:
 	@$(A8_PYTHON) tools/secretscan.py --install-hook

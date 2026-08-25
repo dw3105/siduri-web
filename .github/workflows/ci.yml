@@ -29,7 +29,9 @@ jobs:
       # by a named concession, and until the link fix landed CI failed before
       # reaching it.
       - name: Install a chromedriver matching the runner's Chrome
-        run: npx --yes browser-driver-manager install chrome
+        # It exits 1 on success and writes ~/.browser-driver-manager/.env,
+        # which mk/a8.mk reads for the chromedriver path.
+        run: npx --yes browser-driver-manager install chrome || true
       - name: Run build, golden, vet, links, HTML, axe, budgets and secret gates
         env:
           A8_EXTERNAL_LINKS: '1'
