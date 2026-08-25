@@ -1,0 +1,13 @@
+package site
+
+templ aboutPage(data PageData, head []templ.Component) {
+	@Document("About — Siduri", data.Preview, head, aboutContent())
+}
+
+templ aboutContent() {
+	<main>
+		<h1>About</h1>
+		<p class="lede">I build small software systems with agents and keep a person responsible for what ships.</p>
+		<p>This site is the working example. The build is static, the source is plain Markdown, and the checks are part of the artifact.</p>
+	</main>
+}

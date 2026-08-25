@@ -5,9 +5,13 @@ package site
 func init() {
 	Register(Route{
 		Name:   "about",
-		Output: "about/index.html",
+		Output: RouteOutput{Path: "about/index.html"},
 		Render: func(data PageData) interfaceComponent {
-			return AboutPage(data.Preview)
+			return aboutPage(data, renderHeadFragments(data))
 		},
 	})
+}
+
+func AboutPage(preview bool) interfaceComponent {
+	return aboutPage(PageData{Preview: preview}, nil)
 }

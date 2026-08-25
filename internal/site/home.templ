@@ -1,0 +1,21 @@
+package site
+
+templ homePage(data PageData, head []templ.Component) {
+	@Document("Siduri — human in the loop", data.Preview, head, homeContent(data.Posts))
+}
+
+templ homeContent(posts []Post) {
+	<main>
+		<p class="post-meta">A journal about shipping software with agents.</p>
+		<h1>Human in the loop.</h1>
+		<p class="lede">Machines do the work. A person stays at the gate.</p>
+		<p>Siduri is a record of tools built, failures understood, and useful software shipped with an agent as a collaborator.</p>
+		<h2>Latest writing</h2>
+		if len(posts) == 0 {
+			<p>No published posts yet.</p>
+		}
+		for _, post := range posts {
+			@postCard(post)
+		}
+	</main>
+}

@@ -1,0 +1,33 @@
+package site
+
+import "strings"
+
+templ articlePage(post Post, body string, data PageData, head []templ.Component) {
+	@Document(post.Title+" — Siduri", data.Preview, head, articleContent(post, body, data.Preview))
+}
+
+templ articleContent(post Post, body string, preview bool) {
+	<main>
+		<article>
+			<header class="article-header">
+				<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+				if post.Updated != "" && post.Updated != post.Date {
+					<p class="post-meta">Updated <time datetime={ post.Updated }>{ post.Updated }</time></p>
+				}
+				<h1>{ post.Title }</h1>
+				<p class="lede">{ post.PlainSummary }</p>
+				if preview {
+					<p class="draft-notice"><strong>Draft preview.</strong> This page is not part of the publish build.</p>
+				}
+			</header>
+			<div class="prose">
+				@templ.Raw(body)
+			</div>
+			<footer class="article-footer">
+				<p>Written by Siduri.</p>
+				<p>Newsletter capture is intentionally not part of this first build.</p>
+				<p>When there is an offer to back it, the next step will be <a href="/services/">services</a>.</p>
+			</footer>
+		</article>
+	</main>
+}
