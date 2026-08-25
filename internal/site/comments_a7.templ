@@ -1,0 +1,58 @@
+package site
+
+import "strconv"
+
+templ commentsStylesheet() {
+	<link rel="stylesheet" href="/comments_a7.css"/>
+}
+
+templ commentsSection(post Post, thread commentThread) {
+	<section class="comment-thread" aria-labelledby={ commentHeadingID(post) } data-comment-count={ strconv.Itoa(thread.Count) }>
+		<meta itemprop="commentCount" content={ strconv.Itoa(thread.Count) }/>
+		<h2 id={ commentHeadingID(post) }>Comments</h2>
+		for _, comment := range thread.Comments {
+			@commentCard(comment)
+		}
+		for _, refusal := range thread.Refusals {
+			<p class="comment-refused">{ refusal }</p>
+		}
+		if thread.Closed {
+			<p class="comment-closed">Comments are closed on this post because it is more than 12 months old.</p>
+		}
+		if thread.Structured != "" {
+			@templ.Raw(thread.Structured)
+		}
+	</section>
+}
+
+templ commentCard(comment commentView) {
+	<article class="comment" id={ "comment-" + comment.ID } itemscope itemtype="https://schema.org/Comment">
+		<header class="comment-header">
+			<p class="comment-meta">
+				if comment.AuthorWebsite != "" {
+					<a itemprop="author" href={ comment.AuthorWebsite } rel="nofollow ugc noopener">{ comment.AuthorName }</a>
+				} else {
+					<span itemprop="author">{ comment.AuthorName }</span>
+				}
+				if comment.AuthorRole == "site" {
+					<span> · Siduri reply</span>
+				}
+				<span> · <time itemprop="datePublished" datetime={ comment.CreatedAt }>{ comment.CreatedAt }</time></span>
+			</p>
+		</header>
+		<div class="comment-body" itemprop="text">
+			@templ.Raw(comment.BodyHTML)
+		</div>
+		if len(comment.Replies) > 0 {
+			<div class="comment-replies">
+				for _, reply := range comment.Replies {
+					@commentCard(reply)
+				}
+			</div>
+		}
+	</article>
+}
+
+func commentHeadingID(post Post) string {
+	return "comments-" + post.Slug
+}

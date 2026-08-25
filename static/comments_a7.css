@@ -1,0 +1,56 @@
+.comment-thread {
+	border-top: 1px solid var(--rule);
+	margin-top: 3rem;
+	padding-top: 2rem;
+}
+
+.comment-thread > h2 {
+	margin-top: 0;
+}
+
+.comment {
+	border-top: 1px solid var(--rule);
+	margin-top: 1.5rem;
+	padding-top: 1rem;
+}
+
+.comment-header {
+	margin: 0;
+	padding: 0;
+}
+
+.comment-meta {
+	color: var(--muted);
+	font-size: .9rem;
+	margin: 0;
+}
+
+.comment-body {
+	margin-top: .6rem;
+}
+
+.comment-body p {
+	margin: .8rem 0;
+}
+
+.comment-body pre {
+	background: color-mix(in srgb, var(--ink) 10%, var(--paper));
+	overflow-x: auto;
+	padding: .75rem;
+}
+
+.comment-replies {
+	border-left: 2px solid var(--rule);
+	margin: 1rem 0 0 1rem;
+	padding-left: 1rem;
+}
+
+.comment-replies .comment {
+	margin-top: 1rem;
+}
+
+.comment-closed,
+.comment-refused {
+	color: var(--muted);
+	font-size: .95rem;
+}
