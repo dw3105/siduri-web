@@ -91,6 +91,24 @@ def normalise(token: str) -> str:
     return posixpath.normpath(token)
 
 
+#: A task states what it owns and, deliberately, what it must not touch. Both
+#: are filenames in the same file. Scanning the whole text reports every
+#: must-not-touch line as a claim -- eight lanes "claiming" `routes.go` when all
+#: eight were told to keep away from it. Ownership is a section, so read it.
+OWNS_HEADING = re.compile(r"^#+\s*Files you own\s*$", re.M)
+NEXT_HEADING = re.compile(r"^#+\s", re.M)
+
+
+def ownership_block(text: str) -> str:
+    """The `Files you own` section, or the whole text when there is no such section."""
+    match = OWNS_HEADING.search(text)
+    if not match:
+        return text
+    rest = text[match.end():]
+    following = NEXT_HEADING.search(rest)
+    return rest[: following.start()] if following else rest
+
+
 def paths_in(text: str) -> set[str]:
     found = set()
     for match in TOKEN.finditer(text):
@@ -104,7 +122,7 @@ def collisions(tasks: dict[str, str]) -> tuple[dict[str, list[str]], dict[str, l
     """Return (lane-owned named twice, integrator-owned named at all)."""
     owners: dict[str, list[str]] = {}
     for name, text in sorted(tasks.items()):
-        for path in paths_in(text):
+        for path in paths_in(ownership_block(text)):
             if path in READ_ONLY_BY_GUARD:
                 continue
             owners.setdefault(path, []).append(name)
@@ -188,11 +206,28 @@ def selftest() -> int:
     # slash, not underscore-prefixed, so `is_path` returned False and two tasks
     # claiming it reported cuttable. Asserting the invariant makes the omission
     # impossible rather than caught.
+    # A task states what it owns and, deliberately, what it must not touch.
+    # Scanning whole text reported all eight lanes "claiming" routes.go when all
+    # eight had been told to keep away from it -- caught before worktrees were cut.
+    forbidden = """### Files you own
+
+`internal/site/a1.go`
+
+### Files you must not touch
+
+`internal/site/routes.go`, `go.mod`
+"""
+    check({"A1": forbidden, "A2": forbidden.replace("a1.go", "a2.go")}, {}, {}, "must-not-touch is not a claim")
+
+    # A genuine claim inside the ownership block is still caught.
+    claims = forbidden.replace("`internal/site/a1.go`", "`internal/site/a1.go`\n`go.mod`")
+    check({"A1": claims}, {}, {"go.mod": ["A1"]}, "claim inside ownership block")
+
     unreachable = [p for p in sorted(INTEGRATOR_OWNED) if not is_path(p)]
     assert not unreachable, f"integrator-owned but unreachable by is_path: {unreachable}"
 
     branch_cases = _selftest_branches()
-    print(f"lane_overlap selftest: 10 intent cases, 1 invariant, {branch_cases} branch cases pass")
+    print(f"lane_overlap selftest: 12 intent cases, 1 invariant, {branch_cases} branch cases pass")
     return 0
 
 
