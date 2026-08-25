@@ -10,4 +10,5 @@ Ask
 Block pre-flight
 Pre-flight
 Close-out
+What this enforces
 Step checklist

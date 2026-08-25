@@ -3,14 +3,15 @@ name: siduri-code
 description: Working rule for the Siduri site build, repo siduri-web: two specs are the contract, eight Codex lanes run parallel and read no skill, the merged tree is the only verdict. Read before acting.
 ---
 
-**v1.0 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
+**v1.1 - 25 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
 content earned in one day: repo genesis, one spine lane, one seam lane, nine
 findings, four of them against this session's own claims. File caveman full.
 Output stay **lite**. Change log live in `ledger.md`, never here.
 
 **Canonical copy is `skills/siduri-code/` in `siduri-web`.**
-`~/.claude/skills/siduri-code` is deployed copy. Edit here, run `make
-skill-install`.
+`~/.claude/skills/siduri-code` is deployed copy. **No install target and no drift
+check exist yet** - copy is by hand, and `deployed == canonical` is true today and
+held by nothing. `hitl` bind it with `make skill-check`. Finding 0013.
 
 **This file bind Claude session only.** Codex worker read task file. Clause meant
 to reach worker go in task text or in guard, never here. `FO-01`.
@@ -35,7 +36,7 @@ work move; `AGENTS.md` govern what worker may touch. Both read.
 `skill check` → this line, nothing else:
 
 ```
-siduri-code v1.0: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine
+siduri-code v1.1: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | fifteen clause here go red nowhere, and section naming them is the only thing telling reader which sixty-six are which
 ```
 
 `skill check <ID>` → that rule line, verbatim. `skill check refs` → every filename
@@ -45,10 +46,11 @@ in reference table. Cannot recall → `skill check: FAILED, reattach skill`.
 
 - **ST-01** **Two registers, and file decide which.** Turn, task text, ADR, commit body, finding row - caveman **lite**. This file and `references/` - caveman **full**. Off only "stop caveman" / "normal mode".
 - **ST-02** Caveman lite is full sentence, article, technical term, code, command, error string, filename all survive.
-- **ST-03** Scan before send. Cut opener, filler, hedge, closer, tool narration.
+- **ST-03** Scan before send. Cut opener, filler (just, really, basically, actually, simply), hedge, closer, tool narration. **One filler = scan not run.**
 - **ST-04** **Every reference carry its content same sentence, every turn.** `FO-04` is nothing; *FO-04, registration happen when data exist* is readable.
 - **ST-05** **Fact leaving session carry where it was read from.** Ref for file, command for query, unit for number.
 - **ST-06** **This file stay under 32768 byte.** Same cap that eat `AGENTS.md`. Skill over cap is skill that truncate wherever it is pasted, and `gateslot-code` sit at 32394 with 374 spare.
+- **ST-13** **Rule phrased as advice fire while auditing, never while designing.** Write what diff can be checked against, never what to be careful about. Read `## What this enforces` before adding clause: fifteen here already fail this.
 - **ST-07** **`SKILL.md` is index. Rule is one line, one claim, under 300 char.** Shape live in reference.
 
 ## Read first
@@ -95,7 +97,7 @@ Eight lane run parallel. Every rule here come from that and from nothing else.
 - **FO-09** **Integration is named lane with own task, never residue.** Only clean fast-forward with green gate stay in lead's hand.
 - **FO-10** **Wave get one Done-when that is end-to-end and performed by person.** Read all lane Done-when and ask which name product. All naming file mean nobody test composition.
 - **FO-11** **Worker report is claim. Read tree.** Not summary, not test count, not *gate passed*.
-- **FO-12** **Shared line found while writing lane task is seam defect, not task problem.** Fix seam before wave, never route eight lane around it.
+- **FO-12** **Filename named by two lane task is seam defect, and it is grep.** `tools/lane_overlap.py` run over task set before any worktree cut; non-empty output mean wave not ready. Fix seam, never route lane around it.
 
 ## Proving
 
@@ -202,6 +204,42 @@ close-out wave <N>
 - **CL-02** **Finding outside scope go in `docs/FINDINGS.md`, in closing commit.** Row carry where found, what break, what it look like when it break.
 - **CL-03** **Claim later action erase carry its date and that action.**
 - **CL-04** **Turn end `Your move:` / `Mine:`. Box go last.**
+
+## What this enforces
+
+**Fifty-one of sixty-six clause bind an artefact. Fifteen bind nothing.** Nothing
+in the formatting tell them apart, and `skill check` reciting sixty-six read as
+coverage. This section exist so reader can tell which is which - and reader who
+most need it is this session, in three week, under load.
+
+**Bound, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
+ranges* in pre-flight. `PR-01` by *baseline: every check proved red before counted
+green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
+row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
+lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
+`CT-04` by path check in `make check`. `FO-12` by `tools/lane_overlap.py`.
+
+**Unbound, named rather than left to look enforced:**
+
+| Clause | Why nothing catch it | What would |
+|---|---|---|
+| `ST-03` | Turn text unread by any tool | Filler list is enumerable - grep it |
+| `ST-04`, `ST-05` | Bind turn text | Nothing cheap |
+| `ST-06` | `Makefile:24` match `AGENTS*.md` and `.agents.md`, never `SKILL.md` | One `-o -name 'SKILL.md'` |
+| `PR-02` | *Prefer* is tell. No input turn it red | Heuristic, keep as one |
+| `PR-09` | First half is stance | Second half - *print value, never `ok`* - is grep |
+| `SH-02` | `.git/hooks` empty | Pre-commit hook, four line. Cheapest unconverted rule here |
+| `SH-03` | Nothing read worktree path | `git worktree list` against repo path, two line |
+| `SH-07` | Nothing read commit shape | `git log` arithmetic |
+| `AS-01`..`AS-08` | Every one is turn-shape obligation | Nothing. Family is prediction, never record |
+
+**Three of nine W1 item ship unguarded** - byte emitter, `<head>` fragment,
+`AGENTS.md` assembly. Hand-planted at close by this session. Hand-planting is not
+gate, and saying so here is what stop green close reading as covered.
+
+**`ST-13` and this section arrive together, deliberately.** File carrying *rule
+phrased as advice fire while auditing* plus fifteen advice clause break own rule
+on same page. `ST-13` alone read as satisfied and make file less honest.
 
 ## Step checklist
 

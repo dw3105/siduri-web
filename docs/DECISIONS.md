@@ -17,6 +17,7 @@ they did not.
 | 5 | 2026-08-25 | Spec filenames | renamed to `REQUIREMENTS-*.md` | **refuted it** — four in-document refs dangled, incl. front matter and the D-5 consequence | renamed back; zero contract bytes changed, no amendment needed |
 | 6 | 2026-08-25 | Insert lane W1 — widen the seam — before wave A | proposed: eight lanes cannot run against finding 0006 | pending | pending |
 | 7 | 2026-08-25 | `siduri-code` skill, canonical in `skills/`, deployed to `~/.claude/skills/` | written, v1.0, 66 clauses, every one earned today | pending | pending |
+| 8 | 2026-08-25 | `siduri-code` v1.1 — add `## What this enforces`, `ST-13`, restore `ST-03`'s tell, convert `FO-12` to a script | v1.0 shipped 66 clauses with nothing distinguishing the guarded from the unguarded | **refuted v1.0's honesty** — named the 15 that go red nowhere, and refused `ST-13` alone as making the file less honest | pending |
 
 ## Open
 
