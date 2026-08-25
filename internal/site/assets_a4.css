@@ -1,0 +1,16 @@
+/* A4's critical path is embedded into every document head. The complete
+   stylesheet remains a separate asset for the rest of the page. */
+:root { color-scheme: light dark; font-family: system-ui, sans-serif; line-height: 1.6; }
+* { box-sizing: border-box; }
+body { background: #f6f3ec; color: #1d1d1b; margin: 0; }
+a { color: #245c4a; }
+header, main, footer { margin: 0 auto; max-width: 68ch; padding: 1.25rem; }
+header { align-items: baseline; display: flex; gap: 2rem; justify-content: space-between; }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+nav a { text-decoration: none; }
+main { padding-bottom: 4rem; padding-top: 3rem; }
+h1, h2, h3 { line-height: 1.2; }
+@media (prefers-color-scheme: dark) {
+  body { background: #1d1d1b; color: #ece8df; }
+  a { color: #8fd1b0; }
+}
