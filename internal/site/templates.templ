@@ -1,0 +1,142 @@
+package site
+
+import "strings"
+
+templ Document(title string, preview bool, content templ.Component) {
+	<!DOCTYPE html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ title }</title>
+			if preview {
+				<meta name="robots" content="noindex"/>
+			}
+			<link rel="stylesheet" href="/site.css"/>
+		</head>
+		<body>
+			<header>
+				<a href="/" aria-label="Siduri home"><strong>Siduri</strong></a>
+				<nav aria-label="Primary">
+					<a href="/journal/">Journal</a>
+					<a href="/tools/">Tools</a>
+					<a href="/about/">About</a>
+					<a href="/contact/">Contact</a>
+				</nav>
+			</header>
+			@content
+			<footer>
+				<a href="/about/">About</a> · <a href="/contact/">Contact</a>
+			</footer>
+		</body>
+	</html>
+}
+
+templ HomePage(posts []Post, preview bool) {
+	@Document("Siduri — human in the loop", preview, HomeContent(posts))
+}
+
+templ HomeContent(posts []Post) {
+	<main>
+		<p class="post-meta">A journal about shipping software with agents.</p>
+		<h1>Human in the loop.</h1>
+		<p class="lede">Machines do the work. A person stays at the gate.</p>
+		<p>Siduri is a record of tools built, failures understood, and useful software shipped with an agent as a collaborator.</p>
+		<h2>Latest writing</h2>
+		if len(posts) == 0 {
+			<p>No published posts yet.</p>
+		}
+		for _, post := range posts {
+			@PostCard(post)
+		}
+	</main>
+}
+
+templ JournalPage(posts []Post, preview bool) {
+	@Document("Journal — Siduri", preview, JournalContent(posts))
+}
+
+templ JournalContent(posts []Post) {
+	<main>
+		<h1>Journal</h1>
+		<p class="lede">The work, including the parts that did not work.</p>
+		if len(posts) == 0 {
+			<p>No published posts yet.</p>
+		}
+		for _, post := range posts {
+			@PostCard(post)
+		}
+	</main>
+}
+
+templ PostCard(post Post) {
+	<article class="post-card">
+		<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+		<h2><a href={ "/journal/" + post.Slug + "/" }>{ post.Title }</a></h2>
+		<p>{ post.PlainSummary }</p>
+	</article>
+}
+
+templ AboutPage(preview bool) {
+	@Document("About — Siduri", preview, AboutContent())
+}
+
+templ AboutContent() {
+	<main>
+		<h1>About</h1>
+		<p class="lede">I build small software systems with agents and keep a person responsible for what ships.</p>
+		<p>This site is the working example. The build is static, the source is plain Markdown, and the checks are part of the artifact.</p>
+	</main>
+}
+
+templ ContactPage(preview bool) {
+	@Document("Contact — Siduri", preview, ContactContent())
+}
+
+templ ContactContent() {
+	<main>
+		<h1>Contact</h1>
+		<p>For now, the simplest route is <a href="mailto:hello@siduri.ai">hello@siduri.ai</a>.</p>
+	</main>
+}
+
+templ ArticlePage(post Post, body string, preview bool) {
+	@Document(post.Title+" — Siduri", preview, ArticleContent(post, body, preview))
+}
+
+templ ArticleContent(post Post, body string, preview bool) {
+	<main>
+		<article>
+			<header class="article-header">
+				<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+				if post.Updated != "" && post.Updated != post.Date {
+					<p class="post-meta">Updated <time datetime={ post.Updated }>{ post.Updated }</time></p>
+				}
+				<h1>{ post.Title }</h1>
+				<p class="lede">{ post.PlainSummary }</p>
+				if preview {
+					<p class="draft-notice"><strong>Draft preview.</strong> This page is not part of the publish build.</p>
+				}
+			</header>
+			<div class="prose">
+				@templ.Raw(body)
+			</div>
+			<footer class="article-footer">
+				<p>Written by Siduri.</p>
+				<p>Newsletter capture is intentionally not part of this first build.</p>
+				<p>When there is an offer to back it, the next step will be <a href="/services/">services</a>.</p>
+			</footer>
+		</article>
+	</main>
+}
+
+templ EmptyTagPage(tag string, preview bool) {
+	@Document("Tag: "+tag+" — Siduri", preview, EmptyTagContent(tag))
+}
+
+templ EmptyTagContent(tag string) {
+	<main>
+		<h1>Tag: { tag }</h1>
+		<p>No posts carry this tag yet.</p>
+	</main>
+}

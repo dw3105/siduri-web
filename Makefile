@@ -1,0 +1,38 @@
+SHELL := /bin/sh
+
+GO_BIN := $(shell go env GOPATH)/bin
+TEMPL := $(GO_BIN)/templ
+DEV_DIR := .dev-dist
+
+.PHONY: dev build check publish comments deploy rollback
+
+dev:
+	@PATH="$(GO_BIN):$$PATH" $(TEMPL) generate
+	@go run ./cmd/siduri dev --output $(DEV_DIR)
+
+build:
+	@PATH="$(GO_BIN):$$PATH" $(TEMPL) generate
+	@go run ./cmd/siduri build --output dist
+
+check: build
+	@test -z "$$(gofmt -l $$(rg --files -g '*.go' -g '!vendor/**'))" || { echo 'check: gofmt found unformatted files' >&2; exit 1; }
+	@go vet ./...
+	@PATH="$(GO_BIN):$$PATH" $(TEMPL) fmt -fail .
+	@go test ./internal/site -run '^TestGolden' -count=1
+	@go test ./...
+	@base="$$(git merge-base HEAD main 2>/dev/null || git rev-list --max-parents=0 HEAD)"; git diff --quiet "$$base" HEAD -- docs/ && git diff --quiet -- docs/ && git diff --cached --quiet -- docs/ || { echo 'check: docs/ is contract-owned and must not change' >&2; exit 1; }
+	@find . -type f \( -name 'AGENTS.md' -o -name 'AGENTS*.md' -o -name '.agents.md' \) -print | while IFS= read -r file; do test "$$(wc -c < "$$file")" -lt 32768 || { echo "check: $$file is at or above 32768 bytes" >&2; exit 1; }; done
+	@if grep -rE '[a-z0-9._%+-]+@[a-z0-9.-]+' content/; then echo 'check: raw email address found under content/' >&2; exit 1; fi
+	@if test -d dist && grep -rE '/services|([€$$][[:space:]]*[0-9])|<form([[:space:]>]|$$)' dist; then echo 'check: pre-P3 sales or form artifact found in dist/' >&2; exit 1; fi
+
+publish:
+	@echo 'publish: Wave P1 fills this target' >&2; exit 1
+
+comments:
+	@echo 'comments: Wave P2 fills this target' >&2; exit 1
+
+deploy:
+	@echo 'deploy: the deployment lane in Wave P0 fills this target' >&2; exit 1
+
+rollback:
+	@echo 'rollback: the deployment lane in Wave P0 fills this target' >&2; exit 1
