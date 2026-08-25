@@ -54,10 +54,15 @@ Routine operations are one command each:
     docs/FINDINGS.md                out-of-scope findings
     docs/adr/                       one file per mechanism decision
 
-The seam a lane registers against lives in `internal/site/routes.go`:
-`Register` for a fixed page, `RegisterContent` for routes computed from loaded
-content, `RegisterHead` for a `<head>` fragment, and `PageOutput` / `ByteOutput`
-for what an expansion produces.
+The seam a lane registers against lives in `internal/site/routes.go` and
+`internal/site/article_sections.go`: `Register` for a fixed page,
+`RegisterContent` for routes computed from loaded content, `RegisterHead` for a
+`<head>` fragment, `RegisterArticleSection` for an additive article component
+(`ArticleSectionBodyAside`, `ArticleSectionAfterBody`, or
+`ArticleSectionFooter`), and `RegisterBodyRenderer` for the one owner allowed
+to replace Markdown-to-HTML rendering. `PageOutput` / `ByteOutput` are what an
+expansion produces. Article section render functions receive the post and
+build's `PageData`; section names are sorted within their slot.
 
 ## Content conventions and voice
 

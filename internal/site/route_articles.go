@@ -10,11 +10,12 @@ func init() {
 				outputs := make([]Output, 0, len(buildData.Posts))
 				for _, post := range buildData.Posts {
 					post := post
-					body := renderMarkdown(post.Body)
+					body := renderArticleBody(post, buildData)
+					sections := articleSectionsFor(post, buildData)
 					outputs = append(outputs, PageOutput(
 						"journal/"+post.Slug+"/index.html",
 						func() interfaceComponent {
-							return articlePage(post, body, buildData, renderHeadFragments(buildData))
+							return articlePage(post, body, buildData, renderHeadFragments(buildData), sections)
 						},
 					))
 				}
@@ -25,5 +26,6 @@ func init() {
 }
 
 func ArticlePage(post Post, body string, preview bool) interfaceComponent {
-	return articlePage(post, body, PageData{Preview: preview}, nil)
+	data := PageData{Preview: preview}
+	return articlePage(post, body, data, nil, articleSectionsFor(post, data))
 }
