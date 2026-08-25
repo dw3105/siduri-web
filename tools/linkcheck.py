@@ -6,9 +6,9 @@
     python3 tools/linkcheck.py --selftest
 
 External checks are intentionally opt-in so a lane can work without a network.
-The CI workflow passes ``--external``.  ``/tools/`` is a known pending route
-until A6 lands; ``/services/`` is treated the same way because the current
-article fixture names the later services surface before its lane exists.
+The CI workflow passes ``--external``.  ``/services/`` is a known pending route
+because the current article fixture names the later services surface before
+its lane exists.
 """
 from __future__ import annotations
 
@@ -21,7 +21,9 @@ import urllib.parse
 import urllib.request
 
 
-KNOWN_PENDING = {"/tools/", "/services/"}
+KNOWN_PENDING = {
+    "/services/": "the current article fixture names the later services surface before its lane exists",
+}
 
 
 class LinkParser(html.parser.HTMLParser):
@@ -117,7 +119,15 @@ def check_dist(dist: pathlib.Path, external: bool, timeout: float = 10.0) -> tup
 
             path = parsed.path or "/"
             if path in KNOWN_PENDING:
-                print(f"linkcheck: known pending route skipped: {path}")
+                reason = KNOWN_PENDING[path]
+                target = internal_target(dist, page, value)
+                if target is not None and target.exists() and target.is_file():
+                    errors.append(
+                        f"{page}: known pending route {path!r} now resolves to {target}; "
+                        f"remove the stale allowlist entry ({reason})"
+                    )
+                else:
+                    print(f"linkcheck: known pending route skipped: {path} ({reason})")
                 continue
             internal_count += 1
             target = internal_target(dist, page, value)
@@ -125,7 +135,7 @@ def check_dist(dist: pathlib.Path, external: bool, timeout: float = 10.0) -> tup
                 errors.append(f"{page}: internal link {value!r} resolves to missing {target}")
 
     mode = "including external HTTP checks" if external else "internal only; external checks skipped (use --external)"
-    print(f"linkcheck: {internal_count} internal links, {external_count} external links, {mode}")
+    print(f"linkcheck: {internal_count} internal links, {external_count} external links, {len(errors)} failures, {mode}")
     return internal_count, external_count, errors
 
 
@@ -133,14 +143,20 @@ def selftest() -> int:
     with tempfile.TemporaryDirectory(prefix="siduri-linkcheck-") as raw:
         dist = pathlib.Path(raw)
         (dist / "present").mkdir()
-        (dist / "present/index.html").write_text('<a href="/present/">present</a><a href="/tools/">pending</a>', encoding="utf-8")
+        present_page = dist / "present/index.html"
+        present_page.write_text('<a href="/present/">present</a><a href="/services/">pending</a>', encoding="utf-8")
         (dist / "index.html").write_text('<a href="/present/">present</a>', encoding="utf-8")
         _, external, errors = check_dist(dist, external=False)
         assert external == 0 and not errors, errors
+        (dist / "services").mkdir()
+        (dist / "services/index.html").write_text("services", encoding="utf-8")
+        _, _, errors = check_dist(dist, external=False)
+        assert any("known pending route '/services/' now resolves" in error for error in errors), errors
+        present_page.write_text('<a href="/present/">present</a>', encoding="utf-8")
         (dist / "index.html").write_text('<a href="/dead/">dead</a>', encoding="utf-8")
         _, _, errors = check_dist(dist, external=False)
         assert any("internal link '/dead/'" in error for error in errors), errors
-    print("linkcheck selftest: internal success, known-pending skip, dead-link failure, and external opt-in pass")
+    print("linkcheck selftest: internal success, expiring allowlist, dead-link failure, and external opt-in pass")
     return 0
 
 
