@@ -25,6 +25,7 @@ they did not.
 | 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
 | 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
 | 15 | 2026-08-25 | Gateslot's repository link is dropped until the repo is public | offered three options with FR-13 and the P1 gate against each | not consulted | **decided**: drop the link until it is public |
+| 16 | 2026-08-27 | **Design feedback arrives as annotations, not screenshots** — `agentation-vanilla` pasted into the console against `make dev`, capture half only, `agentation-mcp` never run. ADR 0006 | proposed after running the tool over all 31 pages: 81 of 849 selectors resolve to a *different* element | **agreed on all five points and the recommendation**; re-derived every number on a second engine and found two the planner had not — the unrooted chain (0061) and the seven-day destructive expiry (0062) | **decided**, in one word: *YES* |
 
 ## Open
 
@@ -51,6 +52,24 @@ they did not.
   collecting personal data, not building the code that would.
 - **ADR 0002**, `AGENTS.md` ordering. Deferred to after wave 0 by his ruling.
 
+- **The annotation channel's selector field is a hint, not an identity.**
+  `**Text:**` and `**Selected text:**` are sound; `**Selector:**` is wrong on 250
+  of 849 elements across our pages (findings 0060, 0061). Two defects, both
+  upstream, both one small change. Reported to the author with the operator's
+  approval on 2026-08-27; if the fix lands, this open item closes and the
+  selector becomes usable as written.
+
+- **Nothing asserts the built route set** (finding 0064). `dist/` is a total map
+  from URL to screen in one direction only — a screen that stops rendering
+  vanishes with the gate green and no diff. Not scheduled; recorded so the
+  walked tree is not read as coverage of what *should* render.
+
+- **`AGENTS.md:90-91` overstates its own guard** (finding 0063). It claims
+  `make check` rejects any change under `docs/`; `Makefile:30` guards the two
+  requirements files. Either the sentence narrows to match the guard or the
+  guard widens to match the sentence. `AGENTS.md` is not the contract, so this
+  is the operator's call and not an amendment.
+
 
 ## Reviewer scope, as of 2026-08-25
 
@@ -60,3 +79,17 @@ binary, worktree and identity mechanics, both scope assumptions.
 Not checked: the operator's "everything before commercialization" sentence
 (never seen it), `REQUIREMENTS-COMMENTS.md` beyond two cited lines, the eight
 lane definitions for `RV-23` disjointness — they do not exist yet.
+
+## Reviewer scope, as of 2026-08-27 — decision 16 only
+
+Checked by running: the tool fetched fresh, size, sha256 and `LICENSE`;
+network-call greps; the mount point and shadow root; storage load and save;
+`getSelector` read whole; selector resolution over all 849 elements of all 31
+pages in jsdom, unpatched and patched; landmark nesting across all 31 pages by
+parser; npm metadata for all three package names.
+
+Not checked: the skill's `references/measured.md`; **the tool's interactive
+path** — both sessions evaluated its selector function and neither has clicked
+its UI or seen a clipboard block emitted, so the export format is read at source
+and nowhere else; Chrome-versus-jsdom divergence beyond the two runs agreeing on
+all five numbers; whether the author takes the issue.
