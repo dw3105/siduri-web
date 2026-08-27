@@ -57,7 +57,7 @@
 .comment-refused {
 	background: color-mix(in srgb, var(--muted) 8%, var(--paper));
 	border: 1px dashed var(--rule);
-	color: var(--ink);
+	color: var(--muted);
 	font-family: ui-monospace, monospace;
 	font-size: .8rem;
 	line-height: 1.4;
