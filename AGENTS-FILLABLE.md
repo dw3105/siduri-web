@@ -47,6 +47,18 @@ the branch, CI runs, and the pull request merges when `check` is green. This
 machine fetches through a read-only deploy key and its push URL is `DISABLED`
 (`docs/adr/0004`).
 
+**The push loop, written out because losing it costs an hour.** The operator's
+laptop already has a git remote named `claude-vm` pointing at this machine. He
+runs, in his own clone:
+
+    git fetch claude-vm <branch>:<branch>
+    git push origin <branch>
+    gh pr create --base main --head <branch> --fill
+
+`claude-vm` is the whole transfer. Do not invent another one — a bundle, `scp`,
+or a file attachment are all wrong answers to a problem the remote already
+solves, and all three were proposed on 27 Aug 2026 before anyone reread this.
+
 ## Content conventions and voice
 
 Posts use the required frontmatter fields `title`, `slug`, `date`, `summary`,
