@@ -1,0 +1,47 @@
+package site
+
+templ chromeDocument(title string, lang string, preview bool, head []templ.Component, content templ.Component) {
+	<!doctype html>
+	<html lang={ lang }>
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ title }</title>
+			if preview {
+				<meta name="robots" content="noindex"/>
+			}
+			<link rel="stylesheet" href="/site.css"/>
+			for _, fragment := range head {
+				@fragment
+			}
+		</head>
+		<body>
+			@siteHeader()
+			@content
+		</body>
+	</html>
+}
+
+templ siteHeader() {
+	<header>
+		<a href="/" aria-label="Siduri home"><strong>Siduri</strong></a>
+		<nav aria-label="Primary">
+			<a href="/journal/">Journal</a>
+			<a href="/tools/">Tools</a>
+		</nav>
+	</header>
+}
+
+templ postMeta(post Post) {
+	<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time></p>
+}
+
+templ pageHeader(class string, meta templ.Component, title string, summary string, beforeTitle templ.Component, afterSummary templ.Component) {
+	<header class={ class }>
+		@meta
+		@beforeTitle
+		<h1>{ title }</h1>
+		<p class="lede">{ summary }</p>
+		@afterSummary
+	</header>
+}
