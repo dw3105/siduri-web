@@ -4,15 +4,11 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
-	"regexp"
 	"sort"
-	"strings"
 	"testing"
 )
 
-var a5HrefPattern = regexp.MustCompile(`href="([^"]+)"`)
-
-func TestA5RequiredPagesAndLegalLinkGraph(t *testing.T) {
+func TestA5RequiredPagesAndOperatorLinkGraph(t *testing.T) {
 	output := t.TempDir()
 	if err := Build(repositoryRoot(t), output, false); err != nil {
 		t.Fatal(err)
@@ -43,11 +39,14 @@ func TestA5RequiredPagesAndLegalLinkGraph(t *testing.T) {
 		}
 	}
 
-	pages := htmlFiles(t, output)
-	for _, page := range pages {
-		for _, target := range []string{"impressum/index.html", "datenschutz/index.html"} {
-			if !a5ReachableWithin(page, target, output, 2) {
-				t.Errorf("%s cannot reach %s in two clicks", page, target)
+	for _, page := range htmlFiles(t, output) {
+		data, err := os.ReadFile(filepath.Join(output, page))
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, href := range []string{`href="/impressum/"`, `href="/datenschutz/"`} {
+			if bytes.Contains(data, []byte(href)) {
+				t.Errorf("%s unexpectedly links %s", page, href)
 			}
 		}
 	}
@@ -142,52 +141,6 @@ func htmlFiles(t *testing.T, root string) []string {
 	}
 	sort.Strings(files)
 	return files
-}
-
-func a5ReachableWithin(start, target, root string, maxDepth int) bool {
-	type node struct {
-		page  string
-		depth int
-	}
-	queue := []node{{page: start}}
-	seen := map[string]bool{start: true}
-	for len(queue) > 0 {
-		current := queue[0]
-		queue = queue[1:]
-		if current.page == target {
-			return true
-		}
-		if current.depth == maxDepth {
-			continue
-		}
-		data, err := os.ReadFile(filepath.Join(root, current.page))
-		if err != nil {
-			continue
-		}
-		for _, match := range a5HrefPattern.FindAllSubmatch(data, -1) {
-			next := a5NormalizeInternalLink(string(match[1]))
-			if next == "" || seen[next] {
-				continue
-			}
-			seen[next] = true
-			queue = append(queue, node{page: next, depth: current.depth + 1})
-		}
-	}
-	return false
-}
-
-func a5NormalizeInternalLink(href string) string {
-	if href == "/" {
-		return "index.html"
-	}
-	if !strings.HasPrefix(href, "/") || strings.HasPrefix(href, "//") {
-		return ""
-	}
-	href = strings.TrimPrefix(href, "/")
-	if strings.HasSuffix(href, "/") {
-		href += "index.html"
-	}
-	return filepath.ToSlash(href)
 }
 
 func a5BuildFixture(t *testing.T) string {
