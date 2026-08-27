@@ -25,6 +25,9 @@ they did not.
 | 13 | 2026-08-25 | **Publish post 1** — `draft: true` → `false` | proposed with the gate evidence; agents draft and never publish | not consulted on this one | **approved explicitly**, in these words: *publish post 1 - we will replace it with real post later* |
 | 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
 | 15 | 2026-08-25 | Gateslot's repository link is dropped until the repo is public | offered three options with FR-13 and the P1 gate against each | not consulted | **decided**: drop the link until it is public |
+| 16 | 2026-08-27 | **Design feedback arrives as annotations, not screenshots** — `agentation-vanilla` pasted into the console against `make dev`, capture half only, `agentation-mcp` never run. ADR 0006 | proposed after running the tool over all 31 pages: 81 of 849 selectors resolve to a *different* element | **agreed on all five points and the recommendation**; re-derived every number on a second engine and found two the planner had not — the unrooted chain (0061) and the seven-day destructive expiry (0062) | **decided**, in one word: *YES* |
+| 17 | 2026-08-27 | **Wave W1 — the §13 acceptance pass.** Six Codex lanes, a `make acceptance` gate deriving its set from the contract by heading, and the operator's own pass over fifteen rendered pages | proposed pages-first after the operator's ruling; cut six lanes, not eight | agreed the cut; corrected the harness three times — heading anchor not line range, exit code split three ways, and the pinned count replaced by a two-method cross-check | **decided**: *go*. Merged as PR #6 |
+| 18 | 2026-08-27 | **The legal pages stay built and unlinked, the footer is dropped, and every repeated element loads from one source** | recorded from the operator's own annotations during his pass | not consulted — taken live during the sitting | **decided**, in his words: *drop the footer, keep the pages hidden and unlinked*, and *ALL REPEATED elements must be loaded from the same source, not reinvented* |
 
 ## Open
 
@@ -51,6 +54,46 @@ they did not.
   collecting personal data, not building the code that would.
 - **ADR 0002**, `AGENTS.md` ordering. Deferred to after wave 0 by his ruling.
 
+- **The annotation channel's selector field is a hint, not an identity.**
+  `**Text:**` and `**Selected text:**` are sound; `**Selector:**` is wrong on 250
+  of 849 elements across our pages (findings 0060, 0061). Two defects, both
+  upstream, both one small change. Reported to the author with the operator's
+  approval on 2026-08-27; if the fix lands, this open item closes and the
+  selector becomes usable as written.
+
+- **Nothing asserts the built route set** (finding 0064). `dist/` is a total map
+  from URL to screen in one direction only — a screen that stops rendering
+  vanishes with the gate green and no diff. Not scheduled; recorded so the
+  walked tree is not read as coverage of what *should* render.
+
+- **`AGENTS.md:90-91` overstates its own guard** (finding 0063). It claims
+  `make check` rejects any change under `docs/`; `Makefile:30` guards the two
+  requirements files. Either the sentence narrows to match the guard or the
+  guard widens to match the sentence. `AGENTS.md` is not the contract, so this
+  is the operator's call and not an amendment.
+
+- **The acceptance is not accepted.** `make acceptance` on `main` reports
+  `held=8 deferred=5 open=3 failed=2` over eighteen criteria. Criterion 1 fails —
+  a clean checkout does not build. Criterion 18 fails — the twelve-month comment
+  freeze tests a hardcoded date literal, so *automatically* is false. Criteria 3c,
+  8 and 10 are open. Recorded so a green `make check` is not read as an accepted
+  phase.
+
+- **`siduri.ai` is not available and the build asserts it 272 times** (finding
+  0066). Four unlinked sites hold the domain, one of them a security guard. The
+  name decision is the operator's and blocks nothing until publish.
+
+- **One chrome, one source** (finding 0067) is decision 18's implementation and
+  has no lane yet. It subsumes the footer removal, the unlinking, the two content
+  widths, and the unstyled tag pages.
+
+- **`LR-1` and `LR-2` are not struck.** The operator chose to unlink rather than
+  amend, so both clauses stand and both pages still ship. Recorded so the next
+  reader does not infer an amendment that was never made.
+
+- **The keyboard pass has still never been performed** — `NFR-2:294`, criterion
+  3c, owner operator. Nothing automated substitutes for it.
+
 
 ## Reviewer scope, as of 2026-08-25
 
@@ -60,3 +103,33 @@ binary, worktree and identity mechanics, both scope assumptions.
 Not checked: the operator's "everything before commercialization" sentence
 (never seen it), `REQUIREMENTS-COMMENTS.md` beyond two cited lines, the eight
 lane definitions for `RV-23` disjointness — they do not exist yet.
+
+## Reviewer scope, as of 2026-08-27 — decision 16 only
+
+Checked by running: the tool fetched fresh, size, sha256 and `LICENSE`;
+network-call greps; the mount point and shadow root; storage load and save;
+`getSelector` read whole; selector resolution over all 849 elements of all 31
+pages in jsdom, unpatched and patched; landmark nesting across all 31 pages by
+parser; npm metadata for all three package names.
+
+Not checked: the skill's `references/measured.md`; **the tool's interactive
+path** — both sessions evaluated its selector function and neither has clicked
+its UI or seen a clipboard block emitted, so the export format is read at source
+and nowhere else; Chrome-versus-jsdom divergence beyond the two runs agreeing on
+all five numbers; whether the author takes the issue.
+
+## Reviewer scope, as of 2026-08-27 — wave W1
+
+Checked by running: the live domain, its title, RDAP record and MX; every
+`siduri.ai` occurrence in `dist/`; criterion 1 by running `make build` with
+`templ` absent; body-child structure of all 31 rendered pages by parser; the
+selector algorithm's resolution over all 849 elements in jsdom, patched and
+unpatched; `tools/acceptance.py` anchors, `check()` and selftest; `mk/accept.mk`;
+`tools/secretscan.py` exemption logic; the criterion 11 evidence command, which
+was broken by the integrator's own normalisation and caught by re-running it.
+
+Not checked: `references/measured.md` in the annotation skill; the annotation
+tool's interactive path — the selector function was evaluated, the tool's UI was
+never clicked; seventeen of the eighteen fragment rows against their own `ran`
+lines; whether `make check` was green on the integration branch, which the
+integrator ran and the reviewer did not.
