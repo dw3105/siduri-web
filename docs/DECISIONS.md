@@ -26,12 +26,13 @@ they did not.
 | 14 | 2026-08-25 | Wave A closed: 11 lanes merged, `main` green, FR-12 wired | verified by planting every Done-when on the merged tree | pending | pending |
 | 15 | 2026-08-25 | Gateslot's repository link is dropped until the repo is public | offered three options with FR-13 and the P1 gate against each | not consulted | **decided**: drop the link until it is public |
 | 16 | 2026-08-27 | **Design feedback arrives as annotations, not screenshots** — `agentation-vanilla` pasted into the console against `make dev`, capture half only, `agentation-mcp` never run. ADR 0006 | proposed after running the tool over all 31 pages: 81 of 849 selectors resolve to a *different* element | **agreed on all five points and the recommendation**; re-derived every number on a second engine and found two the planner had not — the unrooted chain (0061) and the seven-day destructive expiry (0062) | **decided**, in one word: *YES* |
+| 17 | 2026-08-27 | **Wave W1 — the §13 acceptance pass.** Six Codex lanes, a `make acceptance` gate deriving its set from the contract by heading, and the operator's own pass over fifteen rendered pages | proposed pages-first after the operator's ruling; cut six lanes, not eight | agreed the cut; corrected the harness three times — heading anchor not line range, exit code split three ways, and the pinned count replaced by a two-method cross-check | **decided**: *go*. Merged as PR #6 |
+| 18 | 2026-08-27 | **The legal pages stay built and unlinked, the footer is dropped, and every repeated element loads from one source** | recorded from the operator's own annotations during his pass | not consulted — taken live during the sitting | **decided**, in his words: *drop the footer, keep the pages hidden and unlinked*, and *ALL REPEATED elements must be loaded from the same source, not reinvented* |
 
 ## Open
 
 - **`FR-13` is a deliberate partial** while Gateslot's repository stays private,
-  and `site-requirements.md:499` — *Gateslot is usable by someone who is not the
-  operator* — cannot be met until it is public. Recorded so a green tool page is
+  and §12's P1 gate — *Gateslot is usable by someone who is not the operator* — cannot be met until it is public. Recorded so a green tool page is
   not read as a met requirement.
 
 - **Post 1 is a placeholder by the operator's own word** and is to be replaced
@@ -45,10 +46,10 @@ they did not.
   into `go.mod` before any branch is cut; no lane runs `go get` (`FO-15`).
   Cannot be done until W1 lands, since W1 holds `go.mod`.
 
-- **§12:497**, the P1→P2 gate — *Gateslot is usable by someone who is not the
+- **§12's P1 gate** — *Gateslot is usable by someone who is not the
   operator, and post 2 is published.* Not raised with him, not ruled on, still
   standing. Same class as the struck 490. Blocks wave B; blocks nothing before it.
-- **§12:502**, the postal-address gate. Standing, and it should — it gates
+- **§12's P2 postal-address gate**. Standing, and it should — it gates
   collecting personal data, not building the code that would.
 - **ADR 0002**, `AGENTS.md` ordering. Deferred to after wave 0 by his ruling.
 
@@ -69,6 +70,40 @@ they did not.
   requirements files. Either the sentence narrows to match the guard or the
   guard widens to match the sentence. `AGENTS.md` is not the contract, so this
   is the operator's call and not an amendment.
+
+- **The acceptance is not accepted.** `make acceptance` on `main` reports
+  `held=8 deferred=5 open=3 failed=2` over eighteen criteria. Criterion 1 fails —
+  a clean checkout does not build. Criterion 18 fails — the twelve-month comment
+  freeze tests a hardcoded date literal, so *automatically* is false. Criteria 3c,
+  8 and 10 are open. Recorded so a green `make check` is not read as an accepted
+  phase.
+
+- **`siduri.ai` is not available and the build asserts it 272 times** (finding
+  0066). Four unlinked sites hold the domain, one of them a security guard. The
+  name decision is the operator's and blocks nothing until publish.
+
+- **One chrome, one source** (finding 0067) is decision 18's implementation and
+  has no lane yet. It subsumes the footer removal, the unlinking, the two content
+  widths, and the unstyled tag pages.
+
+- **Decision 18 forbids what `LR-1` requires, and neither was struck.** `LR-1`
+  is not *the page exists*: it reads *Mandatory … must be reachable in two clicks
+  from every page, with a working email address and a means of direct contact*,
+  and §13's ninth criterion says the same for both pages — which `W1` recorded
+  **held**. Unlinking makes both unreachable, so once decision 18 is implemented
+  the clauses stand and the tree breaches them, and a `held` verdict from this
+  same pass is contradicted by a decision two rows above it. Second instance of
+  the class `FR-9` versus §13's sixteenth criterion already occupies: the
+  contract requires what another rule forbids. **Inert today** — nothing is
+  published — **and breached at publish.**
+  `LR-1`'s other operative half is already unmet by a different route: the only
+  address is on a domain the operator has not bought and which delivers to a
+  third party's tenant (finding 0066), so that finding is not *wrong at publish*
+  but *blocks a mandatory clause at publish*. His instruction is recorded
+  faithfully and the conflict is named; resolving it is his, not the build's.
+
+- **The keyboard pass has still never been performed** — `NFR-2`, criterion
+  3c, owner operator. Nothing automated substitutes for it.
 
 
 ## Reviewer scope, as of 2026-08-25
@@ -93,3 +128,21 @@ path** — both sessions evaluated its selector function and neither has clicked
 its UI or seen a clipboard block emitted, so the export format is read at source
 and nowhere else; Chrome-versus-jsdom divergence beyond the two runs agreeing on
 all five numbers; whether the author takes the issue.
+
+## Reviewer scope, as of 2026-08-27 — wave W1
+
+Checked by running: the live domain, its title and MX — the RDAP record and
+registrar are the planner's measurement, which the reviewer took rather than
+re-ran; every
+`siduri.ai` occurrence in `dist/`; criterion 1 by running `make build` with
+`templ` absent; body-child structure of all 31 rendered pages by parser; the
+selector algorithm's resolution over all 849 elements in jsdom, patched and
+unpatched; `tools/acceptance.py` anchors, `check()` and selftest; `mk/accept.mk`;
+`tools/secretscan.py` exemption logic; the criterion 11 evidence command, which
+was broken by the integrator's own normalisation and caught by re-running it.
+
+Not checked: `references/measured.md` in the annotation skill; the annotation
+tool's interactive path — the selector function was evaluated, the tool's UI was
+never clicked; seventeen of the eighteen fragment rows against their own `ran`
+lines; whether `make check` was green on the integration branch, which the
+integrator ran and the reviewer did not.
