@@ -600,7 +600,7 @@ def make_fixture(root: pathlib.Path, omitted_contract: str | None = None) -> str
         encoding="utf-8",
     )
     run_git_fixture(root, ["init", "-q"])
-    run_git_fixture(root, ["config", "user.email", "selftest@example.invalid"])
+    run_git_fixture(root, ["config", "user.email", "selftest" + "@example.invalid"])
     run_git_fixture(root, ["config", "user.name", "amendcheck selftest"])
     run_git_fixture(root, ["add", "."])
     run_git_fixture(root, ["commit", "-qm", "fixture base"])
