@@ -51,10 +51,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install templ and Wrangler
-        run: |
-          go install github.com/a-h/templ/cmd/templ@v0.3.1020
-          npm install --global wrangler@4
+      - name: Install templ
+        # Wrangler is resolved by npx in mk/a8.mk, so no global install.
+        run: go install github.com/a-h/templ/cmd/templ@v0.3.1020
       - name: Upload draft-inclusive preview version
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
