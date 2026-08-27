@@ -186,10 +186,42 @@ def read_revision_file(repo: pathlib.Path, revision: str, path: str) -> str:
     return git_bytes(repo, ["show", f"{revision}:{path}"]).decode("utf-8", errors="replace")
 
 
+def revision_path_exists(repo: pathlib.Path, revision: str, path: str) -> bool:
+    result = subprocess.run(
+        ["git", "cat-file", "-e", f"{revision}:{path}"],
+        cwd=repo,
+        capture_output=True,
+        check=False,
+    )
+    return result.returncode == 0
+
+
+def rule4_message(repo: pathlib.Path, base: str, head: str) -> tuple[bool, str]:
+    missing: list[str] = []
+    for path in CONTRACT_FILES:
+        if not revision_path_exists(repo, base, path):
+            missing.append(f"{path} missing at base ({base})")
+        if not revision_path_exists(repo, head, path):
+            missing.append(f"{path} missing at HEAD ({head})")
+    if missing:
+        return False, "watched path check failed: " + "; ".join(missing)
+    return True, "all watched contract paths exist at base and HEAD"
+
+
 def added_adr_paths(repo: pathlib.Path, base: str, head: str) -> list[str]:
     output = git_bytes(
         repo,
-        ["diff", "--name-only", "--diff-filter=A", "-z", base, head, "--", "docs/adr"],
+        [
+            "diff",
+            "--no-renames",
+            "--name-only",
+            "--diff-filter=A",
+            "-z",
+            base,
+            head,
+            "--",
+            "docs/adr",
+        ],
     )
     return [item.decode("utf-8", errors="replace") for item in output.split(b"\0") if item]
 
@@ -434,6 +466,7 @@ def assess(repo: pathlib.Path, base: str, head: str) -> tuple[bool, str]:
         [
             "diff",
             "--no-ext-diff",
+            "--no-renames",
             "--no-color",
             DIFF_CONTEXT,
             base,
@@ -444,12 +477,16 @@ def assess(repo: pathlib.Path, base: str, head: str) -> tuple[bool, str]:
     )
     file_diffs = parse_contract_diff(diff_text)
     has_contract_diff = any(file_diff.changed for file_diff in file_diffs.values())
+    four_passed, four_detail = rule4_message(repo, base, head)
     added_adrs = inspect_added_adrs(repo, base, head) if has_contract_diff else []
-    base_texts = {
-        path: read_revision_file(repo, base, path)
-        for path in CONTRACT_FILES
-        if file_diffs[path].changed
-    }
+    base_texts: dict[str, str] = {}
+    for path in CONTRACT_FILES:
+        if file_diffs[path].changed:
+            base_texts[path] = (
+                read_revision_file(repo, base, path)
+                if revision_path_exists(repo, base, path)
+                else ""
+            )
     one_passed, one_detail = rule1_message(has_contract_diff, added_adrs)
     two_passed, two_details = rule2_messages(has_contract_diff, file_diffs)
     three_passed, three_details = rule3_messages(
@@ -465,15 +502,21 @@ def assess(repo: pathlib.Path, base: str, head: str) -> tuple[bool, str]:
     output.extend(f"  {detail}" for detail in two_details)
     output.append(f"rule 3 (named sections): {'PASS' if three_passed else 'FAIL'}")
     output.extend(f"  {detail}" for detail in three_details)
-    all_passed = one_passed and two_passed and three_passed
-    if not has_contract_diff:
+    output.append(f"rule 4 (watched paths): {'PASS' if four_passed else 'FAIL'} — {four_detail}")
+    all_passed = one_passed and two_passed and three_passed and four_passed
+    if not has_contract_diff and all_passed:
         output.append("decision: no contract diff; accepted")
     elif all_passed:
-        output.append("decision: legitimate amendment; all three rules pass")
+        output.append("decision: legitimate amendment; all four rules pass")
     else:
         failed = ", ".join(
             name
-            for name, passed in (("rule 1", one_passed), ("rule 2", two_passed), ("rule 3", three_passed))
+            for name, passed in (
+                ("rule 1", one_passed),
+                ("rule 2", two_passed),
+                ("rule 3", three_passed),
+                ("rule 4", four_passed),
+            )
             if not passed
         )
         output.append(f"decision: rejected amendment; failed {failed}")
@@ -546,10 +589,12 @@ FIXTURE_COMMENTS = """# Comment System — Requirements
 """
 
 
-def make_fixture(root: pathlib.Path) -> str:
+def make_fixture(root: pathlib.Path, omitted_contract: str | None = None) -> str:
     (root / "docs/adr").mkdir(parents=True)
-    (root / "docs/site-requirements.md").write_text(FIXTURE_SITE, encoding="utf-8")
-    (root / "docs/comments-requirements.md").write_text(FIXTURE_COMMENTS, encoding="utf-8")
+    if omitted_contract != "docs/site-requirements.md":
+        (root / "docs/site-requirements.md").write_text(FIXTURE_SITE, encoding="utf-8")
+    if omitted_contract != "docs/comments-requirements.md":
+        (root / "docs/comments-requirements.md").write_text(FIXTURE_COMMENTS, encoding="utf-8")
     (root / "docs/adr/0001-existing.md").write_text(
         "# 0001 · Existing\n\n**Status** · accepted · 2026-08-01\n",
         encoding="utf-8",
@@ -581,10 +626,11 @@ def run_selftest_case(
     mutate,
     expected_code: int,
     expected_marker: str,
+    omitted_contract: str | None = None,
 ) -> None:
     with tempfile.TemporaryDirectory(prefix="siduri-amendcheck-") as raw:
         root = pathlib.Path(raw)
-        base = make_fixture(root)
+        base = make_fixture(root, omitted_contract)
         mutate(root)
         run_git_fixture(root, ["add", "."])
         staged_changes = subprocess.run(
@@ -666,7 +712,7 @@ def selftest() -> int:
             add_adr(root, "0002", "fragment-rewrite", "OQ-5"),
         ),
         0,
-        "decision: legitimate amendment; all three rules pass",
+        "decision: legitimate amendment; all four rules pass",
     )
     # This is the real :526 shape: the nearest section is ## 13, with no
     # clause identifier for rule 3 to extract.
@@ -733,6 +779,57 @@ def selftest() -> int:
         "hunk 2: FAIL",
     )
     run_selftest_case(
+        "rename-watched-path-away",
+        lambda root: (
+            replace_once(
+                root / "docs/site-requirements.md",
+                "- [ ] Foundation clause remains visible.",
+                "- ~~[ ] Foundation clause remains visible.~~",
+            ),
+            (root / "docs/site-requirements.md").rename(
+                root / "docs/site-requirements-renamed.md"
+            ),
+            add_adr(root, "0002", "renamed-contract", "P0"),
+        ),
+        1,
+        "rule 4 (watched paths): FAIL",
+    )
+    run_selftest_case(
+        "delete-watched-path-outright",
+        lambda root: (
+            (root / "docs/site-requirements.md").unlink(),
+            add_adr(root, "0002", "deleted-contract", "P0"),
+        ),
+        1,
+        "rule 4 (watched paths): FAIL",
+    )
+    run_selftest_case(
+        "add-watched-path-new",
+        lambda root: (
+            (root / "docs/site-requirements.md").write_text(
+                "## P0 · Foundation\n\n- ~~New foundation clause.~~\n",
+                encoding="utf-8",
+            ),
+            add_adr(root, "0002", "added-contract", "P0"),
+        ),
+        1,
+        "rule 4 (watched paths): FAIL",
+        omitted_contract="docs/site-requirements.md",
+    )
+    run_selftest_case(
+        "both-watched-paths-present",
+        lambda root: (
+            replace_once(
+                root / "docs/site-requirements.md",
+                "- [ ] Foundation clause remains visible.",
+                "- ~~[ ] Foundation clause remains visible.~~",
+            ),
+            add_adr(root, "0002", "present-contracts", "P0"),
+        ),
+        0,
+        "rule 4 (watched paths): PASS — all watched contract paths exist at base and HEAD",
+    )
+    run_selftest_case(
         "whole-line-strike",
         lambda root: (
             replace_once(
@@ -743,7 +840,7 @@ def selftest() -> int:
             add_adr(root, "0002", "whole-line", "P0"),
         ),
         0,
-        "decision: legitimate amendment; all three rules pass",
+        "decision: legitimate amendment; all four rules pass",
     )
     run_selftest_case(
         "no-diff",
@@ -751,7 +848,7 @@ def selftest() -> int:
         0,
         "decision: no contract diff; accepted",
     )
-    print("amendcheck selftest: 9 cases pass")
+    print("amendcheck selftest: 13 cases pass")
     return 0
 
 
