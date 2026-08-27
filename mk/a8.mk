@@ -1,6 +1,10 @@
 .PHONY: a8-gates a8-budget a8-headers a8-links a8-html a8-accessibility a8-secrets a8-workflow install-hooks preview-build preview preview-deploy a8-rollback
 
 A8_PYTHON ?= python3
+# preview-deploy called bare `wrangler` while rollback checked for it first --
+# two behaviours for one dependency. npx resolves it on any machine with node,
+# so neither needs a global install and CI's install step is now redundant.
+WRANGLER ?= npx --yes wrangler@4
 A8_EXTERNAL_LINKS ?= 0
 A8_AXE_PORT ?= 8765
 
@@ -105,7 +109,7 @@ preview-build:
 	echo 'preview-build: drafts included and noindex metadata staged in .preview-dist'
 
 preview-deploy: preview-build
-	@wrangler versions upload .preview-dist --env preview --message "Siduri pull request preview"
+	@$(WRANGLER) versions upload --env preview --message "Siduri pull request preview"
 
 preview: preview-deploy
 
@@ -116,8 +120,7 @@ a8-rollback:
 	@if test "$(A8_DRY_RUN)" = 1; then \
 		echo 'dry run: wrangler rollback --name siduri-web --message "Siduri rollback"'; \
 	else \
-		command -v wrangler >/dev/null || { echo 'rollback: wrangler is required (not installed in this lane)' >&2; exit 1; }; \
-		wrangler rollback --name siduri-web --message 'Siduri rollback'; \
+		$(WRANGLER) rollback --name siduri-web --message 'Siduri rollback'; \
 	fi
 
 # Makefile's shared placeholder remains later in parse order. The real work is

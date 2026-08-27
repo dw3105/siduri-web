@@ -44,3 +44,34 @@ as the certificate the entire eight-lane cut rested on, green at baseline.
 
 This is the ordinary shape rather than the exception. Clause that look obvious is
 clause somebody found obvious and missed anyway.
+
+## v1.3 - 25 Aug 2026
+
+Written at session close, after eleven lane merged, CI turned green on GitHub,
+and operator looked at running site for first time and said it need a lot of
+edits.
+
+### Earned this session
+
+| Rule | Earned by |
+|---|---|
+| `FO-10a` | Site built for a day, gated, merged and pushed before anybody opened one page. |
+| `FO-16` | One CI fix split three way under gate requiring green; none could merge, and stacking did not help. |
+| `FO-17` | Two branch gated together, then each predicted alone. Both prediction wrong, opposite direction. |
+| `PR-10` | External link check ran whole day at `A8_EXTERNAL_LINKS=0`, green every time, 66 failure waiting in the mode CI use. |
+| `PR-11` | Accessibility gate scanned different application because port was held and bind failure went unchecked. |
+| `PR-12` | Grep for `AKIA` where tool print `AWS access key`; plant landing past frontmatter delimiter. Two false verdict about working code. |
+| `RD-06` | `gh auth` proposed for machine whose environment table list it under *Never holds*, hours after reading that table. |
+| `RD-07` | Operator asked to run CI as diagnostic; Node 20 and Chrome installed in two command once he insisted, three defect found immediately after. |
+| `SH-12` | Every push this session was hand-typed block. `hitl` FRC-0031 records same shape and its sentence was quoted back by operator. |
+
+### Rule whose author broke it the same session
+
+`SH-01a` written, then violated four times within the hour. `PR-01` shipped as
+the certificate an eight-lane cut rested on, green at baseline. `RD-02` and
+`RD-03` applied to peer's claim and not to own. `OP-13` and `OP-14` drifted until
+operator reloaded skill twice rather than say so.
+
+Nine of nine friction row in `docs/FRICTION.md` are about this session's own
+conduct rather than the tooling. That ratio is the finding.
+
