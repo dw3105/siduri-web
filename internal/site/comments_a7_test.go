@@ -4,11 +4,15 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestA7RepositoryCommentsRenderAsOneLevelThread(t *testing.T) {
+	reference := time.Now().UTC()
+	t.Setenv("SOURCE_DATE_EPOCH", strconv.FormatInt(reference.Unix(), 10))
 	first := t.TempDir()
 	second := t.TempDir()
 	root := repositoryRoot(t)
@@ -49,8 +53,8 @@ func TestA7RepositoryCommentsRenderAsOneLevelThread(t *testing.T) {
 		`itemprop="commentCount" content="2"`,
 		`itemtype="https://schema.org/Comment"`,
 		`Siduri reply`,
-		`Comment 01K3QZJ8X4YB7N2M9V0PQRSTUX was not rendered: replies can be attached only to top-level comments.`,
-		`&lt;script&gt;alert(&#34;not executable&#34;)&lt;/script&gt;`,
+		`data-comment-refusal="Comment 01K3QZJ8X4YB7N2M9V0PQRSTUX was not rendered: replies can be attached only to top-level comments."`,
+		`This comment was not shown because replies can only be attached to top-level comments.`,
 		`rel="nofollow ugc noopener"`,
 		`"@type":"Comment"`,
 	} {
@@ -66,6 +70,9 @@ func TestA7RepositoryCommentsRenderAsOneLevelThread(t *testing.T) {
 	}
 	if strings.Contains(output, "This reply to a reply must be refused") {
 		t.Fatal("reply to a reply was silently rendered")
+	}
+	if strings.Contains(output, `<p class="comment-refused">Comment 01K3QZJ8X4YB7N2M9V0PQRSTUX`) {
+		t.Fatal("operator refusal detail leaked into reader-facing copy")
 	}
 	if _, err := os.Stat(filepath.Join(first, "comments_a7.css")); err != nil {
 		t.Fatalf("comments stylesheet was not emitted: %v", err)
@@ -100,7 +107,7 @@ func a7BuildFiles(t *testing.T, root string) map[string][]byte {
 }
 
 func TestA7ZeroCommentsHasNoEmptyStateNoise(t *testing.T) {
-	thread := commentThreadForPost(Post{Slug: "not-in-repository", Date: commentFreezeReferenceDate})
+	thread := commentThreadForPost(Post{Slug: "not-in-repository", Date: commentFreezeReferenceDate().Format("2006-01-02")})
 	if thread.Count != 0 || len(thread.Comments) != 0 {
 		t.Fatalf("unexpected comments in empty thread: %+v", thread)
 	}
@@ -113,19 +120,70 @@ func TestA7ZeroCommentsHasNoEmptyStateNoise(t *testing.T) {
 	}
 }
 
-func TestA7CommentFreezeUsesFixedReferenceDate(t *testing.T) {
+func TestA7RefusalDetailsUseOperatorAttributeAndReaderCopy(t *testing.T) {
+	thread := commentThread{
+		Refusals: []commentRefusal{
+			{
+				OperatorMessage: "Comments were not rendered: read comments for hello-siduri: permission denied",
+				ReaderMessage:   "Comments are unavailable because the thread could not be loaded.",
+			},
+		},
+	}
+	output := string(renderComponent(t, commentsSection(Post{Slug: "hello-siduri"}, thread)))
+	if !strings.Contains(output, `data-comment-refusal="Comments were not rendered: read comments for hello-siduri: permission denied"`) {
+		t.Fatal("thread load detail is missing from the operator attribute")
+	}
+	if !strings.Contains(output, `>Comments are unavailable because the thread could not be loaded.</p>`) {
+		t.Fatal("thread load refusal is missing its reader-facing copy")
+	}
+	if strings.Contains(output, `>Comments were not rendered:`) {
+		t.Fatal("thread load detail leaked into reader-facing copy")
+	}
+}
+
+func TestA7CommentFreezeUsesBuildReferenceDate(t *testing.T) {
+	reference := time.Now().UTC()
+	cutoff := reference.AddDate(-1, 0, 0)
 	tests := []struct {
 		date   string
 		closed bool
 	}{
-		{date: "2025-08-24", closed: true},
-		{date: "2025-08-25", closed: false},
-		{date: "2026-08-25", closed: false},
+		{date: cutoff.AddDate(0, 0, -1).Format("2006-01-02"), closed: true},
+		{date: cutoff.Format("2006-01-02"), closed: false},
+		{date: cutoff.AddDate(0, 0, 1).Format("2006-01-02"), closed: false},
 	}
 	for _, test := range tests {
-		if got := commentsClosed(test.date); got != test.closed {
-			t.Errorf("commentsClosed(%q) = %v, want %v", test.date, got, test.closed)
+		if got := commentsClosedAt(test.date, reference); got != test.closed {
+			t.Errorf("commentsClosedAt(%q, reference) = %v, want %v", test.date, got, test.closed)
 		}
+	}
+}
+
+func TestA7CommentFreezeReferenceUsesSourceDateEpoch(t *testing.T) {
+	t.Setenv("SOURCE_DATE_EPOCH", "0")
+	want := time.Unix(0, 0).UTC()
+	if got := commentFreezeReferenceDate(); !got.Equal(want) {
+		t.Fatalf("commentFreezeReferenceDate() = %s, want %s", got, want)
+	}
+}
+
+func TestA7CommentFreezeReferenceUsesWallClockWhenUnpinned(t *testing.T) {
+	previous, hadPrevious := os.LookupEnv("SOURCE_DATE_EPOCH")
+	if err := os.Unsetenv("SOURCE_DATE_EPOCH"); err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() {
+		if hadPrevious {
+			_ = os.Setenv("SOURCE_DATE_EPOCH", previous)
+		} else {
+			_ = os.Unsetenv("SOURCE_DATE_EPOCH")
+		}
+	})
+	before := time.Now().UTC()
+	got := commentFreezeReferenceDate()
+	after := time.Now().UTC()
+	if got.Before(before) || got.After(after) {
+		t.Fatalf("commentFreezeReferenceDate() = %s, outside wall-clock interval %s–%s", got, before, after)
 	}
 }
 
@@ -153,6 +211,10 @@ func TestA7FrozenThreadShowsOneLineAndNeverShowsAForm(t *testing.T) {
 }
 
 func TestA7RestrictedMarkdownEscapesHTMLAndSupportsAllowedSubset(t *testing.T) {
+	xssFixture := `<script>alert("not executable")</script>`
+	if got, want := renderCommentMarkdown(xssFixture), "<p>&lt;script&gt;alert(&#34;not executable&#34;)&lt;/script&gt;</p>\n"; got != want {
+		t.Fatalf("renderCommentMarkdown(%q) = %q, want %q", xssFixture, got, want)
+	}
 	output := renderCommentMarkdown("one\nline\n\n**bold** *italic* `code` [link](https://example.com) ![image](https://example.com/image.png)\n\n# not a heading\n\n```go\n<script>\n```")
 	for _, want := range []string{
 		"<p>one<br />\nline</p>",

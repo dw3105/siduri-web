@@ -9,16 +9,26 @@ import (
 	"regexp"
 	"runtime"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/a-h/templ"
 )
 
-// commentFreezeReferenceDate is the named, fixed build reference for FR-22.
-// It is deliberately not time.Now: identical input must produce identical
-// output, including the point at which a thread closes.
-const commentFreezeReferenceDate = "2026-08-25"
+// commentFreezeReferenceDate returns the UTC date used to evaluate FR-22.
+// SOURCE_DATE_EPOCH pins this reference for reproducible builds; without it,
+// the build uses the current UTC date so the freeze follows the real calendar.
+func commentFreezeReferenceDate() time.Time {
+	if value, ok := os.LookupEnv("SOURCE_DATE_EPOCH"); ok {
+		seconds, err := strconv.ParseInt(strings.TrimSpace(value), 10, 64)
+		if err != nil {
+			panic(fmt.Sprintf("site: invalid SOURCE_DATE_EPOCH %q: %v", value, err))
+		}
+		return time.Unix(seconds, 0).UTC()
+	}
+	return time.Now().UTC()
+}
 
 const commentLinkRel = "nofollow ugc noopener"
 
@@ -73,8 +83,13 @@ type commentThread struct {
 	Comments   []commentView
 	Count      int
 	Closed     bool
-	Refusals   []string
+	Refusals   []commentRefusal
 	Structured string
+}
+
+type commentRefusal struct {
+	OperatorMessage string
+	ReaderMessage   string
 }
 
 func init() {
@@ -129,7 +144,10 @@ func commentThreadForPost(post Post) commentThread {
 	records, err := loadCommentRecords(post.Slug)
 	thread := commentThread{Closed: commentsClosed(post.Date)}
 	if err != nil {
-		thread.Refusals = append(thread.Refusals, "Comments were not rendered: "+err.Error())
+		thread.Refusals = append(thread.Refusals, commentRefusal{
+			OperatorMessage: "Comments were not rendered: " + err.Error(),
+			ReaderMessage:   "Comments are unavailable because the thread could not be loaded.",
+		})
 		return thread
 	}
 
@@ -149,18 +167,20 @@ func countCommentViews(comments []commentView) int {
 }
 
 func commentsClosed(postDate string) bool {
+	return commentsClosedAt(postDate, commentFreezeReferenceDate())
+}
+
+func commentsClosedAt(postDate string, reference time.Time) bool {
 	date, err := time.Parse("2006-01-02", postDate)
 	if err != nil {
 		return false
 	}
-	reference, err := time.Parse("2006-01-02", commentFreezeReferenceDate)
-	if err != nil {
-		panic("site: invalid comment freeze reference date")
-	}
-	return date.Before(reference.AddDate(-1, 0, 0))
+	reference = reference.UTC()
+	referenceDate := time.Date(reference.Year(), reference.Month(), reference.Day(), 0, 0, 0, 0, time.UTC)
+	return date.Before(referenceDate.AddDate(-1, 0, 0))
 }
 
-func arrangeCommentRecords(records []commentRecord) ([]commentView, []string) {
+func arrangeCommentRecords(records []commentRecord) ([]commentView, []commentRefusal) {
 	byID := make(map[string]commentRecord, len(records))
 	for _, record := range records {
 		byID[record.ID] = record
@@ -180,11 +200,11 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []string) {
 	}
 
 	rootIDs := make([]string, 0, len(records))
-	refusals := make([]string, 0)
+	refusals := make([]commentRefusal, 0)
 	for _, record := range records {
 		if record.ParentID == "" {
 			if record.AuthorRole != "reader" {
-				refusals = append(refusals, fmt.Sprintf("Comment %s was not rendered: a site reply needs a parent comment.", record.ID))
+				refusals = append(refusals, commentRefusalForComment(record.ID, "a site reply needs a parent comment.", "This comment was not shown because a site reply needs a parent comment."))
 				continue
 			}
 			rootIDs = append(rootIDs, record.ID)
@@ -192,15 +212,15 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []string) {
 		}
 		parent, exists := byID[record.ParentID]
 		if !exists {
-			refusals = append(refusals, fmt.Sprintf("Comment %s was not rendered: its parent comment %s is missing.", record.ID, record.ParentID))
+			refusals = append(refusals, commentRefusalForComment(record.ID, fmt.Sprintf("its parent comment %s is missing.", record.ParentID), "This comment was not shown because its parent comment is missing."))
 			continue
 		}
 		if parent.ParentID != "" {
-			refusals = append(refusals, fmt.Sprintf("Comment %s was not rendered: replies can be attached only to top-level comments.", record.ID))
+			refusals = append(refusals, commentRefusalForComment(record.ID, "replies can be attached only to top-level comments.", "This comment was not shown because replies can only be attached to top-level comments."))
 			continue
 		}
 		if record.AuthorRole != "site" {
-			refusals = append(refusals, fmt.Sprintf("Comment %s was not rendered: only a site comment may be a reply.", record.ID))
+			refusals = append(refusals, commentRefusalForComment(record.ID, "only a site comment may be a reply.", "This comment was not shown because only a site comment may be a reply."))
 			continue
 		}
 		parentView := views[parent.ID]
@@ -214,8 +234,17 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []string) {
 		sort.Slice(view.Replies, func(i, j int) bool { return view.Replies[i].ID < view.Replies[j].ID })
 		comments = append(comments, view)
 	}
-	sort.Strings(refusals)
+	sort.Slice(refusals, func(i, j int) bool {
+		return refusals[i].OperatorMessage < refusals[j].OperatorMessage
+	})
 	return comments, refusals
+}
+
+func commentRefusalForComment(id, detail, readerMessage string) commentRefusal {
+	return commentRefusal{
+		OperatorMessage: fmt.Sprintf("Comment %s was not rendered: %s", id, detail),
+		ReaderMessage:   readerMessage,
+	}
 }
 
 func loadCommentRecords(slug string) ([]commentRecord, error) {
