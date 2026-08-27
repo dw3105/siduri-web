@@ -259,7 +259,9 @@ def check(contract: pathlib.Path, fragments_dir: pathlib.Path) -> int:
         print(f"  {error}", file=sys.stderr)
         return 1
     print_report(report)
-    return 1 if report.errors else 0
+    if report.errors:
+        return 1  # the report is malformed
+    return 0 if report.accepted else 2  # valid, and not accepted
 
 
 def criterion_block(text: str, number: int) -> str:
@@ -352,11 +354,38 @@ def run_subprocess(contract: pathlib.Path, fragments_dir: pathlib.Path) -> subpr
     )
 
 
+
+def _section_lines(text: str, heading: str) -> list[str]:
+    """Lines under `heading`, up to the next `## ` heading. Selftest cross-check."""
+    out, inside = [], False
+    for line in text.split("\n"):
+        if line.startswith(heading):
+            inside = True
+            continue
+        if inside and line.startswith("## "):
+            break
+        if inside:
+            out.append(line)
+    return out
+
+
 def selftest() -> int:
     real_contract = pathlib.Path(__file__).resolve().parents[1] / "docs" / "site-requirements.md"
     real_contract_text = read_text(real_contract)
     criteria = derive_criteria(real_contract)
-    assert len(criteria) == 18, f"real contract should derive 18 criteria, got {len(criteria)}"
+    # Derive the count a second way, by a different method, and compare.
+    # Pinning a literal here would reintroduce one layer up exactly the coupling
+    # the heading anchor removed: the guard would go red the day the operator
+    # legitimately amends the contract.
+    naive = sum(
+        1
+        for line in _section_lines(real_contract_text, CONTRACT_HEADING)
+        if line.startswith("- [ ]")
+    )
+    assert len(criteria) > 0, "the contract anchor matched nothing"
+    assert len(criteria) == naive, (
+        f"parser derived {len(criteria)} criteria, naive count of the section saw {naive}"
+    )
     baseline = synthetic_report(criteria)
 
     with tempfile.TemporaryDirectory(prefix="siduri-acceptance-") as raw:
@@ -450,8 +479,8 @@ def selftest() -> int:
         output = (result.stdout + result.stderr).strip()
         assert result.returncode == 0, f"complete synthetic report failed:\n{output}"
         assert output.splitlines()[0] == "accepted", output
-        assert "criteria: 18" in output, output
-        print("acceptance selftest: real contract derived 18 criteria; synthetic complete report: accepted")
+        assert f"criteria: {len(criteria)}" in output, output
+        print(f"acceptance selftest: real contract derived {len(criteria)} criteria, naive count agrees; synthetic complete report: accepted")
 
     print("acceptance selftest: six refusal classes, all required-field variants, and completeness invariant pass")
     return 0

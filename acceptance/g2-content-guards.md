@@ -37,7 +37,7 @@ ran: `grep -rE '[a-z0-9._%+-]+@[a-z0-9.-]+' content/`
 at: 2026-08-27T18:20:49Z
 saw: No output; exit 1, which is the non-match result accepted by the Makefile's `if` guard.
 red proof: A truthful red run cannot be planted under `content/` because AR-8 prohibits writing a raw email address there without per-instance human approval. The current content produced no matches.
-notes: This is held only for the guard's `content/` scope. A reader-facing address is rendered from `internal/site/contact.templ` into `dist/contact/index.html`: `grep -RIn 'the `hello@` mailbox on the siduri.ai domain' dist/ internal/site/contact.templ` at 2026-08-27T18:20:58Z showed both locations. The Makefile guard does not inspect that template or `dist/`.
+notes: This is held only for the guard's `content/` scope. A reader-facing address is rendered from `internal/site/contact.templ` into `dist/contact/index.html`: `grep -RIn 'hello@' dist/contact/index.html internal/site/contact.templ` at 2026-08-27T18:20:58Z showed both locations. No guard in the tree would notice it. `Makefile` greps `content/` only; `tools/secretscan.py` scans the whole tree but exempts the address by value at `:39` and the four rendering files by name at `:44-48`, deliberately and with a comment. So all three scopes are clear of the reader-facing address, the strictest by explicit allowlist.
 
 ## Final verification
 
