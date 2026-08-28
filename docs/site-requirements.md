@@ -294,7 +294,9 @@ Enforced in CI. A pull request that breaches any line fails.
 WCAG 2.2 AA as a quality floor: semantic landmarks, visible focus, 4.5:1 contrast, keyboard-operable everything, `prefers-reduced-motion` respected, alt text required by the build for content images. Automated axe checks in CI plus a manual keyboard pass before each release. See §9 on whether this is also a legal obligation — build to it either way.
 
 #### NFR-3 · SEO
-Clean semantic HTML, one `h1` per page, descriptive titles under 60 characters, meta descriptions from `summary`, JSON-LD (`Article`, `Person`, `SoftwareApplication`, `Comment`), canonical URLs, generated sitemap, no orphan pages. No keyword engineering — the long tail here is genuinely specific technical language, which the content produces naturally.
+Clean semantic HTML, one `h1` per page, descriptive titles under 60 characters, meta descriptions from `summary`, JSON-LD (`Article`, `Person`, `SoftwareApplication`, `Comment`), canonical URLs, generated sitemap, ~~no orphan pages~~. No keyword engineering — the long tail here is genuinely specific technical language, which the content produces naturally.
+
+The no-orphan-pages phrase is struck by ADR 0009; the other NFR-3 properties remain.
 
 #### NFR-4 · Browser support
 Last two versions of Chrome, Firefox, Safari, Edge, plus Safari iOS. No IE, no polyfill bundle. Baseline CSS features only where support is universal; progressive enhancement above that.
