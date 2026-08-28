@@ -180,6 +180,12 @@ func commentsClosedAt(postDate string, reference time.Time) bool {
 	return date.Before(referenceDate.AddDate(-1, 0, 0))
 }
 
+type commentResolution struct {
+	Depth   int
+	Refused bool
+	Refusal commentRefusal
+}
+
 func arrangeCommentRecords(records []commentRecord) ([]commentView, []commentRefusal) {
 	byID := make(map[string]commentRecord, len(records))
 	for _, record := range records {
@@ -199,31 +205,109 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []commentRef
 		}
 	}
 
+	resolutions := make(map[string]commentResolution, len(records))
+	resolveChild := func(record commentRecord, parent commentResolution) commentResolution {
+		if parent.Refused {
+			return commentResolution{
+				Refused: true,
+				Refusal: commentRefusalForComment(record.ID,
+					fmt.Sprintf("its parent comment %s was not rendered.", record.ParentID),
+					"This comment was not shown because its parent comment was not rendered."),
+			}
+		}
+		// Depth zero is the root; two reply levels are allowed.
+		if parent.Depth >= 2 {
+			return commentResolution{
+				Refused: true,
+				Refusal: commentRefusalForComment(record.ID,
+					"replies can be attached only up to two levels deep.",
+					"This comment was not shown because replies can be attached only up to two levels deep."),
+			}
+		}
+		return commentResolution{Depth: parent.Depth + 1}
+	}
+	resolve := func(startID string) commentResolution {
+		path := make([]string, 0)
+		// The position map makes every input cycle terminate without a hop cap.
+		visited := make(map[string]int)
+		currentID := startID
+		propagate := func(first int) {
+			for i := first; i >= 0; i-- {
+				record := byID[path[i]]
+				resolutions[record.ID] = resolveChild(record, resolutions[record.ParentID])
+			}
+		}
+
+		for {
+			if _, ok := resolutions[currentID]; ok {
+				propagate(len(path) - 1)
+				return resolutions[startID]
+			}
+			if cycleStart, ok := visited[currentID]; ok {
+				for _, id := range path[cycleStart:] {
+					resolutions[id] = commentResolution{
+						Refused: true,
+						Refusal: commentRefusalForComment(id,
+							"its parent comment chain contains a cycle.",
+							"This comment was not shown because its parent comment chain contains a cycle."),
+					}
+				}
+				propagate(cycleStart - 1)
+				return resolutions[startID]
+			}
+
+			record, exists := byID[currentID]
+			if !exists {
+				orphan := byID[path[len(path)-1]]
+				resolutions[orphan.ID] = commentResolution{
+					Refused: true,
+					Refusal: commentRefusalForComment(orphan.ID,
+						fmt.Sprintf("its parent comment %s is missing.", orphan.ParentID),
+						"This comment was not shown because its parent comment is missing."),
+				}
+				propagate(len(path) - 2)
+				return resolutions[startID]
+			}
+
+			visited[currentID] = len(path)
+			path = append(path, currentID)
+			if record.ParentID == "" {
+				if record.AuthorRole != "reader" {
+					resolutions[record.ID] = commentResolution{
+						Refused: true,
+						Refusal: commentRefusalForComment(record.ID,
+							"a site reply needs a parent comment.",
+							"This comment was not shown because a site reply needs a parent comment."),
+					}
+				} else {
+					resolutions[record.ID] = commentResolution{}
+				}
+				propagate(len(path) - 2)
+				return resolutions[startID]
+			}
+			currentID = record.ParentID
+		}
+	}
+	for _, record := range records {
+		if _, ok := resolutions[record.ID]; !ok {
+			resolve(record.ID)
+		}
+	}
+
 	rootIDs := make([]string, 0, len(records))
 	children := make(map[string][]string, len(records))
 	refusals := make([]commentRefusal, 0)
 	for _, record := range records {
+		resolution := resolutions[record.ID]
+		if resolution.Refused {
+			refusals = append(refusals, resolution.Refusal)
+			continue
+		}
 		if record.ParentID == "" {
-			if record.AuthorRole != "reader" {
-				refusals = append(refusals, commentRefusalForComment(record.ID, "a site reply needs a parent comment.", "This comment was not shown because a site reply needs a parent comment."))
-				continue
-			}
 			rootIDs = append(rootIDs, record.ID)
 			continue
 		}
-		parent, exists := byID[record.ParentID]
-		if !exists {
-			refusals = append(refusals, commentRefusalForComment(record.ID, fmt.Sprintf("its parent comment %s is missing.", record.ParentID), "This comment was not shown because its parent comment is missing."))
-			continue
-		}
-		if parent.ParentID != "" {
-			grandparent, exists := byID[parent.ParentID]
-			if exists && grandparent.ParentID != "" {
-				refusals = append(refusals, commentRefusalForComment(record.ID, "replies can be attached only up to two levels deep.", "This comment was not shown because replies can be attached only up to two levels deep."))
-				continue
-			}
-		}
-		children[parent.ID] = append(children[parent.ID], record.ID)
+		children[record.ParentID] = append(children[record.ParentID], record.ID)
 	}
 	sort.Strings(rootIDs)
 	comments := make([]commentView, 0, len(rootIDs))
