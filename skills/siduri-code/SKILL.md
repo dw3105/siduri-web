@@ -250,9 +250,10 @@ close-out wave <N>
 
 ## What this enforces
 
-**No count appear in this section, deliberately.** Number here went stale four
-time - *fifteen*, *seventy-two*, *ninety-nine*, then stale again on very next
-commit that added clause. Fourth one broke inside commit about not losing
+**No count of clause appear in this section, deliberately** - and that is the
+exact claim, because broader one is false. Clause count went stale repeatedly -
+*fifteen*, *seventy-two*, *ninety-nine*, then stale again on very next commit
+that added clause. Fourth one broke inside commit about not losing
 record, with instruction *re-run it rather than trust it* one line away and its
 command printed beside it.
 
@@ -260,7 +261,14 @@ command printed beside it.
 that produced it. This number carried its command, verbatim, one line away, and
 rotted anyway - because carrying command is not running it, and instruction to
 re-derive fire while auditing, never while adding. `ST-13`, one level up from
-where it usually apply. Clause was satisfied and defect recurred, four time.
+where it usually apply. Clause was satisfied and defect recurred each time.
+
+**Section was read by eye on 28 Aug 2026 and other live count survive it** - the
+unguarded-W1-item figure, and `--selftest` case count that was already wrong.
+Recorded as checked by eye rather than by command (`AC-36`): no grep separate
+*eleven bind named artefact* from *one line away*, and reviewer who reported
+*no live numeral survives* had measured only three known-stale one. Universal
+read as verified because targeted check passed, which is finding 0096's species.
 
 So numeral is gone rather than corrected fifth time. Count when you need it:
 
@@ -288,7 +296,7 @@ ranges* in pre-flight. `PR-01` by *baseline: every check proved red before count
 green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
 row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
 lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
-`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py`, ten selftest case.
+`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py`, selftest count read from `--selftest` output.
 
 **Unbound, named rather than left to look enforced:**
 
