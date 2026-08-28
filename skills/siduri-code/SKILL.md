@@ -292,7 +292,7 @@ most need it is this session, in three week, under load.
 **Four state, not two.** Audited clause by clause 28 Aug 2026, rows
 `0100`-`0102` in `docs/FINDINGS.md`.
 
-    machine check      `FO-02`, by `Makefile:32`. One clause.
+    machine check      `FO-02` and `ST-06`, by `Makefile:32`. Two clause.
     named hole         `FO-12`/`13`/`14`, by `tools/lane_overlap.py`, which
                        suppress `docs/FINDINGS.md` at `:38` on premise of guard
                        that do not exist. Empty output do not mean ready -
@@ -325,7 +325,6 @@ close-out field the session fill in about itself.
 | `CL-05` | Row exist or it do not, so it is checkable - but nothing walk `docs/FINDINGS.md` looking for withdrawn finding, and nothing know a finding was withdrawn | `close-check` extended to `FINDINGS.md`: refuse row whose *What breaks* is `nothing` and whose *What it looks like* carry no probe |
 | `ST-03` | Turn text unread by any tool | Filler list is enumerable - grep it |
 | `ST-04`, `ST-05` | Bind turn text | Nothing cheap |
-| `ST-06` | `Makefile:32` match `AGENTS*.md` and `.agents.md`, never `SKILL.md` | One `-o -name 'SKILL.md'` |
 | `PR-02` | *Prefer* is tell. No input turn it red | Heuristic, keep as one |
 | `PR-09` | First half is stance | Second half - *print value, never `ok`* - is grep |
 | `SH-02` | No non-sample hook installed - `.git/hooks` hold 14 file, all git's own `.sample` | Pre-commit hook, four line. Cheapest unconverted rule here |

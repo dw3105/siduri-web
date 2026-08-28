@@ -29,7 +29,7 @@ check: build
 	@go test ./...
 	@contract='docs/site-requirements.md docs/comments-requirements.md'; git diff --quiet -- $$contract && git diff --cached --quiet -- $$contract || { echo 'check: a contract edit must be committed, so w2-amendcheck can judge it as an amendment' >&2; exit 1; }
 	@base="$$(git merge-base HEAD main 2>/dev/null || git rev-list --max-parents=0 HEAD)"; protected="$$(git diff --name-only --diff-filter=MD "$$base" HEAD -- AGENTS-PROHIBITIONS.md; git diff --name-only --diff-filter=MD -- AGENTS-PROHIBITIONS.md; git diff --name-only --diff-filter=MD --cached -- AGENTS-PROHIBITIONS.md)"; test -z "$$protected" || { echo 'check: AGENTS-PROHIBITIONS.md is contract-owned and must not change' >&2; exit 1; }
-	@find . -type f \( -name 'AGENTS.md' -o -name 'AGENTS*.md' -o -name '.agents.md' \) -print | while IFS= read -r file; do test "$$(wc -c < "$$file")" -lt 32768 || { echo "check: $$file is at or above 32768 bytes" >&2; exit 1; }; done
+	@find . -type f \( -name 'AGENTS.md' -o -name 'AGENTS*.md' -o -name '.agents.md' -o -name 'SKILL.md' \) -print | while IFS= read -r file; do test "$$(wc -c < "$$file")" -lt 32768 || { echo "check: $$file is at or above 32768 bytes" >&2; exit 1; }; done
 	@if grep -rE '[a-z0-9._%+-]+@[a-z0-9.-]+' content/; then echo 'check: raw email address found under content/' >&2; exit 1; fi
 	@if test -d dist && grep -rIE '/services|([€$$][[:space:]]*[0-9])|<form([[:space:]>]|$$)' dist; then echo 'check: pre-P3 sales or form artifact found in dist/' >&2; exit 1; fi
 
