@@ -18,7 +18,7 @@ surface judged and is recorded here for that reason.
 | 3 | `footer > a` "Datenschutz" | Drop, add later | **open** — contradicts `LR-2` | operator |
 | 4 | `footer > a` "Stack" | What is the difference from Tools? | open | design |
 | 5 | `main > h2` "Latest writing" | Sounds stupid | open | copy |
-| 6 | `p.post-meta` | Date only, drop read-time and tags | held (via `lane/w3`) | `FR-5` |
+| 6 | `p.post-meta` | Date only, drop read-time and tags | held (via `744e972`) | `FR-5` |
 | 7 | `header > nav > a` "About" | Remove, add later | open | design |
 | 8 | `header > nav > a` "Contact" | Remove, add later | **open** — `FR-16` ships `mailto:` as P0's only contact | operator |
 | 9 | `footer` | Remove the footer for now | **open** — carries the only `LR-1` path | operator |
@@ -37,7 +37,7 @@ surface judged and is recorded here for that reason.
 
 | # | Element | Note | Verdict | Owner |
 |---|---|---|---|---|
-| 1 | `main > article.post-card > p.post-meta` | Date only — drop read-time and tags | held (via `lane/w3`), duplicate of `/` #6 | `FR-5` |
+| 1 | `main > article.post-card > p.post-meta` | Date only — drop read-time and tags | held (via `744e972`), duplicate of `/` #6 | `FR-5` |
 
 ## Pages 4–15
 
@@ -88,12 +88,11 @@ notes: Owner: design and copy. Row 4's question — what distinguishes Stack fro
 
 ### `/` row 6 and `/journal/` row 1 — post-meta
 
-verdict: held (via `lane/w3`)
+verdict: held (via `744e972`)
 ran: grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l
 at: 2026-08-28T11:42:28Z
 saw: 0
-red proof: the same command on `7667b8d` returned a non-zero count
-notes: He revised this ruling on 28 August to date and tags rather than date alone — decision 21. Both annotations are one defect, met.
+notes: Red proof — the same command on `7667b8d` returned a non-zero count. He revised this ruling on 28 August to date and tags rather than date alone — decision 21. Both annotations are one defect, met.
 
 ### `/` row 8 — the Contact link
 

@@ -20,7 +20,7 @@ verdicts and no evidence; it does not claim the evidence existed at the time.
 | # | Page | Element | Note | Verdict | Owner |
 |---|---|---|---|---|---|
 | 1 | `/` | `header > a > strong` "Siduri" | `siduri.ai` is taken — brainstorm a new free name | open | operator |
-| 2 | `/journal/` | `p.post-meta` | "I asked you to remove time to read" | held (via `lane/w3`) | integrator |
+| 2 | `/journal/` | `p.post-meta` | "I asked you to remove time to read" | held (via `744e972`) | integrator |
 | 3 | `/tools/` | `article.tool-card` | Should look like console | open | design |
 | 4 | `/tools/` | `nav.tool-filters` | Not sure — add the task to review later | deferred | integrator |
 | 5 | `/journal/hello-siduri/` | `footer.article-footer > p:nth-child(2)` | "Newsletter capture is intentionally not part of this first build." — WTF | held | integrator |
@@ -52,20 +52,19 @@ notes: Owner: operator. Amends `D-8`, `OQ-5` and `:423`, none of which this pass
 
 ### Row 2 — read time on the journal list
 
-verdict: held (via `lane/w3`)
+verdict: held (via `744e972`)
 ran: grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l
 at: 2026-08-28T11:42:28Z
 saw: 0
-red proof: the same command on `7667b8d`, the tree he was looking at, returned a non-zero count
-notes: This annotation carried three different verdicts across the two reports until 2026-08-28 — `open` in both first-pass tables, `held` in the first-pass probe block, `failed` here — each defensible as of a different date and none saying which was current. `AC-13`: `failed` is a fix-round row, never a verdict that stands, so the pass updates in place and names the fix. One verdict now, `held (via lane/w3)`, in all four places. It read `failed` at the sitting because his ruling of 28 August was not implemented on the page he was looking at; `AC-12` keeps the `via` because bare `held` deletes the most useful thing the row records.
+notes: This annotation carried three different verdicts across the two reports until 2026-08-28 — `open` in both first-pass tables, `held` in the first-pass probe block, `failed` here — each defensible as of a different date and none saying which was current. `AC-13`: `failed` is a fix-round row, never a verdict that stands, so the pass updates in place and names the fix. One verdict now, `held (via 744e972)`, in all four places. It first read `via lane/w3`, which `git merge-base --is-ancestor lane/w3 main` shows is not an ancestor of `main` — the repair shipped as `744e972` and the branch it was rebased from is not something a reader can use. `FO-17`: the merged tree and the branch say nothing about each other, and this is the row where that costs a reader rather than a gate. It read `failed` at the sitting because his ruling of 28 August was not implemented on the page he was looking at; `AC-12` keeps the `via` because bare `held` deletes the most useful thing the row records.
 
 ### Rows 3, 12, 13 — the tool cards and the filter nav
 
 verdict: open
-ran: grep -cE '^[^{]*\.tool-card[^{]*\{' static/site.css
-at: 2026-08-28T11:42:28Z
-saw: the card is styled and no rule sets `font-family`; nothing in it is monospace
-notes: Owner: design. Three annotations, one unbuilt component. Row 12's `All` asymmetry is a separate defect in the same nav and is not fixed by styling it.
+ran: grep -hcE '^[^{]*\.tool-card[^{]*\{' static/*.css internal/site/*.css | paste -sd+ | bc; grep -rn 'font-family' static/*.css internal/site/*.css
+at: 2026-08-28T12:31:00Z
+saw: 4 rules, all in `static/tools_a6.css:34-52`; `font-family` is set in exactly two places, `site.css:3` (system-ui) and `article_a1.css:42` (code), neither of them the card
+notes: Owner: design. Three annotations, one component. The first version of this probe grepped `static/site.css` alone, returned `0`, and was recorded beside `saw: the card is styled` — a command that supports the opposite of its own observation, and the wrong file besides: this repo has five stylesheets and the card is in `tools_a6.css`. `PR-13`, found by `siduri-reviewer`. The card is styled; what it is not is monospace, which is the annotation. Row 12's `All` asymmetry is a separate defect in the same nav and is not fixed by styling it.
 
 ### Row 4 — the filter nav review task
 
@@ -78,11 +77,10 @@ notes: Owner: integrator. He has since ruled it is raised as its own task. That 
 ### Row 5 — the newsletter apology
 
 verdict: held
-ran: grep -rIc 'Newsletter capture' dist/
-at: 2026-08-28T11:42:28Z
-saw: 0 across the whole build
-red proof: the same grep on `7667b8d` returned 1, in `dist/journal/hello-siduri/index.html`
-notes: The sentence is gone and `FR-9`'s newsletter element stays unmet. Removing the apology did not meet the requirement; it stopped announcing the gap to readers. Finding 0069.
+ran: grep -rIl 'Newsletter capture' dist/ | wc -l
+at: 2026-08-28T12:31:00Z
+saw: 0
+notes: Red proof — the same grep on `7667b8d` returned 1, in `dist/journal/hello-siduri/index.html`. The sentence is gone and `FR-9`'s newsletter element stays unmet. Removing the apology did not meet the requirement; it stopped announcing the gap to readers. Finding 0069.
 
 ### Row 6 — the article footer
 
@@ -95,10 +93,10 @@ notes: Recorded during the sitting as "cannot reproduce". Re-measured: no footer
 ### Rows 7, 8, 9, 10 — the four undesigned components
 
 verdict: open
-ran: for c in article-header tool-header post-list tool-empty; do grep -cE "^[^{]*\.$c[^{]*\{" static/site.css; done
-at: 2026-08-28T11:42:28Z
-saw: `.article-header` 2, `.tool-header` 0, `.post-list` 0, `.tool-empty` 1
-notes: The 27 August draft recorded `.article-header` as 1. It is 2 today. `AC-38`: the number went stale, the mechanism did not. Owner: design.
+ran: for c in article-header tool-header post-list tool-empty; do grep -hcE "^[^{]*\.$c[^{]*\{" static/*.css internal/site/*.css | paste -sd+ | bc; done
+at: 2026-08-28T12:31:00Z
+saw: at tree `f54c954`: `.article-header` 1, `.tool-header` 0, `.post-list` 0, `.tool-empty` 1
+notes: Owner: design. Three sets of numbers were recorded for these four components before one was right. The 27 August draft said 1/0/0/1. The first backfill said 2/0/0/1 from a command that listed `static/site.css static/*.css` and so counted `site.css` twice. `siduri-reviewer` re-ran it and got 1/0/0/0, correctly, because the single-file form misses `.tool-empty` in `tools_a6.css`. The command above reads all five stylesheets and gives 1/0/0/1 at the named tree. The verdict never moved — four components, two of them with no rules at all — and 1/0/0/1 argues it harder than 2/0/0/1 did. `AC-38`: a number is re-measured against the tree that exists, and the row says which tree.
 
 ### Row 11 — the refusal line and the depth limit
 
@@ -106,8 +104,7 @@ verdict: failed
 ran: planted A-missing ← B ← C in content/comments/hello-siduri/, make build, grep -c 'PQRSTC2' dist/journal/hello-siduri/index.html
 at: 2026-08-28T11:52:00Z
 saw: 0 — C is neither rendered nor refused; B is refused once
-red proof: the same three fixtures on `e2c484c^` produced `PQRSTC2 was not rendered: replies can be attached only to top-level comments.`
-notes: The operator's request was met on the happy path: 4 comments render at 2 levels and the refusal line he objected to is gone. But `internal/site/comments_a7.go:221` refuses depth only when the grandparent exists, so a reply under an already-refused reply is appended to a child list nothing walks. Found by `siduri-reviewer` and reproduced here. `failed`, not `held`: the change that satisfied the annotation introduced a silent drop, and `PR-09` — the refusal mechanism exists so nothing disappears quietly — is exactly what it defeats. Finding 0087.
+notes: Red proof — the same three fixtures on `e2c484c^` produced `PQRSTC2 was not rendered: replies can be attached only to top-level comments.` The operator's request was met on the happy path: 4 comments render at 2 levels and the refusal line he objected to is gone. But `internal/site/comments_a7.go:221` refuses depth only when the grandparent exists, so a reply under an already-refused reply is appended to a child list nothing walks. Found by `siduri-reviewer` and reproduced here. `failed`, not `held`: the change that satisfied the annotation introduced a silent drop, and `PR-09` — the refusal mechanism exists so nothing disappears quietly — is exactly what it defeats. Finding 0087.
 
 ### Rows 14, 15 — the two clean pages
 
