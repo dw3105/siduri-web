@@ -1,7 +1,8 @@
 # Acceptance W2 — the operator's second pass
 
 wave: W2
-tree: 14f5296e2fbc7248324b4be05c4df21efee38c47
+sitting tree: 57641f5
+probe tree: 14f5296e2fbc7248324b4be05c4df21efee38c47
 host: legalcopilot-dev.europe-west3-b.c.legalcopilot-dev.internal
 
 Surface judged: `.dev-dist` served on 127.0.0.1:8080, tunnelled to the operator's
@@ -9,9 +10,24 @@ Surface judged: `.dev-dist` served on 127.0.0.1:8080, tunnelled to the operator'
 `</body>`. The injection is part of the surface judged and is recorded for that
 reason.
 
-**Probes were added on 2026-08-28, after the sitting.** Every `ran` line below
-was executed on the host and tree named above on that date, not during the
-sitting. Where re-measurement disagrees with what was written on 27 August the
+**Two trees, and the report needs both.** `sitting tree` is what the operator
+looked at and annotated; `probe tree` is what the `ran` lines below were executed
+against on 2026-08-28. They are different, and collapsing them loses whichever is
+not kept. `AC-26` and `AC-27` want the tree that produced the surface judged; a
+re-runnable probe wants the tree it ran on.
+
+This matters for two rows rather than being bookkeeping. At `57641f5`,
+`grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l` returns **2**, not the `0`
+row 2 records, and the planted A-missing ← B ← C chain returns **1**, not row
+11's `0` — because at that tree the defect he annotated was still a visible
+refusal rather than a silent drop. A reader reconstructing why he wrote *"I asked
+you to remove time to read"* against a tree that never rendered read time finds
+nothing to explain the annotation. An earlier draft named only `57641f5`, which
+made the probes unreproducible; the repair for that named only `14f5296`, which
+made his annotations illegible. Found both ways by `siduri-reviewer`.
+
+Every `ran` line below was executed on the host and `probe tree` named above,
+not during the sitting. Where re-measurement disagrees with what was written on 27 August the
 row says so, per `AC-38` and `AC-39`. This repairs a report that carried fifteen
 verdicts and no evidence; it does not claim the evidence existed at the time.
 

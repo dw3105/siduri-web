@@ -105,10 +105,10 @@ notes: Owner: operator. `FR-16` ships `mailto:` as P0's only contact path and th
 ### `/journal/hello-siduri/` rows 1–5 — the article page
 
 verdict: open
-ran: for c in article-header post-list; do grep -cE "^[^{]*\.$c[^{]*\{" static/site.css; done
-at: 2026-08-28T11:42:28Z
-saw: `.article-header` 2 rules, `.post-list` 0
-notes: Row 1 (header layout) is open with owner design and is re-probed in the second pass. Row 2, the escaped `<script>` fixture published as content, and row 3, the ULID in the refusal line, are finding 0071 — both are test fixtures shipped as the only post's content. Row 4, the newsletter apology, is met. Row 5 is the footer, above.
+ran: for c in article-header post-list; do grep -hcE "^[^{]*\.$c[^{]*\{" static/*.css internal/site/*.css | paste -sd+ | bc; done
+at: 2026-08-28T12:52:00Z
+saw: at tree `c90efc9`: `.article-header` 1 rule, `.post-list` 0
+notes: This probe recorded `.article-header` 2 until 2026-08-28 from the single-file form, the same defect repaired in the second pass's rows 7–10 and left standing here — both halves of one fix landing in one report and not the other. `744e972` moved `site.css` under the recorded number. Row 1 (header layout) is open with owner design and is re-probed in the second pass. Row 2, the escaped `<script>` fixture published as content, and row 3, the ULID in the refusal line, are finding 0071 — both are test fixtures shipped as the only post's content. Row 4, the newsletter apology, is met. Row 5 is the footer, above.
 
 ### Pages 4–15 — the sweep
 
