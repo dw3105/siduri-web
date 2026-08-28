@@ -1,0 +1,18 @@
+skill	canonical	checked_here
+cavecrew	Claude Code plugin: cavecrew	not checked here
+caveman	Claude Code plugin: caveman	not checked here
+caveman-commit	Claude Code plugin: caveman	not checked here
+caveman-compress	Claude Code plugin: caveman	not checked here
+caveman-help	Claude Code plugin: caveman	not checked here
+caveman-review	Claude Code plugin: caveman	not checked here
+caveman-stats	Claude Code plugin: caveman	not checked here
+codex-tasks	github.com/dw3105/hitl:skills/codex-tasks	not checked here
+gateslot-code	github.com/dw3105/gateslot:skills/gateslot-code	not checked here
+hitl-accept	github.com/dw3105/hitl:skills/hitl-accept	not checked here
+hitl-code	github.com/dw3105/hitl:skills/hitl-code	not checked here
+hitl-review	github.com/dw3105/hitl:skills/hitl-review	not checked here
+legal-copilot-code	github.com/dw3105/legalcopilot:skills/legal-copilot-code	not checked here
+screen-annotations	github.com/dw3105/hitl:skills/screen-annotations	not checked here
+siduri-code	siduri-web:skills/siduri-code	yes
+talking-to-operator	github.com/dw3105/hitl:skills/talking-to-operator	not checked here
+trello-bug-triage	github.com/dw3105/legalcopilot:skills/trello-bug-triage	not checked here
