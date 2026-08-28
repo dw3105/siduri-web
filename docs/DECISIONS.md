@@ -38,7 +38,34 @@ they did not.
 | 25 | 2026-08-28 | **The tools filter nav is raised as its own review task rather than folded into a design lane.** The task has not been created — finding 0082 | recorded from his annotation *not sure — add the task to review later* | not consulted | **decided**: raise it separately |
 | 26 | 2026-08-28 | **Session close-out must deposit artefacts, not describe duties.** Measured: 15 operator verdicts with 0 probes, no findings row since 0078, no decision row for four rulings, one skill clause existing only in the deployed copy, and `AGENTS.md` carrying a false claim about its own guard. Backfilled as rows 0079–0088 and decisions 20–26 | proposed five parts; withdrew one on finding `tools/acceptance.py` already enforces `{ran, at, saw}` with four planted breaches | **agreed the diagnosis and part 3; dissented on sequencing.** Named a destructive ordering defect — `skill-install` would overwrite the only copy of `PR-11a`; corrected the baseline argument from *prove red* to *prove it can also go green*, one passing fixture per rule; ruled guard-plus-backfill one PR under `FO-16`; collapsed the manifest into part 3 with a checked/unchecked split. Scope: re-derived all five measurements, the greps, the `docs/` guard by planting, A9 under amendcheck, and the drop by fixture. Not checked: `hitl`'s install direction, the templ and CSS diffs, `make check` on `14f5296`, and the backfill content | pending |
 
+| 27 | 2026-08-28 | **Wave W4 — close-out that deposits artefacts.** Three Codex lanes: the silent comment drop fixed by a reachability pass; `tools/acceptance.py` extended to walk the operator's own reports with ten fixtures; `make skill-install`/`skill-check` with a provenance manifest and eight fixtures. Plus `Makefile:32` extended to `SKILL.md`, and the records backfill — findings 0079–0108, decisions 20–27, probes on both acceptance reports | proposed five parts; withdrew one on finding the mechanism already existed, and rewrote all four task files after review | **agreed and gated every step.** Found something blocking in each of the four task files before they were cut — an unbounded walk fed its own cycle input, a guard rejecting the repo's own records convention, a one-shot red proof, and a `docs/` exception contradicting `AGENTS.md`. Verified the merged tree, including four things nobody had run on it: determinism over 41 files, the acceptance invariant, fixture leakage, and B1's property test against the pre-fix implementation. Scope: not checked — B1's and B2's report prose, findings text beyond ids, and whether CI reproduces the 32 s gate time | **decided**: *fix plus guard*, one PR. Merged as `c19c51e` |
+| 28 | 2026-08-28 | **The enforcement section is rewritten to four states, not two.** `FO-02` and `ST-06` are bound by a machine check, `Makefile:32`; `FO-12`/`13`/`14` are bound with a named false negative; eight are self-reported fields nothing reads; `CT-04` named a mechanism that does not exist. No total is given — the categories are the record, and a total is the figure that rots | proposed the rewrite after the audit | **audited all ten and supplied the four-state shape.** Also declined the authority the lead asserted on the operator's behalf — `RV-05`, an arrangement relayed by the lead is a claim until the operator states it directly — while noting the change did not need it, since `CT-01` scopes operator approval to the two requirements files | **pending** — see open question below |
+
 ## Open
+
+- **Does `siduri-reviewer` gate changes on the operator's behalf, or only screen
+  them before they reach him?** The lead told the reviewer that the operator had
+  delegated approval of skill and rules changes to them. The operator said that
+  to the lead, never to the reviewer, who declined to act on it — `RV-05`, an
+  arrangement relayed by the lead is a claim until the operator states it
+  directly. The reviewer's reading is that `RV-01` makes them a precondition on
+  what the lead may propose, never a substitute for approval. Nothing has moved
+  on the disputed reading: `CT-01` scopes operator approval to the two
+  requirements files, and every skill change this wave was a skill file. The
+  question is live for the next thing that touches the contract. Decision 28.
+
+- **Should a skill edit be unable to merge until it has been deployed?**
+  `skill-install` could write the canonical tree digest into
+  `skills/MANIFEST.tsv` at deploy time, and CI could recompute and compare —
+  catching *canonical moved and nobody redeployed*, which is the state this box
+  is in whenever the skill is edited. It needs no live host and pins no foreign
+  checksum. The cost is a real workflow constraint: a pull request editing a
+  skill stays red until someone runs `skill-install` and commits the receipt,
+  which makes *deploy before merge* mechanical rather than remembered. Proposed
+  by `siduri-reviewer`, finding 0094. The other direction — the deployed copy
+  edited directly, finding 0085's actual shape — is unobservable from CI and no
+  mechanism helps.
+
 
 - **`FR-13` is a deliberate partial** while Gateslot's repository stays private,
   and `site-requirements.md:499` — *Gateslot is usable by someone who is not the

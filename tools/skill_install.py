@@ -117,6 +117,19 @@ def check(source: pathlib.Path, live: pathlib.Path, name: str, out) -> int:
         else:
             print(f"skill-check: live copy matches {source}.", file=out)
 
+    # The warning belongs to every state `skill-install` would act on, not only
+    # drift. It first sat inside the drift branch, while the deletion it warns
+    # about is in the strand path - a warning placed where it cannot fire in the
+    # case it exists for. Found by `siduri-reviewer`, docs/FINDINGS.md row 0093.
+    if failed:
+        print(
+            "  before running `make skill-install`: docs/FINDINGS.md row 0093.\n"
+            "  install() removes a stranded directory under the live skills path,\n"
+            "  which holds skills this repo does not own, and has never run\n"
+            "  against it.",
+            file=out,
+        )
+
     if stranded:
         print("  remove the strand:        make skill-install", file=out)
     return 1 if failed else 0
