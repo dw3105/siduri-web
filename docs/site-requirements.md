@@ -209,7 +209,9 @@ Posts may declare `series` and `part`. Series members render a compact navigator
 Posts reference tools by slug and render as linked cards. Tool pages list the posts that mention them. This bidirectional link is built from the content graph, not maintained by hand.
 
 #### FR-9 · Post footer
-Every article ends with the same three elements, in order: author line, newsletter capture, one contextual line routing to `/services`. No sales copy inside the post body.
+~~Every article ends with the same three elements, in order: author line, newsletter capture, one contextual line routing to `/services`.~~ No sales copy inside the post body.
+
+Every article ends with the same two elements, in order: author line and newsletter capture. The contextual services line moves to P3. See ADR 0012.
 
 ### 5.3 Discovery
 
