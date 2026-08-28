@@ -11,5 +11,3 @@ approved_by: human
 ---
 
 The boundary is clear and useful. A [first note](https://example.com/), a [second note](https://example.com/), and a [third note](https://example.com/) make the link policy concrete.
-
-<script>alert("not executable")</script>

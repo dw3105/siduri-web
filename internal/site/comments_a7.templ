@@ -14,7 +14,7 @@ templ commentsSection(post Post, thread commentThread) {
 			@commentCard(comment)
 		}
 		for _, refusal := range thread.Refusals {
-			<p class="comment-refused">{ refusal }</p>
+			<p class="comment-refused" data-comment-refusal={ refusal.OperatorMessage }>{ refusal.ReaderMessage }</p>
 		}
 		if thread.Closed {
 			<p class="comment-closed">Comments are closed on this post because it is more than 12 months old.</p>
