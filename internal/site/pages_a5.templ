@@ -1,42 +1,7 @@
 package site
 
-import "strings"
-
 templ a5Document(title string, lang string, preview bool, head []templ.Component, content templ.Component) {
-	<!DOCTYPE html>
-	<html lang={ lang }>
-		<head>
-			<meta charset="utf-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<title>{ title }</title>
-			if preview {
-				<meta name="robots" content="noindex"/>
-			}
-			<link rel="stylesheet" href="/site.css"/>
-			for _, fragment := range head {
-				@fragment
-			}
-		</head>
-		<body>
-			<header>
-				<a href="/" aria-label="Siduri home"><strong>Siduri</strong></a>
-				<nav aria-label="Primary">
-					<a href="/journal/">Journal</a>
-					<a href="/tools/">Tools</a>
-					<a href="/about/">About</a>
-					<a href="/contact/">Contact</a>
-				</nav>
-			</header>
-			@content
-			<footer>
-				<a href="/about/">About</a> ·
-				<a href="/stack/">Stack</a> ·
-				<a href="/contact/">Contact</a> ·
-				<a href="/impressum/">Impressum</a> ·
-				<a href="/datenschutz/">Datenschutz</a>
-			</footer>
-		</body>
-	</html>
+	@chromeDocument(title, lang, preview, head, content)
 }
 
 templ a5HomePage(data PageData, head []templ.Component) {
@@ -45,7 +10,7 @@ templ a5HomePage(data PageData, head []templ.Component) {
 
 templ a5HomeContent(posts []Post) {
 	<main>
-		<p class="post-meta">A journal about shipping software with agents.</p>
+		<p>A journal about shipping software with agents.</p>
 		<h1>Human in the loop.</h1>
 		<p class="lede">Machines do the work. A person stays at the gate.</p>
 		<p>I build small software systems with agents and keep a human responsible for what becomes public. Siduri is the record: tools built, failures understood, and useful software shipped with the boundary visible.</p>
@@ -62,7 +27,7 @@ templ a5HomeContent(posts []Post) {
 
 templ a5PostCard(post Post) {
 	<article class="post-card">
-		<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+		@postMeta(post)
 		<h2><a href={ "/journal/" + post.Slug + "/" }>{ post.Title }</a></h2>
 		<p>{ post.PlainSummary }</p>
 	</article>

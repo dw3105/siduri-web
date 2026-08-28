@@ -1,34 +1,5 @@
 package site
 
 templ Document(title string, preview bool, head []templ.Component, content templ.Component) {
-	<!DOCTYPE html>
-	<html lang="en">
-		<head>
-			<meta charset="utf-8"/>
-			<meta name="viewport" content="width=device-width, initial-scale=1"/>
-			<title>{ title }</title>
-			if preview {
-				<meta name="robots" content="noindex"/>
-			}
-			<link rel="stylesheet" href="/site.css"/>
-			for _, fragment := range head {
-				@fragment
-			}
-		</head>
-		<body>
-			<header>
-				<a href="/" aria-label="Siduri home"><strong>Siduri</strong></a>
-				<nav aria-label="Primary">
-					<a href="/journal/">Journal</a>
-					<a href="/tools/">Tools</a>
-					<a href="/about/">About</a>
-					<a href="/contact/">Contact</a>
-				</nav>
-			</header>
-			@content
-			<footer>
-				<a href="/about/">About</a> · <a href="/contact/">Contact</a>
-			</footer>
-		</body>
-	</html>
+	@chromeDocument(title, "en", preview, head, content)
 }
