@@ -22,9 +22,12 @@
 * { box-sizing: border-box; }
 body { background: var(--paper); color: var(--ink); margin: 0; }
 a { color: var(--link); }
-header, main, footer { margin: 0 auto; max-width: 68ch; padding: 1.25rem; }
-header { align-items: baseline; display: flex; gap: 2rem; justify-content: space-between; }
-nav { display: flex; flex-wrap: wrap; gap: 1rem; }
+/* Scoped to the site chrome. These were bare element selectors and matched
+   every <header> and <nav> on the page -- the article header, the tool
+   header and the filter nav were all being laid out as a shell row. */
+.site-header, main, body > footer { margin: 0 auto; max-width: 68ch; padding: 1.25rem; }
+.site-header { align-items: baseline; display: flex; gap: 2rem; justify-content: space-between; }
+.site-header nav { display: flex; flex-wrap: wrap; gap: 1rem; }
 nav a { text-decoration: none; }
 main { padding-top: 3rem; padding-bottom: 4rem; }
 h1, h2, h3 { line-height: 1.2; }

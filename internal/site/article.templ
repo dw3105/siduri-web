@@ -10,7 +10,7 @@ templ articleContent(post Post, body string, preview bool, sections ArticleSecti
 	<main>
 		<article>
 			<header class="article-header">
-				<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+				<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { strings.Join(post.Tags, ", ") }</p>
 				if post.Updated != "" && post.Updated != post.Date {
 					<p class="post-meta">Updated <time datetime={ post.Updated }>{ post.Updated }</time></p>
 				}
@@ -27,7 +27,6 @@ templ articleContent(post Post, body string, preview bool, sections ArticleSecti
 			@articleSectionComponents(sections.AfterBody)
 			<footer class="article-footer">
 				<p>Written by Siduri.</p>
-				<p>Newsletter capture is intentionally not part of this first build.</p>
 				@articleSectionComponents(sections.Footer)
 			</footer>
 		</article>
