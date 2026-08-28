@@ -238,7 +238,9 @@ Deferred by D-9 and blocked on OQ-1. When written it must state, above the fold:
 Silence on price is the single biggest conversion killer for solo consultants. A range with conditions beats "let's talk". Record the decision in OQ-2 before this page is written, not while writing it.
 
 #### FR-16 · Contact — `mailto:` at launch
-Phase 0 and 1 ship a plain `mailto:` link and nothing else. No form, no Worker, no data processing, no spam surface, and — importantly — no personal data collected before the §9 questions are settled.
+~~Phase 0 and 1 ship a plain `mailto:` link and nothing else.~~ No form, no Worker, no data processing, no spam surface, and — importantly — no personal data collected before the §9 questions are settled.
+
+The P0/P1 mailto sentence is struck deliberately by ADR 0011; the phase-2 form paragraph below remains.
 
 A form arrives in phase 2 alongside comments, reusing the same Worker: `POST /api/contact`, Turnstile, delivered to Gmail via Resend, same layered spam defence. Fields: name, email, one message box, one optional line — "what are you trying to build". No dropdowns, no budget selector, no phone field.
 
