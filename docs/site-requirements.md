@@ -364,7 +364,9 @@ Cloudflare, Resend, the newsletter provider, GitHub. Each listed on the privacy 
 *Not legal advice. The operator is EU-based and offering commercial services, so these are real obligations. Have a Fachanwalt review before launch — the fee is smaller than one Abmahnung.*
 
 #### LR-1 · Impressum
-Mandatory. <cite index="30-1">The obligation now sits in § 5 DDG, which replaced § 5 TMG on 14 May 2024 with the mandatory contents essentially unchanged</cite> — <cite index="29-1">the substantive requirements carried over and only the terminology shifted from "Telemedien" to "digitale Dienste".</cite> Must be reachable in two clicks from every page, with a working email address and a means of direct contact. <cite index="27-1">There is no legal requirement to cite the statute in the Impressum at all, and omitting the reference avoids the risk of an Abmahnung for citing a repealed one.</cite>
+Mandatory. <cite index="30-1">The obligation now sits in § 5 DDG, which replaced § 5 TMG on 14 May 2024 with the mandatory contents essentially unchanged</cite> — <cite index="29-1">the substantive requirements carried over and only the terminology shifted from "Telemedien" to "digitale Dienste".</cite> ~~Must be reachable in two clicks from every page, with a working email address and a means of direct contact.~~ <cite index="27-1">There is no legal requirement to cite the statute in the Impressum at all, and omitting the reference avoids the risk of an Abmahnung for citing a repealed one.</cite>
+
+The two-click reachability sentence is struck by ADR 0007. A working email address and a means of direct contact remain required. See ADR 0007.
 
 #### LR-1a · Brand is not a legal person
 `Siduri` is a trading name. Whatever the Impressum and the privacy notice require, they name the natural or legal person behind it, not the brand. Registering the domain does not create an entity and does not satisfy any disclosure obligation. See OQ-3 and LR-7.
