@@ -48,7 +48,7 @@ saw: no `.js` or `.mjs` files and no executable files under `dist/`; 32 script t
 red proof: no built-tree no-JavaScript invariant exists to turn red for a small added script; `go test ./internal/site -run 'TestA1BodyRendererIsBuildTimeAndKeepsPlainMarkdown|TestA6NoJavaScriptIndexListsEveryTool' -count=1` at 2026-08-27T18:22:41Z passed, but those are component checks only
 notes: The JSON-LD data blocks are non-executable. The two component tests reject a script in the article body and tools index. The budget code counts `*.js` bytes but would allow a small file under its 30 KB budget; no check scans all rendered HTML for executable script tags or asserts that the built tree contains no JavaScript. The current static navigation and article content are therefore readable without JavaScript, with that future-regression gap recorded.
 
-## Criterion 9 — Impressum and Datenschutz are reachable in two clicks from every page.
+## Criterion 9 — ~~Impressum and Datenschutz are reachable in two clicks from every page.~~
 
 verdict: held
 ran: go test ./internal/site -run '^TestA5RequiredPagesAndLegalLinkGraph$' -count=1
