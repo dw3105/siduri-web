@@ -296,7 +296,7 @@ ranges* in pre-flight. `PR-01` by *baseline: every check proved red before count
 green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
 row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
 lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
-`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py`, selftest count read from `--selftest` output.
+`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py` - **bound with named false negative, never bound clean.** Tool suppress `docs/FINDINGS.md` at `:38` before collision detection, on premise of guard that do not exist, and printed *no collision, wave is cuttable* for three W4 task that all named that file. Finding 0090. Empty output do not mean ready, which is exactly direction `FO-12` rely on. Selftest count read from `--selftest` output.
 
 **Unbound, named rather than left to look enforced:**
 
@@ -310,10 +310,10 @@ lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
 | `CL-05` | Row exist or it do not, so it is checkable - but nothing walk `docs/FINDINGS.md` looking for withdrawn finding, and nothing know a finding was withdrawn | `close-check` extended to `FINDINGS.md`: refuse row whose *What breaks* is `nothing` and whose *What it looks like* carry no probe |
 | `ST-03` | Turn text unread by any tool | Filler list is enumerable - grep it |
 | `ST-04`, `ST-05` | Bind turn text | Nothing cheap |
-| `ST-06` | `Makefile:24` match `AGENTS*.md` and `.agents.md`, never `SKILL.md` | One `-o -name 'SKILL.md'` |
+| `ST-06` | `Makefile:32` match `AGENTS*.md` and `.agents.md`, never `SKILL.md` | One `-o -name 'SKILL.md'` |
 | `PR-02` | *Prefer* is tell. No input turn it red | Heuristic, keep as one |
 | `PR-09` | First half is stance | Second half - *print value, never `ok`* - is grep |
-| `SH-02` | `.git/hooks` empty | Pre-commit hook, four line. Cheapest unconverted rule here |
+| `SH-02` | No non-sample hook installed - `.git/hooks` hold 14 file, all git's own `.sample` | Pre-commit hook, four line. Cheapest unconverted rule here |
 | `SH-03` | Nothing read worktree path | `git worktree list` against repo path, two line |
 | `SH-07` | Nothing read commit shape | `git log` arithmetic |
 | `AS-01`..`AS-08` | Every one is turn-shape obligation | Nothing. Family is prediction, never record |
