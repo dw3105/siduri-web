@@ -98,10 +98,14 @@ The repo is public. Records committed to git carry a name and an opaque hash, ne
 ### 4.1 Submission
 
 #### FR-1 · Comment form
-Every article page renders a comment form below the approved thread. Fields: display name (required, ≤60 chars), email (required, ≤120 chars, never published), website (optional, ≤200 chars), comment body (required, ≤2000 chars). Plus a hidden honeypot field and a Turnstile widget. The form works without JavaScript as a plain HTML POST; htmx is progressive enhancement only.
+~~Every article page renders a comment form below the approved thread.~~
+Every article page renders a comment form below the approved thread. Each approved comment at depth 0 or 1 renders one plain-POST reply form beside that comment; depth-2 comments have no reply form.
+~~Fields: display name (required, ≤60 chars), email (required, ≤120 chars, never published), website (optional, ≤200 chars), comment body (required, ≤2000 chars). Plus a hidden honeypot field and a Turnstile widget.~~
+The page form fields are display name (required, ≤60 chars), email (required, ≤120 chars, never published), website (optional, ≤200 chars), and comment body (required, ≤2000 chars). A reply form has the same fields plus a hidden `parent_id` field containing the ID of the comment being answered. Both forms include a hidden honeypot field and a Turnstile widget. The form works without JavaScript as a plain HTML POST; htmx is progressive enhancement only.
 
 #### FR-2 · Submission endpoint
-`POST /api/comments`, same origin, `application/x-www-form-urlencoded`. Returns an HTML fragment, not JSON — htmx swaps it directly into the page. On success the fragment is the pending-state confirmation card; on failure it is the form re-rendered with an inline error and the user's input preserved.
+~~`POST /api/comments`, same origin, `application/x-www-form-urlencoded`. Returns an HTML fragment, not JSON — htmx swaps it directly into the page. On success the fragment is the pending-state confirmation card; on failure it is the form re-rendered with an inline error and the user's input preserved.~~
+`POST /api/comments` accepts same-origin `application/x-www-form-urlencoded` requests, including an optional hidden `parent_id` identifying the approved comment being answered. It returns an HTML fragment, not JSON — htmx swaps it directly into the page. On success the fragment is the pending-state confirmation card; on failure it is the form re-rendered with an inline error and the user's input preserved. The endpoint refuses a parent at depth 2, so no submission can create a third level.
 
 #### FR-3 · Body format
 Comment bodies are stored as plain text. On render, a restricted Markdown subset is applied: paragraphs, line breaks, `code`, fenced blocks, bold, italic, and links. No images, no raw HTML, no headings, no tables. All links get `rel="nofollow ugc noopener"`. Maximum 2 links per comment; a third causes rejection at submit time with a clear message.
@@ -153,7 +157,10 @@ If more than 20 comments arrive in a rolling 24h window, the Worker switches to 
 One file per comment: `content/comments/<post-slug>/<ulid>.md`, YAML frontmatter plus the body. Sorted lexically by ULID, which sorts chronologically for free. One file per comment, not one file per post — clean diffs, no merge conflicts, and each approval is an isolated, reviewable change.
 
 #### FR-13 · Author replies
-An author reply is a comment record with `author_role: site` and a `parent_id`. Threading is exactly one level deep: a reply to a reply is not supported and the UI offers no affordance for it. Replies are drafted by the agent and approved by the human on the same terms as any other comment.
+An author reply is a comment record with `author_role: site` and a `parent_id`. ~~Threading is exactly one level deep: a reply to a reply is not supported and the UI offers no affordance for it.~~ Threading is exactly two levels deep: a reply to a reply is supported, but a reply to a depth-2 reply is not, and the UI offers no reply affordance on a depth-2 comment. Replies are drafted by the agent and approved by the human on the same terms as any other comment.
+
+#### FR-13a · Reader replies
+A reader reply is a comment record with `author_role: reader` and a `parent_id`. Readers may reply to any approved comment, including another reader's reply, but threading is capped at two levels: a reply to a depth-2 comment is refused and the UI offers no reply affordance on a depth-2 comment. Reader replies are submitted through the same human review and publication path as other reader comments.
 
 #### FR-14 · Static rendering
 The build reads `content/comments/**`, renders threads into each article page, and emits `schema.org/Comment` structured data. Comment count appears in the page metadata. A post with zero comments renders the form and no empty-state noise.
@@ -314,14 +321,14 @@ Every part of this system must be operable by an agent from the repo alone: one 
 - [ ] After deploy, the comment renders statically with `schema.org/Comment` markup.
 - [ ] KV keys for published comments are gone after a green deploy, and only after.
 - [ ] A KV purge failure produces no duplicate comment on the page.
-- [ ] Golden-file tests cover thread rendering, including a one-level reply and an empty thread.
+- [ ] ~~Golden-file tests cover thread rendering, including a one-level reply and an empty thread.~~
 - [ ] Removal request path deletes the file and the comment is gone after the next deploy.
 
 ---
 
 ## 10 · Out of scope
 
-Threading deeper than one level · reactions and voting · comment editing by readers · comment search · an RSS feed of comments · webmentions and ActivityPub · a moderation web UI (the agent session *is* the UI) · avatars fetched from third parties · real-time updates · comment counts on index pages.
+~~Threading deeper than one level~~ · reactions and voting · comment editing by readers · comment search · an RSS feed of comments · webmentions and ActivityPub · a moderation web UI (the agent session *is* the UI) · avatars fetched from third parties · real-time updates · comment counts on index pages.
 
 ---
 

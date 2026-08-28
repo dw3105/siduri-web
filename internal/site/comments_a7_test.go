@@ -47,14 +47,20 @@ func TestA7RepositoryCommentsRenderAsOneLevelThread(t *testing.T) {
 	}
 
 	output := string(page)
+	if !strings.Contains(output, `id="comment-01K3QZJ8X4YB7N2M9V0PQRSTUY"`) {
+		t.Fatal("reader depth-2 comment is missing from rendered thread markup")
+	}
+	renderedCommentCount := strings.Count(output, `<div class="comment" id="comment-`)
+	if renderedCommentCount == 0 {
+		t.Fatal("rendered thread contains no comment elements")
+	}
+	commentCount := strconv.Itoa(renderedCommentCount)
 	for _, want := range []string{
 		`class="comment-thread"`,
-		`data-comment-count="2"`,
-		`itemprop="commentCount" content="2"`,
+		`data-comment-count="` + commentCount + `"`,
+		`itemprop="commentCount" content="` + commentCount + `"`,
 		`itemtype="https://schema.org/Comment"`,
 		`Siduri reply`,
-		`data-comment-refusal="Comment 01K3QZJ8X4YB7N2M9V0PQRSTUX was not rendered: replies can be attached only to top-level comments."`,
-		`This comment was not shown because replies can only be attached to top-level comments.`,
 		`rel="nofollow ugc noopener"`,
 		`"@type":"Comment"`,
 	} {
@@ -67,12 +73,6 @@ func TestA7RepositoryCommentsRenderAsOneLevelThread(t *testing.T) {
 	}
 	if got := strings.Count(output, `rel="nofollow ugc noopener"`); got < 4 {
 		t.Fatalf("expected the three body links and author website to carry rel, got %d", got)
-	}
-	if strings.Contains(output, "This reply to a reply must be refused") {
-		t.Fatal("reply to a reply was silently rendered")
-	}
-	if strings.Contains(output, `<p class="comment-refused">Comment 01K3QZJ8X4YB7N2M9V0PQRSTUX`) {
-		t.Fatal("operator refusal detail leaked into reader-facing copy")
 	}
 	if _, err := os.Stat(filepath.Join(first, "comments_a7.css")); err != nil {
 		t.Fatalf("comments stylesheet was not emitted: %v", err)

@@ -200,6 +200,7 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []commentRef
 	}
 
 	rootIDs := make([]string, 0, len(records))
+	children := make(map[string][]string, len(records))
 	refusals := make([]commentRefusal, 0)
 	for _, record := range records {
 		if record.ParentID == "" {
@@ -216,23 +217,28 @@ func arrangeCommentRecords(records []commentRecord) ([]commentView, []commentRef
 			continue
 		}
 		if parent.ParentID != "" {
-			refusals = append(refusals, commentRefusalForComment(record.ID, "replies can be attached only to top-level comments.", "This comment was not shown because replies can only be attached to top-level comments."))
-			continue
+			grandparent, exists := byID[parent.ParentID]
+			if exists && grandparent.ParentID != "" {
+				refusals = append(refusals, commentRefusalForComment(record.ID, "replies can be attached only up to two levels deep.", "This comment was not shown because replies can be attached only up to two levels deep."))
+				continue
+			}
 		}
-		if record.AuthorRole != "site" {
-			refusals = append(refusals, commentRefusalForComment(record.ID, "only a site comment may be a reply.", "This comment was not shown because only a site comment may be a reply."))
-			continue
-		}
-		parentView := views[parent.ID]
-		parentView.Replies = append(parentView.Replies, views[record.ID])
-		views[parent.ID] = parentView
+		children[parent.ID] = append(children[parent.ID], record.ID)
 	}
 	sort.Strings(rootIDs)
 	comments := make([]commentView, 0, len(rootIDs))
-	for _, id := range rootIDs {
+	var assemble func(string) commentView
+	assemble = func(id string) commentView {
 		view := views[id]
-		sort.Slice(view.Replies, func(i, j int) bool { return view.Replies[i].ID < view.Replies[j].ID })
-		comments = append(comments, view)
+		replyIDs := children[id]
+		sort.Strings(replyIDs)
+		for _, replyID := range replyIDs {
+			view.Replies = append(view.Replies, assemble(replyID))
+		}
+		return view
+	}
+	for _, id := range rootIDs {
+		comments = append(comments, assemble(id))
 	}
 	sort.Slice(refusals, func(i, j int) bool {
 		return refusals[i].OperatorMessage < refusals[j].OperatorMessage
