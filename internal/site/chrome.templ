@@ -1,5 +1,7 @@
 package site
 
+import "strings"
+
 templ chromeDocument(title string, lang string, preview bool, head []templ.Component, content templ.Component) {
 	<!DOCTYPE html>
 	<html lang={ lang }>
@@ -33,7 +35,7 @@ templ siteHeader() {
 }
 
 templ postMeta(post Post) {
-	<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time></p>
+	<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { strings.Join(post.Tags, ", ") }</p>
 }
 
 templ pageHeader(class string, meta templ.Component, title string, summary string, beforeTitle templ.Component, afterSummary templ.Component) {
