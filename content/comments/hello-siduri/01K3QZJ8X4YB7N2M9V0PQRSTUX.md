@@ -10,4 +10,4 @@ approved_at: 2026-08-25T20:25:00Z
 approved_by: human
 ---
 
-This reply to a reply must be refused rather than flattened into the thread.
+The successful path is useful too; this answer keeps the example concrete.
