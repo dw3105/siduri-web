@@ -195,7 +195,9 @@ Images are optimized at build time to WebP/AVIF with explicit width and height a
 ### 5.2 Article pages
 
 #### FR-5 · Reading experience
-Single column, ~68ch measure, no sidebar. Table of contents for posts over 1,500 words, inline on mobile and in the margin on wide screens. Reading time and publish date visible; updated date shown when it differs.
+Single column, ~68ch measure, no sidebar. Table of contents for posts over 1,500 words, inline on mobile and in the margin on wide screens. ~~Reading time and~~ publish date visible; updated date shown when it differs.
+
+Reading time is struck by ADR 0010; the measure, table of contents, publish date, and conditional updated date remain.
 
 #### FR-6 · Code blocks
 Syntax highlighting applied at build time — no client-side highlighter. Copy button, language label, optional filename caption, and horizontal scroll rather than wrapping. Given the subject matter, code blocks are primary content and get first-class typographic treatment.
