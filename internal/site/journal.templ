@@ -21,7 +21,7 @@ templ journalContent(posts []Post) {
 
 templ postCard(post Post) {
 	<article class="post-card">
-		<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { readingTime(post.Body) } min read · { strings.Join(post.Tags, ", ") }</p>
+		<p class="post-meta"><time datetime={ post.Date }>{ post.Date }</time> · { strings.Join(post.Tags, ", ") }</p>
 		<h2><a href={ "/journal/" + post.Slug + "/" }>{ post.Title }</a></h2>
 		<p>{ post.PlainSummary }</p>
 	</article>

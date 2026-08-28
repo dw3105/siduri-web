@@ -165,6 +165,7 @@ cutting one.
 - **AS-06** **Frame what break, never what changed.**
 - **AS-07** **Decision takeable without opening laptop.**
 - **AS-08** **Question that contradict operator's own instruction go to him as contradiction, named.** Contract he wrote can forbid order he asked for.
+- **AS-09** **Asking operator to look at rendered thing mean giving exact URL on host they are using, never path and never page name.** They read turn on phone, in another session, hours later, and reconstructing base URL is work they should not do. Port is theirs, not yours: tunnel that forward local 18080 make every 8080 link wrong. Ask once what base they hold, then paste full link per page, one per line, clickable.
 
 ## Block pre-flight
 
