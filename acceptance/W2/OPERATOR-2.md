@@ -20,7 +20,7 @@ verdicts and no evidence; it does not claim the evidence existed at the time.
 | # | Page | Element | Note | Verdict | Owner |
 |---|---|---|---|---|---|
 | 1 | `/` | `header > a > strong` "Siduri" | `siduri.ai` is taken — brainstorm a new free name | open | operator |
-| 2 | `/journal/` | `p.post-meta` | "I asked you to remove time to read" | failed | integrator |
+| 2 | `/journal/` | `p.post-meta` | "I asked you to remove time to read" | held (via `lane/w3`) | integrator |
 | 3 | `/tools/` | `article.tool-card` | Should look like console | open | design |
 | 4 | `/tools/` | `nav.tool-filters` | Not sure — add the task to review later | deferred | integrator |
 | 5 | `/journal/hello-siduri/` | `footer.article-footer > p:nth-child(2)` | "Newsletter capture is intentionally not part of this first build." — WTF | held | integrator |
@@ -52,12 +52,12 @@ notes: Owner: operator. Amends `D-8`, `OQ-5` and `:423`, none of which this pass
 
 ### Row 2 — read time on the journal list
 
-verdict: failed, repaired under `lane/w3`
+verdict: held (via `lane/w3`)
 ran: grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l
 at: 2026-08-28T11:42:28Z
 saw: 0
 red proof: the same command on `7667b8d`, the tree he was looking at, returned a non-zero count
-notes: `failed` rather than `held` because the ruling of 28 August was not implemented when he looked. The repair is real and is what `saw` measures.
+notes: This annotation carried three different verdicts across the two reports until 2026-08-28 — `open` in both first-pass tables, `held` in the first-pass probe block, `failed` here — each defensible as of a different date and none saying which was current. `AC-13`: `failed` is a fix-round row, never a verdict that stands, so the pass updates in place and names the fix. One verdict now, `held (via lane/w3)`, in all four places. It read `failed` at the sitting because his ruling of 28 August was not implemented on the page he was looking at; `AC-12` keeps the `via` because bare `held` deletes the most useful thing the row records.
 
 ### Rows 3, 12, 13 — the tool cards and the filter nav
 
