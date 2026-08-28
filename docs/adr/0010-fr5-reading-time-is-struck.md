@@ -12,10 +12,10 @@ Only `Reading time and` is struck in place. The single-column measure, table-of-
 
 ## Why it was asked
 
-The operator said “Date only, drop read-time and tags” for the root post metadata and repeated “Date only — drop read-time and tags” on the journal card. This amendment reaches the `FR-5` wording that requires reading time; it does not invent a contract strike for tags that `FR-5` does not contain.
+The operator's design pass recorded “Date only, drop read-time and tags” on the root post card and again on the journal card. **He revised that on 28 August 2026, asked directly: “Date and tags, read time is too posh.”** Tags stay; reading time goes, article pages included. This amendment reaches the `FR-5` wording that requires reading time, which is the contract's only mention of it; tags appear nowhere in `FR-5`, so that half of the original annotation never needed an amendment and now needs none.
 
 ## What now carries the risk
 
 I grepped `internal/site/article.templ:13`, `internal/site/journal.templ:24`, `internal/site/pages_a5.templ:65`, and `internal/site/tags_a2.templ:18`. The first three render reading time and tags with the date; the tag-page card at `tags_a2.templ:18` is already date-only. I found no direct test asserting that reading time is visible, so no live guard carries the removed presentation requirement. The remaining date and article-layout obligations stay in the contract for the owning template lanes to implement and test.
 
-The ambiguity was resolved narrowly: the operator's “drop read-time and tags” annotation is two presentation findings, but only reading time is named by this clause. Tags remain untouched here and any tag-display amendment needs its own operator ruling and trace.
+Tags remain untouched by this clause and **no tag amendment is pending**: the operator's revision keeps them. `internal/site/chrome.templ` was corrected at `f785243` so `postMeta` renders date and tags without reading time, which is why the call-site note above no longer describes `pages_a5.templ`.

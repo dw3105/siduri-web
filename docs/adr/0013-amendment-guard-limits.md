@@ -65,6 +65,38 @@ The mechanism has these limits, all recorded rather than hidden:
    present. Nothing asserts that `check` still depends on it. The fix is not
    part of this lane.
 
+9. **Rule 1 is existential over the range, and every per-ADR check it owns
+   inherits that.** `amendcheck.py:393` filters to the added ADRs with no
+   `date_error` and passes if *any* survive. The number-freshness checks at
+   `:259-275` — collision with an existing ADR, duplication inside the added set
+   — are well built and write to that same field, so they are discarded whenever
+   one added ADR is clean. Six of seven ADRs can carry a malformed, undated or
+   duplicated status line and the guard reports a legitimate amendment while
+   naming the one it validated, which reads exactly like set validation. Audit
+   after the fact instead:
+
+       ls docs/adr/ | sed -n 's/^\([0-9]\{4\}\)-.*/\1/p' | sort | uniq -d
+       grep -L '^\*\*Status\*\* ·' docs/adr/*.md
+
+10. **Part three of a three-part amendment is never in scope.** `CT-02` requires
+    the ADR, the strike in place, and every affected check, in one commit. Rules
+    1 to 3 read `docs/` only, so the guard prints *legitimate amendment* over a
+    range that cannot contain a check edit — and prints the same whether that
+    edit exists anywhere or nowhere. Both instances in this set are real: this
+    amendment's own part three landed on another branch, in `baaface`, and
+    criterion 9's landed nowhere until it was noticed by hand. The first was
+    visible only because `make acceptance` happens to compare fragment headings
+    against contract text.
+
+11. **One amendment's risk assessment can be invalidated by another amendment in
+    the same set, and nothing sees it.** ADR 0007 retains `LR-1`'s direct-contact
+    obligation; ADR 0011 strikes the clause requiring the only implementation of
+    it. Each passes the guard on its own range, and a per-commit read cannot
+    catch it either — it took reading the whole set. **The remedy is not a future
+    guard.** Rules 1 to 4 read `docs/` and one range, and nothing cheap
+    cross-references two ADRs' risk sections against each other. A person reads
+    the set, or nobody does.
+
 The old guard may also have been vacuous in CI: `Makefile:30` fell back to a
 base expression that collapses to HEAD in a shallow checkout, while
 `actions/checkout@v4` defaults to `fetch-depth: 1` and the old `ci.yml` set no
