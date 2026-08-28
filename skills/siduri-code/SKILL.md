@@ -42,7 +42,7 @@ work move; `AGENTS.md` govern what worker may touch. Both read.
 `skill check` → this line, nothing else:
 
 ```
-siduri-code v1.4: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | route operator already use is fact like credential he hold | task naming parsed output pin every field | correctness per-part mean defect live between part, no per-part gate see it | field carrying command get re-run or carry no command | guard pinned to value it guard go red on correct work | directory doing exempted job need its exemption | gate running only in mode where it cannot fail is not gate | binding is not serving, check gate scan what it think it scan | under green-required gate, unit of work is whatever make gate green | wave not closeable until operator looked at artefact | operator ruling get its row in the turn it is given | clause written into deployed skill and not into skills/ is lost, and install target overwrite it | never end turn with uncommitted work, and destructive probe go in throwaway clone | ask what is running never what is installed | probe block verdict equal every row it name and blocks partition once, row addressed by section and number | finding withdrawn after checking get row carrying probe that withdrew it | twenty clause here go red nowhere and rest unaudited, and section naming them is only thing telling reader which is which
+siduri-code v1.4: two spec files are the contract and only operator amend them | Codex worker read task file and never this skill, so clause reaching worker live in task text or in guard | AGENTS.md truncate at 32768 silently and drop end, so prohibition go first and live in file worker cannot edit | lane own only new file, and file every lane need belong to integrator | registration happen when data exist, never before | worker run no gate, integrator run it once on merged tree | branch green alone say nothing about branch merged | check green at baseline certify nothing, prove it red first | agent report is claim, read tree | document is not machine fact, probe this turn | rename inside contract dangle reference the contract cannot fix | reviewer agreement is precondition on proposal, never substitute for approval | agreement carry scope, what was checked and what was not | one decision per turn, box last, Your move and Mine | route operator already use is fact like credential he hold | task naming parsed output pin every field | correctness per-part mean defect live between part, no per-part gate see it | field carrying command get re-run or carry no command | guard pinned to value it guard go red on correct work | directory doing exempted job need its exemption | gate running only in mode where it cannot fail is not gate | binding is not serving, check gate scan what it think it scan | under green-required gate, unit of work is whatever make gate green | wave not closeable until operator looked at artefact | operator ruling get its row in the turn it is given | clause written into deployed skill and not into skills/ is lost, and install target overwrite it | never end turn with uncommitted work, and destructive probe go in throwaway clone | ask what is running never what is installed | probe block verdict equal every row it name and blocks partition once, row addressed by section and number | finding withdrawn after checking get row carrying probe that withdrew it | section carry no count, because number here went stale four time while carrying its own command
 ```
 
 `skill check <ID>` → that rule line, verbatim. `skill check refs` → every filename
@@ -56,7 +56,7 @@ in reference table. Cannot recall → `skill check: FAILED, reattach skill`.
 - **ST-04** **Every reference carry its content same sentence, every turn.** `FO-04` is nothing; *FO-04, registration happen when data exist* is readable.
 - **ST-05** **Fact leaving session carry where it was read from.** Ref for file, command for query, unit for number.
 - **ST-06** **This file stay under 32768 byte.** Same cap that eat `AGENTS.md`. Skill over cap is skill that truncate wherever it is pasted, and `gateslot-code` sit at 32394 with 374 spare.
-- **ST-13** **Rule phrased as advice fire while auditing, never while designing.** Write what diff can be checked against, never what to be careful about. Read `## What this enforces` before adding clause: twenty here already fail this, and five of twenty were added by session that quoted this clause while adding them.
+- **ST-13** **Rule phrased as advice fire while auditing, never while designing.** Write what diff can be checked against, never what to be careful about. Read `## What this enforces` before adding clause: unbound table there already list one class of clause that fail this, and several were added by session that quoted this clause while adding them.
 - **ST-07** **`SKILL.md` is index. Rule is one line, one claim, under 300 char.** Shape live in reference.
 
 ## Read first
@@ -244,35 +244,46 @@ close-out wave <N>
 
 - **CL-01** **Done-when is list cited from task, and every line met or deferred by name.** Answered from memory is not answered.
 - **CL-02** **Finding outside scope go in `docs/FINDINGS.md`, in closing commit.** Row carry where found, what break, what it look like when it break.
-- **CL-05** **Finding withdrawn after checking get row, and row carry probe that withdrew it.** Row exist or it do not, so this is checkable; *act of looking is evidence* is not, and would be twenty-first advice clause. Withdrawn finding leaving no trace get re-opened by next reader with no record anybody looked. Requires `docs/FINDINGS.md`'s negative-result row shape, added same day.
+- **CL-05** **Finding withdrawn after checking get row, and row carry probe that withdrew it.** Row exist or it do not, so this is checkable; *act of looking is evidence* is not, and would join unbound table rather than bind anything. Withdrawn finding leaving no trace get re-opened by next reader with no record anybody looked. Requires `docs/FINDINGS.md`'s negative-result row shape, added same day.
 - **CL-03** **Claim later action erase carry its date and that action.**
 - **CL-04** **Turn end `Your move:` / `Mine:`. Box go last.**
 
 ## What this enforces
 
-**Ninety-nine clause here, counted by `grep -oE '\*\*[A-Z]{2}-[0-9]+[a-z]?\*\*'
-SKILL.md | sort -u | wc -l`. Thirteen bind named artefact. Twenty bind nothing.
-Remaining sixty-six are unaudited, and saying so is the point of this section.**
+**No count appear in this section, deliberately.** Number here went stale four
+time - *fifteen*, *seventy-two*, *ninety-nine*, then stale again on very next
+commit that added clause. Fourth one broke inside commit about not losing
+record, with instruction *re-run it rather than trust it* one line away and its
+command printed beside it.
 
-**Count was `seventy-two` until 28 Aug 2026 and the file had ninety-nine.** Old
-command drop suffixed id - `PR-11a`, `SS-04a`, `PR-16a` - and section was never
-re-run as clause landed. `PR-14`: value pinned by hand go wrong on correct work,
-and here nothing go red so it just quietly become false. Number above carry
-command that produced it (`ST-05`); re-run it rather than trust it.
+**That is `SS-06` failing on its own terms.** Clause say number carry command
+that produced it. This number carried its command, verbatim, one line away, and
+rotted anyway - because carrying command is not running it, and instruction to
+re-derive fire while auditing, never while adding. `ST-13`, one level up from
+where it usually apply. Clause was satisfied and defect recurred, four time.
 
-Earlier version claimed *fifty-one of sixty-six bind an artefact*. Both number
-wrong: count came from grep matching only list-item form and missing `RD-01` and
-`CT-01`, which are written as bare lead-in exactly as parent skill write them,
-and the split was arithmetic rather than audit. `ST-05` say number carry command
-that produced it; that clause was broken by the section enforcing it.
+So numeral is gone rather than corrected fifth time. Count when you need it:
 
-Nothing in formatting tell bound from unbound, and `skill check` reciting
-seventy-two read as coverage. This section exist so reader can tell which is which - and reader who
+    grep -oE '\*\*[A-Z]{2}-[0-9]+[a-z]?\*\*' SKILL.md | sort -u | wc -l
+
+Two caveat for whoever run it. Suffixed id - `PR-11a`, `SS-04a`, `PR-16a` - need
+`[a-z]?` or they vanish, which is how *seventy-two* survived. And `CT-01` and
+`RD-01` are bold paragraph rather than list item, so `^- `-anchored command give
+two fewer and read as two clause lost.
+
+**Property that replace the number, and it is greppable:** every clause added is
+named in bound list or unbound table below, or it sit in unaudited remainder by
+not being named at all. Test is one grep for the id. `CL-05` was unclassified
+for one commit and no number would have caught that - `PR-14`, derive target,
+never name it, demonstrated four time.
+
+Nothing in formatting tell bound from unbound, and `skill check` reciting every
+clause read as coverage. This section exist so reader can tell which is which - and reader who
 most need it is this session, in three week, under load.
 
-**Thirteen bound, and by what.** `SS-04` by `git status --short`, one call, run before turn end. `SS-05` and `SS-06` bind once `skill-check` and `close-check` exist and are unbound until then - listed here as **pending**, never as bound, because a clause bound by a target nobody has built is the exact shape this section exist to expose. `PR-16` and `PR-16a` bind by partition-and-uniformity over report row, same condition.
+**Bound-pending, and by what.** `SS-04` by `git status --short`, one call, run before turn end. `SS-05` and `SS-06` bind once `skill-check` and `close-check` exist and are unbound until then - listed here as **pending**, never as bound, because a clause bound by a target nobody has built is the exact shape this section exist to expose. `PR-16` and `PR-16a` bind by partition-and-uniformity over report row, same condition.
 
-**Eleven bound today, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
+**Bound today, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
 ranges* in pre-flight. `PR-01` by *baseline: every check proved red before counted
 green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
 row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
@@ -288,6 +299,7 @@ lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
 | `SS-03` | *Commit unasked* bind intent, never artefact | Same guard as `SS-02` |
 | `SS-04a` | *Throwaway clone* is where command ran, not what it produced | Nothing cheap |
 | `SS-07` | Bind turn text | Nothing cheap |
+| `CL-05` | Row exist or it do not, so it is checkable - but nothing walk `docs/FINDINGS.md` looking for withdrawn finding, and nothing know a finding was withdrawn | `close-check` extended to `FINDINGS.md`: refuse row whose *What breaks* is `nothing` and whose *What it looks like* carry no probe |
 | `ST-03` | Turn text unread by any tool | Filler list is enumerable - grep it |
 | `ST-04`, `ST-05` | Bind turn text | Nothing cheap |
 | `ST-06` | `Makefile:24` match `AGENTS*.md` and `.agents.md`, never `SKILL.md` | One `-o -name 'SKILL.md'` |
@@ -303,7 +315,7 @@ lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
 gate, and saying so here is what stop green close reading as covered.
 
 **`ST-13` and this section arrive together, deliberately.** File carrying *rule
-phrased as advice fire while auditing* plus twenty advice clause break own rule
+phrased as advice fire while auditing* plus every advice clause in unbound table break own rule
 on same page. `ST-13` alone read as satisfied and make file less honest.
 
 ## Step checklist
