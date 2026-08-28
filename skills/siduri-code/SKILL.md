@@ -289,14 +289,29 @@ Nothing in formatting tell bound from unbound, and `skill check` reciting every
 clause read as coverage. This section exist so reader can tell which is which - and reader who
 most need it is this session, in three week, under load.
 
-**Bound-pending, and by what.** `SS-04` by `git status --short`, one call, run before turn end. `SS-05` and `SS-06` bind once `skill-check` and `close-check` exist and are unbound until then - listed here as **pending**, never as bound, because a clause bound by a target nobody has built is the exact shape this section exist to expose. `PR-16` and `PR-16a` bind by partition-and-uniformity over report row, same condition.
+**Four state, not two.** Audited clause by clause 28 Aug 2026, rows
+`0100`-`0102` in `docs/FINDINGS.md`.
 
-**Bound today, and by what.** `RD-01` and `RD-05` by *requirements read whole with line
-ranges* in pre-flight. `PR-01` by *baseline: every check proved red before counted
-green*. `PR-06` by *breaches n planted, n red, n restored*. `PR-07` by determinism
-row. `FO-02` by byte count. `FO-10` by *end-to-end, page opened*. `FO-11` by *each
-lane's tree read, not its report*. `RV-02` by *decisions n rows with scope*.
-`CT-04` by path check in `make check`. `FO-12`, `FO-13` and `FO-14` by `tools/lane_overlap.py` - **bound with named false negative, never bound clean.** Tool suppress `docs/FINDINGS.md` at `:38` before collision detection, on premise of guard that do not exist, and printed *no collision, wave is cuttable* for three W4 task that all named that file. Finding 0090. Empty output do not mean ready, which is exactly direction `FO-12` rely on. Selftest count read from `--selftest` output.
+    machine check      `FO-02`, by `Makefile:32`. One clause.
+    named hole         `FO-12`/`13`/`14`, by `tools/lane_overlap.py`, which
+                       suppress `docs/FINDINGS.md` at `:38` on premise of guard
+                       that do not exist. Empty output do not mean ready -
+                       exact direction `FO-12` rely on. Finding 0090.
+    self-report        eight clause, by field in pre-flight or close-out block.
+                       **Nothing mechanical read either block.** Field make
+                       session look; it do not tell filled-in from true.
+    no mechanism       `CT-04`, claimed bound by *path check in `make check`*.
+                       No such check - planted committed `docs/` edit, exit 0,
+                       twice. Finding 0086, recorded before this was written.
+
+Third state was absent here until today and was doing most of the work.
+Merging it with `FO-02` is what made this section overstate.
+
+**`FO-11` is refuted by own binding** - *read tree, never report*, bound by a
+close-out field the session fill in about itself.
+
+**Pending, never bound:** `SS-04` by `git status --short`. `SS-05`, `SS-06`,
+`PR-16`, `PR-16a`, `CL-05` once `skill-check` and `close-check` exist.
 
 **Unbound, named rather than left to look enforced:**
 
