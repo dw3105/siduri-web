@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"os"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"testing"
@@ -234,4 +235,188 @@ func TestA7RestrictedMarkdownEscapesHTMLAndSupportsAllowedSubset(t *testing.T) {
 	if strings.Contains(output, `href="https://example.com/image.png"`) {
 		t.Fatalf("image syntax was turned into a link: %s", output)
 	}
+}
+
+func TestA7CommentArrangementMakesEveryRecordReachableOrRefused(t *testing.T) {
+	tests := []struct {
+		name               string
+		records            []commentRecord
+		wantRendered       []string
+		wantRefused        []string
+		wantRefusalDetails map[string]string
+	}{
+		{
+			name: "missing parent chain",
+			records: []commentRecord{
+				testCommentRecord("B", "missing"),
+				testCommentRecord("C", "B"),
+			},
+			wantRefused: []string{"B", "C"},
+			wantRefusalDetails: map[string]string{
+				"B": "its parent comment missing is missing.",
+				"C": "its parent comment B was not rendered.",
+			},
+		},
+		{
+			name: "missing parent chain with another descendant",
+			records: []commentRecord{
+				testCommentRecord("B", "missing"),
+				testCommentRecord("C", "B"),
+				testCommentRecord("D", "C"),
+			},
+			wantRefused: []string{"B", "C", "D"},
+			wantRefusalDetails: map[string]string{
+				"B": "its parent comment missing is missing.",
+				"C": "its parent comment B was not rendered.",
+				"D": "its parent comment C was not rendered.",
+			},
+		},
+		{
+			name: "too deep after two allowed levels",
+			records: []commentRecord{
+				testCommentRecord("root", ""),
+				testCommentRecord("A", "root"),
+				testCommentRecord("B", "A"),
+				testCommentRecord("C", "B"),
+			},
+			wantRendered: []string{"root", "A", "B"},
+			wantRefused:  []string{"C"},
+			wantRefusalDetails: map[string]string{
+				"C": "replies can be attached only up to two levels deep.",
+			},
+		},
+		{
+			name: "one reply",
+			records: []commentRecord{
+				testCommentRecord("A", ""),
+				testCommentRecord("B", "A"),
+			},
+			wantRendered: []string{"A", "B"},
+		},
+		{
+			name: "siblings",
+			records: []commentRecord{
+				testCommentRecord("A", ""),
+				testCommentRecord("B", "A"),
+				testCommentRecord("B2", "A"),
+			},
+			wantRendered: []string{"A", "B", "B2"},
+		},
+		{
+			name: "self parent",
+			records: []commentRecord{
+				testCommentRecord("A", "A"),
+			},
+			wantRefused: []string{"A"},
+		},
+		{
+			name: "two node cycle",
+			records: []commentRecord{
+				testCommentRecord("A", "B"),
+				testCommentRecord("B", "A"),
+			},
+			wantRefused: []string{"A", "B"},
+		},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			comments, refusals := arrangeCommentRecords(test.records)
+			rendered := testRenderedCommentCounts(comments)
+			refused := testRefusedCommentCounts(refusals, test.records)
+
+			for _, record := range test.records {
+				renderedCount := rendered[record.ID]
+				refusedCount := refused[record.ID]
+				if !((renderedCount == 1 && refusedCount == 0) || (renderedCount == 0 && refusedCount == 1)) {
+					t.Errorf("comment %s has rendered count %d and refusal count %d; want exactly one", record.ID, renderedCount, refusedCount)
+				}
+			}
+
+			if got, want := sortedCommentIDs(rendered), sortedCommentIDsFromList(test.wantRendered); !slicesEqual(got, want) {
+				t.Errorf("rendered comment IDs = %v, want %v", got, want)
+			}
+			if got, want := sortedCommentIDs(refused), sortedCommentIDsFromList(test.wantRefused); !slicesEqual(got, want) {
+				t.Errorf("refused comment IDs = %v, want %v", got, want)
+			}
+			for id, detail := range test.wantRefusalDetails {
+				if got := refusalDetailForComment(refusals, id); got != detail {
+					t.Errorf("refusal detail for %s = %q, want %q", id, got, detail)
+				}
+			}
+		})
+	}
+}
+
+func testCommentRecord(id, parentID string) commentRecord {
+	return commentRecord{
+		ID:         id,
+		AuthorName: "Reader " + id,
+		AuthorRole: "reader",
+		ParentID:   parentID,
+		Body:       "Comment " + id,
+	}
+}
+
+func testRenderedCommentCounts(comments []commentView) map[string]int {
+	counts := make(map[string]int)
+	var visit func([]commentView)
+	visit = func(views []commentView) {
+		for _, view := range views {
+			counts[view.ID]++
+			visit(view.Replies)
+		}
+	}
+	visit(comments)
+	return counts
+}
+
+func testRefusedCommentCounts(refusals []commentRefusal, records []commentRecord) map[string]int {
+	counts := make(map[string]int)
+	for _, record := range records {
+		prefix := "Comment " + record.ID + " was not rendered:"
+		for _, refusal := range refusals {
+			if strings.HasPrefix(refusal.OperatorMessage, prefix) {
+				counts[record.ID]++
+			}
+		}
+	}
+	return counts
+}
+
+func sortedCommentIDs(counts map[string]int) []string {
+	ids := make([]string, 0, len(counts))
+	for id := range counts {
+		ids = append(ids, id)
+	}
+	sort.Strings(ids)
+	return ids
+}
+
+func sortedCommentIDsFromList(ids []string) []string {
+	sorted := append([]string(nil), ids...)
+	sort.Strings(sorted)
+	return sorted
+}
+
+func slicesEqual(left, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for i := range left {
+		if left[i] != right[i] {
+			return false
+		}
+	}
+	return true
+}
+
+func refusalDetailForComment(refusals []commentRefusal, id string) string {
+	prefix := "Comment " + id + " was not rendered: "
+	for _, refusal := range refusals {
+		if strings.HasPrefix(refusal.OperatorMessage, prefix) {
+			return strings.TrimPrefix(refusal.OperatorMessage, prefix)
+		}
+	}
+	return ""
 }
