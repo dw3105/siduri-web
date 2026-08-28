@@ -58,7 +58,10 @@ surface judged and is recorded here for that reason.
 
 ## Close
 
-15 of 15 pages walked. 22 annotations. 3 clean, 3 unlinked by decision.
+15 of 15 pages walked. 22 annotations. **2 clean** — `/about/` and
+`/404.html` — and 3 unlinked by decision. The close line read *3 clean*
+until 2026-08-28; the table it summarises has always shown two. `AC-21`:
+a count is computed from the rows, never counted by hand. Finding 0081.
 
 **Dominant finding: one chrome, six reinventions.** header, footer, nav,
 post-meta, post list and the header block are each built two or three times by
