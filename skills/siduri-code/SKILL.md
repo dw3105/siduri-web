@@ -10,8 +10,14 @@ Output stay **lite**. Change log live in `ledger.md`, never here.
 
 **Canonical copy is `skills/siduri-code/` in `siduri-web`.**
 `~/.claude/skills/siduri-code` is deployed copy. **No install target and no drift
-check exist yet** - copy is by hand, and `deployed == canonical` is true today and
-held by nothing. `hitl` bind it with `make skill-check`. Finding 0013.
+check exist yet**, and the two copies **differ right now** - this file is ahead of
+deployed by `SS-01`..`SS-07`, `SS-04a` and `PR-11a`, so clause you are reading here
+may not be clause the running session loaded. Earlier version of this paragraph said
+`deployed == canonical` is true today and held by nothing; that sentence was false
+for as long as `PR-11a` existed in deployed and nowhere else, and stayed in the file
+through the commit that repaired the drift it described. `RD-02`: probe beat
+document, including this one. `hitl` bind it with `make skill-check`. Findings 0013,
+0085.
 
 **This file bind Claude session only.** Codex worker read task file. Clause meant
 to reach worker go in task text or in guard, never here. `FO-01`.

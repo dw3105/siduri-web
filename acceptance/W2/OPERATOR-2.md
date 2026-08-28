@@ -44,78 +44,78 @@ four; `clean` is `held` with the probe saying what was clean, `fixed` and
 
 ### Row 1 — the site name
 
-- **verdict** — open
-- **ran** — curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://siduri.ai/
-- **at** — 2026-08-27T09:14:00Z
-- **saw** — 200 https://siduri.ai/en — a live product on the domain `D-8` selects
-- **notes** — Owner: operator. Amends `D-8`, `OQ-5` and `:423`, none of which this pass may touch (`CT-01`).
+verdict: open
+ran: curl -sS -o /dev/null -w '%{http_code} %{url_effective}\n' -L https://siduri.ai/
+at: 2026-08-27T09:14:00Z
+saw: 200 https://siduri.ai/en — a live product on the domain `D-8` selects
+notes: Owner: operator. Amends `D-8`, `OQ-5` and `:423`, none of which this pass may touch (`CT-01`).
 
 ### Row 2 — read time on the journal list
 
-- **verdict** — failed, repaired under `lane/w3`
-- **ran** — grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — 0
-- **red proof** — the same command on `7667b8d`, the tree he was looking at, returned a non-zero count
-- **notes** — `failed` rather than `held` because the ruling of 28 August was not implemented when he looked. The repair is real and is what `saw` measures.
+verdict: failed, repaired under `lane/w3`
+ran: grep -rIoE '[0-9]+ min read|min read' dist/ | wc -l
+at: 2026-08-28T11:42:28Z
+saw: 0
+red proof: the same command on `7667b8d`, the tree he was looking at, returned a non-zero count
+notes: `failed` rather than `held` because the ruling of 28 August was not implemented when he looked. The repair is real and is what `saw` measures.
 
 ### Rows 3, 12, 13 — the tool cards and the filter nav
 
-- **verdict** — open
-- **ran** — grep -cE '^[^{]*\.tool-card[^{]*\{' static/site.css
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — the card is styled and no rule sets `font-family`; nothing in it is monospace
-- **notes** — Owner: design. Three annotations, one unbuilt component. Row 12's `All` asymmetry is a separate defect in the same nav and is not fixed by styling it.
+verdict: open
+ran: grep -cE '^[^{]*\.tool-card[^{]*\{' static/site.css
+at: 2026-08-28T11:42:28Z
+saw: the card is styled and no rule sets `font-family`; nothing in it is monospace
+notes: Owner: design. Three annotations, one unbuilt component. Row 12's `All` asymmetry is a separate defect in the same nav and is not fixed by styling it.
 
 ### Row 4 — the filter nav review task
 
-- **verdict** — deferred
-- **ran** — git log --oneline origin/main -- internal/site
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — no commit addresses "add the task to review later"
-- **notes** — Owner: integrator. He has since ruled it is raised as its own task. That task does not exist, so the deferral currently points at nothing — finding 0082.
+verdict: deferred
+ran: git log --oneline origin/main -- internal/site
+at: 2026-08-28T11:42:28Z
+saw: no commit addresses "add the task to review later"
+notes: Owner: integrator. He has since ruled it is raised as its own task. That task does not exist, so the deferral currently points at nothing — finding 0082.
 
 ### Row 5 — the newsletter apology
 
-- **verdict** — held
-- **ran** — grep -rIc 'Newsletter capture' dist/
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — 0 across the whole build
-- **red proof** — the same grep on `7667b8d` returned 1, in `dist/journal/hello-siduri/index.html`
-- **notes** — The sentence is gone and `FR-9`'s newsletter element stays unmet. Removing the apology did not meet the requirement; it stopped announcing the gap to readers. Finding 0069.
+verdict: held
+ran: grep -rIc 'Newsletter capture' dist/
+at: 2026-08-28T11:42:28Z
+saw: 0 across the whole build
+red proof: the same grep on `7667b8d` returned 1, in `dist/journal/hello-siduri/index.html`
+notes: The sentence is gone and `FR-9`'s newsletter element stays unmet. Removing the apology did not meet the requirement; it stopped announcing the gap to readers. Finding 0069.
 
 ### Row 6 — the article footer
 
-- **verdict** — held
-- **ran** — grep -rIl 'href="/about/"' dist/ | wc -l
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — 0
-- **notes** — Recorded during the sitting as "cannot reproduce". Re-measured: no footer of that shape and no link of that href anywhere in the build. The annotation was made against a page state the `.site-header` scoping had already changed. `AC-39`.
+verdict: held
+ran: grep -rIl 'href="/about/"' dist/ | wc -l
+at: 2026-08-28T11:42:28Z
+saw: 0
+notes: Recorded during the sitting as "cannot reproduce". Re-measured: no footer of that shape and no link of that href anywhere in the build. The annotation was made against a page state the `.site-header` scoping had already changed. `AC-39`.
 
 ### Rows 7, 8, 9, 10 — the four undesigned components
 
-- **verdict** — open
-- **ran** — for c in article-header tool-header post-list tool-empty; do grep -cE "^[^{]*\.$c[^{]*\{" static/site.css; done
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — `.article-header` 2, `.tool-header` 0, `.post-list` 0, `.tool-empty` 1
-- **notes** — The 27 August draft recorded `.article-header` as 1. It is 2 today. `AC-38`: the number went stale, the mechanism did not. Owner: design.
+verdict: open
+ran: for c in article-header tool-header post-list tool-empty; do grep -cE "^[^{]*\.$c[^{]*\{" static/site.css; done
+at: 2026-08-28T11:42:28Z
+saw: `.article-header` 2, `.tool-header` 0, `.post-list` 0, `.tool-empty` 1
+notes: The 27 August draft recorded `.article-header` as 1. It is 2 today. `AC-38`: the number went stale, the mechanism did not. Owner: design.
 
 ### Row 11 — the refusal line and the depth limit
 
-- **verdict** — failed
-- **ran** — planted A-missing ← B ← C in content/comments/hello-siduri/, make build, grep -c 'PQRSTC2' dist/journal/hello-siduri/index.html
-- **at** — 2026-08-28T11:52:00Z
-- **saw** — 0 — C is neither rendered nor refused; B is refused once
-- **red proof** — the same three fixtures on `e2c484c^` produced `PQRSTC2 was not rendered: replies can be attached only to top-level comments.`
-- **notes** — The operator's request was met on the happy path: 4 comments render at 2 levels and the refusal line he objected to is gone. But `internal/site/comments_a7.go:221` refuses depth only when the grandparent exists, so a reply under an already-refused reply is appended to a child list nothing walks. Found by `siduri-reviewer` and reproduced here. `failed`, not `held`: the change that satisfied the annotation introduced a silent drop, and `PR-09` — the refusal mechanism exists so nothing disappears quietly — is exactly what it defeats. Finding 0087.
+verdict: failed
+ran: planted A-missing ← B ← C in content/comments/hello-siduri/, make build, grep -c 'PQRSTC2' dist/journal/hello-siduri/index.html
+at: 2026-08-28T11:52:00Z
+saw: 0 — C is neither rendered nor refused; B is refused once
+red proof: the same three fixtures on `e2c484c^` produced `PQRSTC2 was not rendered: replies can be attached only to top-level comments.`
+notes: The operator's request was met on the happy path: 4 comments render at 2 levels and the refusal line he objected to is gone. But `internal/site/comments_a7.go:221` refuses depth only when the grandparent exists, so a reply under an already-refused reply is appended to a child list nothing walks. Found by `siduri-reviewer` and reproduced here. `failed`, not `held`: the change that satisfied the annotation introduced a silent drop, and `PR-09` — the refusal mechanism exists so nothing disappears quietly — is exactly what it defeats. Finding 0087.
 
 ### Rows 14, 15 — the two clean pages
 
-- **verdict** — held
-- **ran** — make check
-- **at** — 2026-08-28T11:42:28Z
-- **saw** — exit 0; 31 pages, 0 axe violations, including `/tags/outcome/` and `/about/`
-- **notes** — "Clean" means the operator raised no annotation and the gate is green on those two pages. It does not mean designed; `/tags/outcome/`'s empty state is a bare classless `<p>`, recorded in the first pass and still true.
+verdict: held
+ran: make check
+at: 2026-08-28T11:42:28Z
+saw: exit 0; 31 pages, 0 axe violations, including `/tags/outcome/` and `/about/`
+notes: "Clean" means the operator raised no annotation and the gate is green on those two pages. It does not mean designed; `/tags/outcome/`'s empty state is a bare classless `<p>`, recorded in the first pass and still true.
 
 ## Close
 
