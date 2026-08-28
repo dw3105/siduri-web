@@ -525,7 +525,8 @@ Newsletter (Buttondown), comments, contact form, search, tags, `/stack/`, OG ima
 - [ ] Every post has a `plain_summary`; the build fails on a post that doesn't.
 - [ ] An unknown tag fails the build.
 - [ ] A draft post appears nowhere in `dist/`, verified by grep.
-- [ ] Impressum and Datenschutz are reachable in two clicks from every page.
+- [ ] ~~Impressum and Datenschutz are reachable in two clicks from every page.~~
+  Criterion 9 is struck by ADR 0008; the two-click requirement is no longer an acceptance criterion.
 - [ ] No cookie banner exists, and no non-essential client-side storage is written.
 - [ ] `grep -rE '[a-z0-9._%+-]+@[a-z0-9.-]+' content/` returns only intended addresses.
 - [ ] Contact form works with and without JavaScript, and mail lands in Gmail within 60s.
