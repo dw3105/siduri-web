@@ -8,8 +8,6 @@ hitl-accept	github.com/dw3105/hitl:skills/hitl-accept	not checked here
 hitl-code	github.com/dw3105/hitl:skills/hitl-code	not checked here
 hitl-review	github.com/dw3105/hitl:skills/hitl-review	not checked here
 legal-copilot-code	github.com/dw3105/legalcopilot:skills/legal-copilot-code	not checked here
-legal-copilot-pending-proving	github.com/dw3105/legalcopilot:skills/legal-copilot-pending-proving	not checked here
-legal-copilot-pending-shipping	github.com/dw3105/legalcopilot:skills/legal-copilot-pending-shipping	not checked here
 machine-environment	github.com/dw3105/agent-skills:skills/machine-environment	not checked here
 operator-blocks	github.com/dw3105/agent-skills:skills/operator-blocks	not checked here
 proving	github.com/dw3105/agent-skills:skills/proving	not checked here
