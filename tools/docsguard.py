@@ -6,9 +6,10 @@ contract checks (``tools/amendcheck.py`` via ``w2-amendcheck``, plus the
 working-tree check in ``Makefile``) are authoritative for those paths.
 
 The remaining records are append-only, existing ADRs are immutable, and a new
-ADR is the only other file that may be added under docs/.  The comparison is
-performed for the committed range, the index, and the working tree separately
-so a change cannot be hidden in one of those three states.
+ADR is the only other file that may be added under docs/.  The committed range
+judges only commits that are not already reachable from the published trunk;
+the index and working tree are then checked separately so a change cannot be
+hidden in one of those three states.
 """
 from __future__ import annotations
 
@@ -30,6 +31,8 @@ CONTRACT_FILES = frozenset(
         "docs/comments-requirements.md",
     }
 )
+# This set is deliberately closed: a missing record file is never appendable,
+# so this guard cannot be used to introduce a fourth record file.
 RECORD_FILES = frozenset(
     {
         "docs/DECISIONS.md",
@@ -37,7 +40,7 @@ RECORD_FILES = frozenset(
         "docs/FRICTION.md",
     }
 )
-ADR_PATH = re.compile(r"^docs/adr/\d{4}-[^/]+\.md$")
+ADR_PATH = re.compile(r"^docs/adr/(?P<number>\d{4})-[^/]+\.md$")
 
 
 class DocsGuardError(Exception):
@@ -162,6 +165,8 @@ def changed_paths(before: dict[str, FileState], after: dict[str, FileState]) -> 
 
 
 def additions_only(before: bytes, after: bytes) -> bool:
+    # A missing trailing newline makes the next append replace the final line;
+    # that is intentionally refused rather than silently treated as an append.
     old_lines = before.splitlines(keepends=True)
     new_lines = after.splitlines(keepends=True)
     matcher = difflib.SequenceMatcher(None, old_lines, new_lines, autojunk=False)
@@ -172,11 +177,17 @@ def transition_label(label: str, path: str) -> str:
     return f"{label}: {path}"
 
 
+def adr_number(path: str) -> str | None:
+    match = ADR_PATH.fullmatch(path)
+    return match.group("number") if match else None
+
+
 def inspect_transition(
     before: dict[str, FileState],
     after: dict[str, FileState],
     label: str,
     base_paths: set[str],
+    base_adr_numbers: set[str],
     delegated: set[str],
 ) -> list[str]:
     violations: list[str] = []
@@ -212,12 +223,17 @@ def inspect_transition(
                 violations.append(
                     f"{transition_label(label, path)} — an ADR deletion is not permitted"
                 )
-            elif path in base_paths and old is not None:
+            elif old is None and adr_number(path) in base_adr_numbers:
+                number = adr_number(path)
+                violations.append(
+                    f"{transition_label(label, path)} — ADR number {number} already exists in the published trunk; duplicate ADR numbers are not permitted"
+                )
+            elif path in base_paths:
                 violations.append(
                     f"{transition_label(label, path)} — existing ADRs are immutable"
                 )
-            # A new ADR may be added or edited before it is committed.  The
-            # base-path test keeps an existing ADR from becoming mutable.
+            # A new, non-colliding ADR may be added or edited before it is
+            # committed.  Published-trunk paths remain immutable.
             continue
 
         if old is None:
@@ -230,23 +246,86 @@ def inspect_transition(
     return violations
 
 
+def published_trunk(repo: pathlib.Path) -> tuple[str, str]:
+    for display, ref in (
+        ("origin/main", "refs/remotes/origin/main"),
+        ("main", "refs/heads/main"),
+    ):
+        try:
+            revision = git_bytes(repo, ["rev-parse", "--verify", "--quiet", f"{ref}^{{commit}}"])
+        except DocsGuardError:
+            continue
+        revision = revision.strip().decode("ascii", errors="replace")
+        if revision:
+            return display, revision
+    raise DocsGuardError("cannot resolve published trunk: tried origin/main, then main")
+
+
+def range_commits(repo: pathlib.Path, base: str, head: str, trunk: str) -> tuple[list[str], list[str]]:
+    all_commits = git_bytes(repo, ["rev-list", "--reverse", f"{base}..{head}"])
+    judged_commits = git_bytes(repo, ["rev-list", "--reverse", f"{base}..{head}", "--not", trunk])
+    all_ids = all_commits.decode("ascii", errors="replace").splitlines()
+    judged_ids = judged_commits.decode("ascii", errors="replace").splitlines()
+    return all_ids, judged_ids
+
+
 def assess(repo: pathlib.Path, base: str, head: str) -> tuple[bool, list[str]]:
-    base_states = tree_states(repo, base)
-    head_states = tree_states(repo, head)
+    trunk_ref, trunk_revision = published_trunk(repo)
+    all_commits, judged_commits = range_commits(repo, base, head, trunk_ref)
+    judged_word = "commit" if len(judged_commits) == 1 else "commits"
+    print(
+        f"docsguard: scope — published trunk {trunk_ref}; "
+        f"judged {len(judged_commits)} {judged_word} not reachable from {trunk_ref}"
+    )
+    out_of_scope = [commit for commit in all_commits if commit not in set(judged_commits)]
+    if out_of_scope:
+        if len(out_of_scope) <= 3:
+            details = ", ".join(
+                f"{commit[:12]} (already reachable from {trunk_ref}; out of scope)"
+                for commit in out_of_scope
+            )
+            print(f"docsguard: scope — {details}")
+        else:
+            print(
+                f"docsguard: scope — {len(out_of_scope)} commits already reachable from "
+                f"{trunk_ref}; out of scope"
+            )
+
+    trunk_states = tree_states(repo, trunk_revision)
+    live_head = git_bytes(repo, ["rev-parse", "--verify", "HEAD^{commit}"])
+    live_head = live_head.strip().decode("ascii", errors="replace")
+    head_states = tree_states(repo, live_head)
     index = index_states(repo)
     worktree = working_states(repo)
     delegated: set[str] = set()
     violations: list[str] = []
-    base_paths = set(base_states)
+    base_paths = set(trunk_states)
+    base_adr_numbers = {
+        number
+        for path in base_paths
+        if (number := adr_number(path)) is not None
+    }
 
+    for commit in judged_commits:
+        parent_states = tree_states(repo, f"{commit}^")
+        commit_states = tree_states(repo, commit)
+        violations.extend(
+            inspect_transition(
+                parent_states,
+                commit_states,
+                f"committed commit {commit[:12]}",
+                base_paths,
+                base_adr_numbers,
+                delegated,
+            )
+        )
     violations.extend(
-        inspect_transition(base_states, head_states, "committed range", base_paths, delegated)
+        inspect_transition(head_states, index, "index", base_paths, base_adr_numbers, delegated)
     )
     violations.extend(
-        inspect_transition(head_states, index, "index", base_paths, delegated)
-    )
-    violations.extend(
-        inspect_transition(index, worktree, "working tree", base_paths, delegated)
+        inspect_transition(
+            index, worktree, "working tree", base_paths, base_adr_numbers, delegated
+        )
     )
     if delegated:
         delegated_paths = ", ".join(sorted(delegated))
