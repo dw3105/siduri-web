@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check enforcement-marker vocabulary and coverage in the four Siduri skills.
+"""Check enforcement-marker vocabulary and coverage in the three Siduri skills.
 
 This is a shape check only.  It checks that every rule has exactly one marker
 and that the marker belongs to the vocabulary for its skill.  It cannot check
@@ -21,7 +21,6 @@ SKILLS = (
     ("skills/siduri-code/SKILL.md", PERMANENT_MARKERS),
     ("skills/siduri-contract/SKILL.md", PERMANENT_MARKERS),
     ("skills/siduri-pending-tasks/SKILL.md", PENDING_MARKERS),
-    ("skills/siduri-pending-proving/SKILL.md", PENDING_MARKERS),
 )
 RULE_START = re.compile(
     r"^\s*(?:-\s+)?(?:\*\*)?(?P<rule>[A-Z]{2}-\d+[a-z]*)(?:\*\*)?\b"
