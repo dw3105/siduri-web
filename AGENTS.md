@@ -99,8 +99,15 @@ Write directly, technically, specifically, and in the first person. Use real
 tools, durations, costs, and failures. Avoid growth-hack language, fabricated
 success, and sentences that could have been written without doing the work.
 
-Wave 0 binds the two operational claims in this file: `make check` rejects any
-change under `docs/`, and it rejects every `AGENTS*.md` or `.agents.md` file at
-or above 32768 bytes. The cap is the codex-cli limit recorded in
-`docs/FINDINGS.md` row 0001; a clause deposited with no guard behind it is a
-clause that reads enforced and is not.
+Wave 0 binds the two operational claims in this file: `make check` sends the
+two requirements files to authoritative `amendcheck` (unaccepted changes
+fail); it refuses changes to any other existing docs file except additions-only
+changes (including appends) to `DECISIONS.md`, `FINDINGS.md`, and
+`FRICTION.md`; it also refuses
+record-file deletions, existing ADR edits or deletions, and new docs files other
+than a new ADR. The prohibition above is stricter than that machine guard. It
+also rejects every
+`AGENTS*.md`, `.agents.md`, or `SKILL.md` file at or above 32768 bytes. The cap
+is the codex-cli limit
+recorded in `docs/FINDINGS.md` row 0001; a clause deposited with no guard behind
+it is a clause that reads enforced and is not.
