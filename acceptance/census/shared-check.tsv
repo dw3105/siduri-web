@@ -1,0 +1,40 @@
+SS-04	SHARED	gateslot-conduct	SS-06	Counterpart says “Never end turn with uncommitted work in tree” and checks git status.
+CT-05	LOCAL	-	-	Siduri’s acceptance/W2/a6-rename.md and contract paths make renaming a contract file’s references a local guard.
+FO-01	LOCAL	-	-	Siduri’s AGENTS.md binds Codex workers to the task file rather than skill or CLAUDE.md; no counterpart sets that worker reading boundary.
+FO-02	LOCAL	-	-	Siduri’s AGENTS.md and its 32768-byte worker-file cap make silent truncation a local Codex contract, not another repo’s rule.
+FO-09	LOCAL	-	-	Siduri’s eight-lane model requires a named integration lane and task; the comparison rules do not define integration as lane residue.
+FO-10	SHARED	legal-copilot-code	SS-10	Counterpart says a parallel package split gets one “Done-when that is end-to-end act by a person,” matching Siduri’s wave rule.
+FO-16	LOCAL	-	-	Siduri’s eight-lane split and green make check composition determine the unit of work; no counterpart makes gate-green the unit.
+FO-18	LOCAL	-	-	Siduri’s tools/acceptance.py consumes pinned acceptance fields, making parser-shaped task output a local artifact contract.
+PR-04	LOCAL	-	-	Siduri’s eight-lane Templ-versus-Go ownership changes the Done-when count; no counterpart varies that count by lane ownership.
+PR-13	SHARED	hitl-accept	AC-16	Counterpart says “ran is command line, not description of one,” the same requirement that a command field be rerunnable rather than prose.
+SH-01	LOCAL	-	-	Siduri’s eight-lane one-commit boundary and lead-assigned subject are local lane workflow; the near miss says one step, one commit.
+SH-05	LOCAL	-	-	Siduri’s task contract and fresh-init incident concern stating this worktree’s branch; no counterpart governs branch facts in a task.
+SH-07	SHARED	gateslot-conduct	SH-14	Counterpart says “Commit message two -m flags” with subject under 72 characters and body max six lines.
+SH-09	SHARED	hitl-code	SH-24	Counterpart says “Never ship command not run here, or whose flag was not read from binary here.”
+CL-01	SHARED	hitl-code	CL-01	Counterpart says “Definition of done is a list cited by range from the plan” and every line is met or deferred by name.
+FO-05	SHARED	legal-copilot-code	SS-06	Counterpart says “Shared counter claimed in integration branch before work start” and unmerged allocation is not a claim.
+PR-11a	LOCAL	-	-	The hitl installer/server swap and running-image digest incident is only reproducible in Siduri’s shared-host acceptance setup.
+SH-04	LOCAL	-	-	Parent .git/config identity before worktrees is Siduri’s worktree topology; no counterpart has this parent-config failure mode.
+ST-02	SHARED	gateslot-conduct	ST-02	Counterpart says “Register is caveman lite: full sentence, article, technical term, code, command, error string, filename all survive.”
+ST-03	SHARED	gateslot-conduct	ST-03	Counterpart says “Scan before send. Cut opener, filler, hedge, closer, tool narration.”
+ST-04	SHARED	gateslot-conduct	ST-05	Counterpart says every reference carries its content in the same sentence every turn, not once per conversation.
+ST-06	LOCAL	-	-	Siduri’s AGENTS.md and make check enforce the 32768-byte worker contract; no counterpart sets this file-size cap.
+FO-19	LOCAL	-	-	Siduri’s internal/site rendering defects across chrome, meta, and width are this site’s cross-part failure class.
+PR-02	LOCAL	-	-	Siduri’s internal/site/build.go and ArticlePage workaround check is renderer-specific; no counterpart requires deleting that workaround.
+PR-05	LOCAL	-	-	Siduri’s make check guards must remain committed in this tree; the near matches cover reports or patches, not retained proof checks.
+PR-07	LOCAL	-	-	Siduri’s static build determinism is proved with a recursive dist-tree checksum; no counterpart specifies that site artifact measurement.
+PR-08	LOCAL	-	-	Siduri’s internal/site package-global registration can survive one build and requires a double-run test; that failure is local to this renderer.
+PR-12	LOCAL	-	-	Siduri’s tools/ guard fixtures must verify planted input landed and actual output, including frontmatter and secret scans; no counterpart states this checker self-test.
+PR-14	SHARED	hitl-accept	AC-22	Counterpart says “Guard pinned to value it guard go red on correct work” and derives the target instead of naming it.
+PR-15	LOCAL	-	-	Siduri’s tools/secretscan.py exemption and acceptance/ record roles make exemption follow directory role; no counterpart has this path policy.
+ST-05	SHARED	gateslot-code	ST-14	Counterpart says “Fact leaving this session carry where it was read from,” with file references, query commands, and units.
+RD-02	SHARED	gateslot-code	RD-02	Counterpart says “Probe this turn beat every document” and treats an undated machine claim as a hypothesis.
+RD-03	SHARED	gateslot-code	RD-04	Counterpart says “Never restate machine fact or code fact from memory” and opens the owning file that turn.
+PR-16	LOCAL	-	-	Siduri’s acceptance/census TSV contract requires grouped verdict equality and exact row partition; no counterpart has these two table invariants.
+SS-01	SHARED	gateslot-conduct	SS-01	Counterpart says “Session is three phase, in order: carry-in close, one step, reflection,” matching work and record deposit.
+SS-07	SHARED	hitl-code	SS-05	Counterpart says “Never assert where session sit in own context” because harness summarisation makes the position unmeasurable.
+AS-08	LOCAL	-	-	Siduri’s two requirement documents can contradict an operator instruction, so this named contradiction rule belongs to its contract.
+CL-03	SHARED	gateslot-code	CL-10	Counterpart says “Observation whose evidence a later action erase carry its date and that action in the sentence.”
+RV-02	LOCAL	-	-	Siduri’s two requirement documents and census scope need checked-versus-unchecked agreement boundaries; no counterpart requires this agreement record.
+RV-03	SHARED	hitl-review	RV-17	Counterpart says “A peer's claim is a claim until re-derived,” including the load-bearing half and which half was checked.
