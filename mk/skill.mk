@@ -1,6 +1,6 @@
 .PHONY: skill-check skill-install skill-selftest
 
-SKILL_NAMES := siduri-code siduri-contract siduri-pending-tasks siduri-pending-proving
+SKILL_NAMES := siduri-code siduri-contract siduri-pending-tasks
 SKILL_MANIFEST ?= skills/MANIFEST.tsv
 SKILLS_ROOT ?= $(HOME)/.claude/skills
 SKILL_ARGS = $(foreach skill,$(SKILL_NAMES),--src "skills/$(skill)" --live "$(SKILLS_ROOT)/$(skill)")
