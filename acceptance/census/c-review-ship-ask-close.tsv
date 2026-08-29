@@ -1,19 +1,19 @@
 RV-01	DELETE	reviewing	RV-16	reviewing:RV-16 says "Treat peer agreement as proposal precondition, not operator approval"; equivalent.	none
-RV-02	CENTRALISE	reviewing	-	gateslot, hitl and legalcopilot need scoped review agreements too; this is generic review handoff, not siduri code.	-
-RV-03	CENTRALISE	reviewing	-	gateslot, hitl and legalcopilot need reviewers to re-derive load-bearing claims too; this is generic review evidence, not siduri code.	-
+RV-02	CENTRALISE	-	-	proposed grouping: reviewing; gateslot, hitl and legalcopilot need scoped review agreements too; this is generic review handoff, not siduri code.	-
+RV-03	CENTRALISE	-	-	proposed grouping: reviewing; gateslot, hitl and legalcopilot need reviewers to re-derive load-bearing claims too; this is generic review evidence, not siduri code.	-
 RV-04	DELETE	reviewing	RV-15	reviewing:RV-15 says "Send finding under finder name, not as peer agreement"; shared-is-weaker.	It does not say the reviewer must never be the operator channel or leave the finding unresolved.
 RV-05	DELETE	reviewing	RV-16	reviewing:RV-16 says "Treat peer agreement as proposal precondition, not operator approval"; shared-is-weaker.	It does not require the operator to state the arrangement directly to the reviewer.
 RV-06	KEEP	talking-to-operator	OP-29	Depends on siduri's docs/DECISIONS.md decision-row requirement; talking-to-operator:OP-29 only records machine-wide authorisation.	OP-29 does not require a row in docs/DECISIONS.md or reject message-thread decisions.
-SH-01	CENTRALISE	codex-tasks	-	gateslot, hitl and legalcopilot need one-lane commit framing too; this is generic task shipping, not siduri code.	-
+SH-01	CENTRALISE	-	-	proposed grouping: codex-tasks; gateslot, hitl and legalcopilot need one-lane commit framing too; this is generic task shipping, not siduri code.	-
 SH-01a	KEEP	codex-tasks	CX-22	Depends on siduri's .github/ruleset-main.json and its pull-request/CI path; codex-tasks:CX-22 only says a green branch says nothing about merge.	It does not require protected main, a pull request, no local merge, or operator branch push.
 SH-02	KEEP	proving	PR-05	Depends on siduri's make check gate and commit-on-main policy; proving:PR-05 only says the gate must cover the change.	It does not name make check or require it before every commit on main.
 SH-03	DELETE	codex-tasks	CX-12	codex-tasks:CX-12 says "One worktree per task, always"; shared-is-weaker.	It does not require an absolute path or prevent a relative path from nesting inside the repo where gates walk it.
-SH-04	CENTRALISE	shared-host	-	gateslot, hitl and legalcopilot need parent identity before shared worktrees too; this is host-wide setup, not siduri code.	-
-SH-05	CENTRALISE	codex-tasks	-	gateslot, hitl and legalcopilot need branch facts stated in handoff tasks too; this is generic task truth, not siduri code.	-
+SH-04	CENTRALISE	-	-	proposed grouping: shared-host; gateslot, hitl and legalcopilot need parent identity before shared worktrees too; this is host-wide setup, not siduri code.	-
+SH-05	CENTRALISE	-	-	proposed grouping: codex-tasks; gateslot, hitl and legalcopilot need branch facts stated in handoff tasks too; this is generic task truth, not siduri code.	-
 SH-06	DELETE	shared-host	SH-07	shared-host:SH-07 says "Cosmetic reason never licenses destruction of operator-used item" and to settle at merge when safe; shared-is-weaker.	It does not require removing every merged worktree or deleting its branch at merge.
-SH-07	CENTRALISE	codex-tasks	-	gateslot, hitl and legalcopilot need the same commit-message handoff format; this is generic task shipping, not siduri code.	-
+SH-07	CENTRALISE	-	-	proposed grouping: codex-tasks; gateslot, hitl and legalcopilot need the same commit-message handoff format; this is generic task shipping, not siduri code.	-
 SH-08	DELETE	shared-host	SH-15	shared-host:SH-15 says "Every command block open with machine on line 1"; shared-is-weaker.	It does not require the box count, command, expected value as trailing comment, or no prose inside the fence.
-SH-09	CENTRALISE	codex-tasks	-	gateslot, hitl and legalcopilot need commands validated before task handoff too; this is generic executable-task hygiene, not siduri code.	-
+SH-09	CENTRALISE	-	-	proposed grouping: codex-tasks; gateslot, hitl and legalcopilot need commands validated before task handoff too; this is generic executable-task hygiene, not siduri code.	-
 SH-10	DELETE	talking-to-operator	OP-15	talking-to-operator:OP-15 says "Watched command get no pipe, no redirect, no tee"; verbatim.	none
 SH-11	DELETE	proving	PR-16	proving:PR-16 says "Never read $? after pipe. Status belong to last command"; equivalent.	It does not require writing output to a file and auditing the outcome.
 SH-12	KEEP	codex-tasks	CX-13	Depends on siduri's Cloudflare publish target and refusal path; codex-tasks:CX-13 only warns that pasted task text is truncated by single-line input.	It does not require a publish target, refusal for an absent target, or replacing later terminal blocks with a target path.
@@ -24,10 +24,10 @@ AS-04	DELETE	talking-to-operator	OP-07	talking-to-operator:OP-07 says "Recommend
 AS-05	DELETE	talking-to-operator	OP-17	talking-to-operator:OP-17 says an action turn carries "every fact needed, in that message"; equivalent.	none
 AS-06	DELETE	talking-to-operator	OP-02	talking-to-operator:OP-02 says the operator needs to know "what break", not what changed; equivalent.	none
 AS-07	DELETE	talking-to-operator	OP-08	talking-to-operator:OP-08 says the choice must require nothing to be looked up; equivalent.	none
-AS-08	CENTRALISE	talking-to-operator	-	gateslot, hitl and legalcopilot need contradiction handling too; this is generic operator communication, not siduri code.	-
+AS-08	CENTRALISE	-	-	proposed grouping: talking-to-operator; gateslot, hitl and legalcopilot need contradiction handling too; this is generic operator communication, not siduri code.	-
 AS-09	DELETE	talking-to-operator	OP-19	talking-to-operator:OP-19 says "Rendered, never described — and put where reader will be"; shared-is-weaker.	It does not require the exact host URL, base-URL question, tunnel-aware port, or one clickable link per page.
-CL-01	CENTRALISE	codex-tasks	-	gateslot, hitl and legalcopilot need task-cited done-when and named deferrals too; this is generic close-out discipline, not siduri code.	-
+CL-01	CENTRALISE	-	-	proposed grouping: codex-tasks; gateslot, hitl and legalcopilot need task-cited done-when and named deferrals too; this is generic close-out discipline, not siduri code.	-
 CL-02	KEEP	codex-tasks	CX-16	Depends on siduri's docs/FINDINGS.md row shape and closing commit; codex-tasks:CX-16 only says a report is a claim and the tree must be checked.	It does not require filing out-of-scope findings with location, failure, and observable break shape.
-CL-03	CENTRALISE	talking-to-operator	-	gateslot, hitl and legalcopilot need dated later-action claims too; this is generic status close-out, not siduri code.	-
+CL-03	CENTRALISE	-	-	proposed grouping: talking-to-operator; gateslot, hitl and legalcopilot need dated later-action claims too; this is generic status close-out, not siduri code.	-
 CL-04	DELETE	talking-to-operator	OP-33	talking-to-operator:OP-33 says "Turn end with Your move and Mine"; shared-is-weaker.	It does not require the final command box to be last; talking-to-operator:OP-13 carries that separate constraint.
 CL-05	KEEP	evidence-and-claims	EV-13	Depends on siduri's docs/FINDINGS.md negative-result row and same-day record; evidence-and-claims:EV-13 only governs proving an absence by reading its holder.	It does not require a withdrawal row, the probe that withdrew the finding, or same-day filing.
