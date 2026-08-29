@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check enforcement-marker vocabulary and coverage in the three Siduri skills.
+"""Check enforcement-marker vocabulary and coverage in the two Siduri skills.
 
 This is a shape check only.  It checks that every rule has exactly one marker
 and that the marker belongs to the vocabulary for its skill.  It cannot check
@@ -16,11 +16,11 @@ from dataclasses import dataclass
 
 
 PERMANENT_MARKERS = frozenset({"bound", "bound-with-gap", "self-reported", "unbound"})
-PENDING_MARKERS = frozenset({"pending-centralisation"})
+# pending-centralisation is intentionally not an active vocabulary entry: all
+# such rules now live in an unloaded reference, where a marker cannot be true.
 SKILLS = (
     ("skills/siduri-code/SKILL.md", PERMANENT_MARKERS),
     ("skills/siduri-contract/SKILL.md", PERMANENT_MARKERS),
-    ("skills/siduri-pending-tasks/SKILL.md", PENDING_MARKERS),
 )
 RULE_START = re.compile(
     r"^\s*(?:-\s+)?(?:\*\*)?(?P<rule>[A-Z]{2}-\d+[a-z]*)(?:\*\*)?\b"
