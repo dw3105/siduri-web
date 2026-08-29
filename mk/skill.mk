@@ -1,19 +1,18 @@
 .PHONY: skill-check skill-install skill-selftest
 
-SKILL_SRC ?= skills/siduri-code
-SKILL_LIVE ?= $(HOME)/.claude/skills/siduri-code
+SKILL_NAMES := siduri-code siduri-contract siduri-pending-tasks siduri-pending-proving
 SKILL_MANIFEST ?= skills/MANIFEST.tsv
 SKILLS_ROOT ?= $(HOME)/.claude/skills
+SKILL_ARGS = $(foreach skill,$(SKILL_NAMES),--src "skills/$(skill)" --live "$(SKILLS_ROOT)/$(skill)")
 
 # This is a developer-host check. CI does not have ~/.claude/skills, so it is
 # intentionally not a prerequisite of the shared `check` target.
 skill-check: skill-selftest
-	@python3 -u tools/skill_install.py --src "$(SKILL_SRC)" \
-		--live "$(SKILL_LIVE)" --manifest "$(SKILL_MANIFEST)" \
-		--skills-root "$(SKILLS_ROOT)" --check
+	@python3 -u tools/skill_install.py $(SKILL_ARGS) \
+		--manifest "$(SKILL_MANIFEST)" --skills-root "$(SKILLS_ROOT)" --check
 
 skill-selftest:
 	@python3 -u tools/skill_install.py --selftest
 
 skill-install: skill-selftest
-	@python3 -u tools/skill_install.py --src "$(SKILL_SRC)" --live "$(SKILL_LIVE)"
+	@python3 -u tools/skill_install.py $(SKILL_ARGS)
