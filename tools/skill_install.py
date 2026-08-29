@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""Install and check the repository-owned Claude Code skill.
+"""Install and check the repository-owned Claude Code skills.
 
     python3 tools/skill_install.py --src DIR --live DIR
+    python3 tools/skill_install.py --src DIR --live DIR --src DIR --live DIR
     python3 tools/skill_install.py --src DIR --live DIR --check
     python3 tools/skill_install.py --selftest
 
@@ -76,7 +77,7 @@ def differences(live: pathlib.Path, source: pathlib.Path) -> list[str]:
 
 
 def strands(live: pathlib.Path, name: str) -> list[pathlib.Path]:
-    """Find non-symlink siblings carrying *name* under another directory name."""
+    """Find non-symlink siblings carrying exactly the owned skill *name*."""
     parent = live.parent
     if not parent.is_dir():
         return []
@@ -159,6 +160,16 @@ def install(source: pathlib.Path, live: pathlib.Path, name: str, out) -> int:
     return 0
 
 
+def install_many(
+    pairs: list[tuple[pathlib.Path, pathlib.Path, str]], out
+) -> int:
+    """Install every source/live pair, retaining exact-name strand scoping."""
+    status = 0
+    for source, live, name in pairs:
+        status = max(status, install(source, live, name, out))
+    return status
+
+
 def manifest_rows(path: pathlib.Path) -> dict[str, tuple[str, str]]:
     """Read the three-column provenance manifest, rejecting malformed rows."""
     try:
@@ -209,10 +220,10 @@ def deployed_directories(root: pathlib.Path) -> list[pathlib.Path]:
 def check_manifest(
     manifest: pathlib.Path,
     skills_root: pathlib.Path,
-    source_name: str,
+    source_names: list[str],
     out,
 ) -> int:
-    """Check manifest coverage and the one in-repository checked row."""
+    """Check manifest coverage and the in-repository checked rows."""
     try:
         rows = manifest_rows(manifest)
     except ValueError as error:
@@ -227,7 +238,9 @@ def check_manifest(
     deployed_names = {path.name for path in deployed}
     manifest_names = set(rows)
     missing = sorted(deployed_names - manifest_names)
-    stale = sorted(manifest_names - deployed_names)
+    # A checked-here source is recorded before the integrator deploys it to
+    # this host, so its repository directory is also an expected location.
+    stale = sorted(manifest_names - deployed_names - set(source_names))
     checked = sorted(name for name, (_, value) in rows.items() if value == CHECKED)
     failed = False
     if missing:
@@ -238,19 +251,15 @@ def check_manifest(
         failed = True
         for name in stale:
             print(f"skill-manifest: row has no deployed directory: {name}", file=out)
-    if checked != [source_name]:
+    expected = sorted(source_names)
+    if checked != expected:
         failed = True
         print(
-            f"skill-manifest: checked_here=yes rows are {checked!r}; expected [{source_name!r}]",
+            f"skill-manifest: checked_here=yes rows are {checked!r}; expected {expected!r}",
             file=out,
         )
     if failed:
         return 1
-    print(
-        f"skill-manifest: {len(deployed)} deployed skill directories, "
-        f"{len(rows)} manifest rows; {source_name} is the only checked-here skill.",
-        file=out,
-    )
     return 0
 
 
@@ -261,10 +270,10 @@ def _remove(path: pathlib.Path) -> None:
         shutil.rmtree(path)
 
 
-def _fixture(source: pathlib.Path) -> None:
+def _fixture(source: pathlib.Path, name: str = "siduri-code") -> None:
     source.mkdir(parents=True)
     (source / "SKILL.md").write_text(
-        "---\nname: siduri-code\ndescription: selftest\n---\n", encoding="utf-8"
+        f"---\nname: {name}\ndescription: selftest\n---\n", encoding="utf-8"
     )
     (source / "payload.txt").write_text("canonical\n", encoding="utf-8")
 
@@ -322,25 +331,83 @@ def selftest() -> int:
                 encoding="utf-8",
             )
             status, output = _captured(
-                check_manifest, manifest, skills_root, "siduri-code"
+                check_manifest, manifest, skills_root, ["siduri-code"]
             )
             assert status == 1 and "foreign-skill" in output
             print("skill-manifest selftest: completeness red — deployed foreign-skill has no row")
             with manifest.open("a", encoding="utf-8") as stream:
                 stream.write("foreign-skill\texternal:fixture\tnot checked here\n")
             status, output = _captured(
-                check_manifest, manifest, skills_root, "siduri-code"
+                check_manifest, manifest, skills_root, ["siduri-code"]
             )
-            assert status == 0 and "2 deployed skill directories" in output
+            assert status == 0 and output == ""
             print("skill-manifest selftest: completeness green — every deployed directory is listed")
-    print("skill-install selftest: 8 named red/green cases pass")
+
+            with manifest.open("a", encoding="utf-8") as stream:
+                stream.write("siduri-contract\tsiduri-web:skills/siduri-contract\tyes\n")
+            status, output = _captured(
+                check_manifest,
+                manifest,
+                skills_root,
+                ["siduri-code", "siduri-contract"],
+            )
+            assert status == 0 and output == ""
+            print(
+                "skill-manifest selftest: repo-owned green — an undeployed "
+                "checked-here source is expected before integration"
+            )
+
+            with manifest.open("a", encoding="utf-8") as stream:
+                stream.write("stale-skill\texternal:fixture\tnot checked here\n")
+            status, output = _captured(
+                check_manifest,
+                manifest,
+                skills_root,
+                ["siduri-code", "siduri-contract"],
+            )
+            assert status == 1 and "stale-skill" in output
+            print("skill-manifest selftest: stale red — unowned row has no deployed directory")
+
+            multi_root = pathlib.Path(live_dir) / "multi"
+            multi_root.mkdir()
+            foreign = multi_root / "foreign-hitl-code"
+            foreign.mkdir()
+            (foreign / "SKILL.md").write_text(
+                "---\nname: hitl-code\ndescription: foreign\n---\n",
+                encoding="utf-8",
+            )
+            (foreign / "payload.txt").write_text("foreign\n", encoding="utf-8")
+            foreign_before = files(foreign)
+
+            names = (
+                "siduri-code",
+                "siduri-contract",
+                "siduri-pending-tasks",
+                "siduri-pending-proving",
+            )
+            sources = [source]
+            for name in names[1:]:
+                fixture = pathlib.Path(source_dir) / name
+                _fixture(fixture, name)
+                sources.append(fixture)
+            pairs = [
+                (skill_source, multi_root / name, name)
+                for skill_source, name in zip(sources, names)
+            ]
+            assert install_many(pairs, io.StringIO()) == 0
+            assert foreign.is_dir() and files(foreign) == foreign_before
+            print(
+                "skill-install selftest: foreign green — four installs left "
+                "foreign hitl-code byte-identical"
+            )
+    print("skill-install selftest: 11 named red/green cases pass")
     return 0
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    parser.add_argument("--src", type=pathlib.Path)
-    parser.add_argument("--live", type=pathlib.Path)
+    parser.add_argument("--src", type=pathlib.Path, action="append")
+    parser.add_argument("--live", type=pathlib.Path, action="append")
     parser.add_argument("--manifest", type=pathlib.Path)
     parser.add_argument("--skills-root", type=pathlib.Path)
     parser.add_argument("--check", action="store_true", help="report only; change nothing")
@@ -348,29 +415,42 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     if args.selftest:
         return selftest()
-    if args.src is None or args.live is None:
+    if not args.src or not args.live:
         parser.error("--src and --live are required unless --selftest is used")
+    if len(args.src) != len(args.live):
+        parser.error("each --src must have a matching --live")
     if args.manifest is not None and args.skills_root is None:
         parser.error("--manifest requires --skills-root")
     if args.skills_root is not None and args.manifest is None:
         parser.error("--skills-root requires --manifest")
 
-    source: pathlib.Path = args.src
-    live: pathlib.Path = args.live
-    if not source.is_dir():
-        print(f"skill: no source directory at {source}", file=sys.stderr)
-        return 1
-    name = skill_name(source)
-    if not name:
-        print(f"skill: {source / 'SKILL.md'} declares no frontmatter name", file=sys.stderr)
-        return 1
+    pairs: list[tuple[pathlib.Path, pathlib.Path, str]] = []
+    for source, live in zip(args.src, args.live):
+        if not source.is_dir():
+            print(f"skill: no source directory at {source}", file=sys.stderr)
+            return 1
+        name = skill_name(source)
+        if not name:
+            print(
+                f"skill: {source / 'SKILL.md'} declares no frontmatter name",
+                file=sys.stderr,
+            )
+            return 1
+        pairs.append((source, live, name))
 
     if args.check:
         status = 0
         if args.manifest is not None and args.skills_root is not None:
-            status = check_manifest(args.manifest, args.skills_root, source.name, sys.stdout)
-        return max(status, check(source, live, name, sys.stdout))
-    return install(source, live, name, sys.stdout)
+            status = check_manifest(
+                args.manifest,
+                args.skills_root,
+                [name for _, _, name in pairs],
+                sys.stdout,
+            )
+        for source, live, name in pairs:
+            status = max(status, check(source, live, name, sys.stdout))
+        return status
+    return install_many(pairs, sys.stdout)
 
 
 if __name__ == "__main__":
