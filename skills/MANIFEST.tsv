@@ -7,13 +7,16 @@ hitl-accept	github.com/dw3105/hitl:skills/hitl-accept	not checked here
 hitl-code	github.com/dw3105/hitl:skills/hitl-code	not checked here
 hitl-review	github.com/dw3105/hitl:skills/hitl-review	not checked here
 legal-copilot-code	github.com/dw3105/legalcopilot:skills/legal-copilot-code	not checked here
+machine-environment	github.com/dw3105/agent-skills:skills/machine-environment	not checked here
+operator-blocks	github.com/dw3105/agent-skills:skills/operator-blocks	not checked here
 proving	github.com/dw3105/agent-skills:skills/proving	not checked here
 reviewing	github.com/dw3105/agent-skills:skills/reviewing	not checked here
 screen-annotations	github.com/dw3105/hitl:skills/screen-annotations	not checked here
+session-lifecycle	github.com/dw3105/agent-skills:skills/session-lifecycle	not checked here
+shipping-and-integration	github.com/dw3105/agent-skills:skills/shipping-and-integration	not checked here
 shared-host	github.com/dw3105/agent-skills:skills/shared-host	not checked here
 siduri-code	siduri-web:skills/siduri-code	yes
 siduri-contract	siduri-web:skills/siduri-contract	yes
-siduri-pending-proving	siduri-web:skills/siduri-pending-proving	yes
 siduri-pending-tasks	siduri-web:skills/siduri-pending-tasks	yes
 talking-to-operator	github.com/dw3105/hitl:skills/talking-to-operator	not checked here
 trello-bug-triage	github.com/dw3105/legalcopilot:skills/trello-bug-triage	not checked here

@@ -3,6 +3,8 @@ name: siduri-code
 description: "Govern Siduri lane ownership, content-derived registration, merged-tree checks, dependency boundaries, and pull-request shipping."
 ---
 
+Siduri-only rules: `references/local-rules.md`.
+
 ## Lane and shipping rules
 
 - **FO-03** **Lane own only new file. File two lane need belong to integrator.** Merge conflict-free by construction, never by care. [bound-with-gap]
