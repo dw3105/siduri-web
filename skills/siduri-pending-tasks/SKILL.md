@@ -5,10 +5,6 @@ description: "Temporary holding file for rules awaiting centralisation; delete t
 
 The shared skills being built in `dw3105/agent-skills` delete this file when they exist. The operator ruled centralised rules go into new shared skills, not the existing eight.
 
-## skill check
-
-Temporary; delete when shared skills exist.
-
 ## codex-tasks
 
 - **SS-04** **Never end turn with uncommitted work in tree.** `git status --short` is one call. Backfill of ten finding row and seven decision row sat uncommitted six tool call and died to `git reset --hard` run beside it. [pending-centralisation]
@@ -39,3 +35,7 @@ Temporary; delete when shared skills exist.
 - **ST-03** Scan before send. Cut opener, filler (just, really, basically, actually, simply), hedge, closer, tool narration. **One filler = scan not run.** [pending-centralisation]
 - **ST-04** **Every reference carry its content same sentence, every turn.** `FO-04` is nothing; *FO-04, registration happen when data exist* is readable. [pending-centralisation]
 - **ST-06** **This file stay under 32768 byte.** Same cap that eat `AGENTS.md`. Skill over cap is skill that truncate wherever it is pasted, and `gateslot-code` sit at 32394 with 374 spare. [pending-centralisation]
+
+## skill check
+
+Temporary; delete when shared skills exist.

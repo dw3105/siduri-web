@@ -3,10 +3,6 @@ name: siduri-contract
 description: "Governs Siduri's contract and requirement documents, and where decisions and findings are recorded."
 ---
 
-## skill check
-
-Eleven rules: read the requirements; amend only through an ADR and affected checks; keep workers out of `docs/`; record rulings and findings; keep canonical skill edits ahead of deployed copies.
-
 ## Rules
 
 **RD-01** Never start from title. Read all four. [self-reported]
@@ -20,3 +16,7 @@ Eleven rules: read the requirements; amend only through an ADR and affected chec
 - **RV-06** **Decision land row in `docs/DECISIONS.md`.** Message thread bind nothing. [unbound]
 - **CL-02** **Finding outside scope go in `docs/FINDINGS.md`, in closing commit.** Row carry where found, what break, what it look like when it break. [unbound]
 - **CL-05** **Finding withdrawn after checking get row, and row carry probe that withdrew it.** Row exist or it do not, so this is checkable; *act of looking is evidence* is not, and would join unbound table rather than bind anything. Withdrawn finding leaving no trace get re-opened by next reader with no record anybody looked. Requires `docs/FINDINGS.md`'s negative-result row shape, added same day. [unbound]
+
+## skill check
+
+Eleven rules: read the requirements; amend only through an ADR and affected checks; keep workers out of `docs/`; record rulings and findings; keep canonical skill edits ahead of deployed copies.

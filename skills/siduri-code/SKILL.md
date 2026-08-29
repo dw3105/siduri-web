@@ -3,12 +3,6 @@ name: siduri-code
 description: "Govern Siduri lane ownership, content-derived registration, merged-tree checks, dependency boundaries, and pull-request shipping."
 ---
 
-## skill check
-
-siduri-code: FO-03 FO-04 FO-07 FO-12 FO-13 FO-14 FO-15 FO-17 SH-01a SH-02 SH-12 govern lane ownership, registration timing, gate ownership, seam scans, integrator files, dependencies, merged-tree prediction, and pull-request shipping.
-
-Read first: `codex-tasks`.
-
 ## Lane and shipping rules
 
 - **FO-03** **Lane own only new file. File two lane need belong to integrator.** Merge conflict-free by construction, never by care. [bound-with-gap]
@@ -22,3 +16,9 @@ Read first: `codex-tasks`.
 - **SH-01a** **Nothing merge locally. `main` advance only through pull request, no bypass.** Lane commit on own branch, operator push branch, CI `check` gate merge. Lead's `main` track `origin/main` and stop being where merge happen. [bound-with-gap]
 - **SH-02** **`make check` before every commit on `main`.** [unbound]
 - **SH-12** **Publish path is target with refusal, never block pasted into terminal.** Bootstrap have no target so one block unavoidable; every block after that is debt with shell prompt. [bound-with-gap]
+
+## skill check
+
+siduri-code: FO-03 FO-04 FO-07 FO-12 FO-13 FO-14 FO-15 FO-17 SH-01a SH-02 SH-12 govern lane ownership, registration timing, gate ownership, seam scans, integrator files, dependencies, merged-tree prediction, and pull-request shipping.
+
+Read first: `codex-tasks`.
