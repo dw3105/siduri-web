@@ -1,6 +1,6 @@
 ---
 name: siduri-code
-description: Working rule for the Siduri site build, repo siduri-web: two specs are the contract, eight Codex lanes run parallel and read no skill, the merged tree is the only verdict. Read before acting.
+description: "Working rule for the Siduri site build, repo siduri-web: two specs are the contract, eight Codex lanes run parallel and read no skill, the merged tree is the only verdict. Read before acting."
 ---
 
 **v1.4 - 27 Aug 2026.** Derived from `gateslot-code` v1.13. Structure kept,
