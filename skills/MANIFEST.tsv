@@ -20,7 +20,6 @@ shared-host	github.com/dw3105/agent-skills:skills/shared-host	not checked here
 shipping-and-integration	github.com/dw3105/agent-skills:skills/shipping-and-integration	not checked here
 siduri-code	siduri-web:skills/siduri-code	yes
 siduri-contract	siduri-web:skills/siduri-contract	yes
-siduri-pending-tasks	siduri-web:skills/siduri-pending-tasks	yes
 talking-to-operator	github.com/dw3105/hitl:skills/talking-to-operator	not checked here
 trello-bug-triage	github.com/dw3105/legalcopilot:skills/trello-bug-triage	not checked here
 writing-skills	github.com/dw3105/agent-skills:skills/writing-skills	not checked here

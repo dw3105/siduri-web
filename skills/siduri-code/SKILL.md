@@ -4,6 +4,7 @@ description: "Govern Siduri lane ownership, content-derived registration, merged
 ---
 
 Siduri-only rules: `references/local-rules.md`.
+Shared rules pending centralisation: `references/pending-shared.md`.
 
 ## Lane and shipping rules
 
