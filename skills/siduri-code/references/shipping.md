@@ -39,7 +39,10 @@ answer whatever dialog come next.
 Unattended form work on this box - probed end to end, exit 0, shell command ran,
 no sandbox failure:
 
-    codex exec -s danger-full-access -C <wt> --color never - < task.md > log 2>&1 &
+    tools/run_codex.sh --deadline <s> --label <label> <wt> <task.md>  # codex exec via the runner
+
+The host-wide Claude Code `PreToolUse` guard `~/skills/guards/bash_check.py`
+(release `01a0bd5`) denies the bare form.
 
 Eight interactive launch is a multi-turn sequence. Each turn restate which box of
 eight and what the last one produced, or the operator lose their place at four.
