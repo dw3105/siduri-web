@@ -103,6 +103,7 @@ saw: templ completed with `updates=0`; generated files are current.
 ran:
 
 ```sh
+# EXECUTED — acceptance W2 run; output recorded after this box
 make build && find dist -type f -exec sha256sum {} + | sort > /tmp/b1
 dist_hold=$(mktemp -d /tmp/siduri-w2-dist.XXXXXX)
 mv dist "$dist_hold/first"
